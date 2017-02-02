@@ -15,6 +15,7 @@ import com.sdsmdg.skipthequeue.models.User;
 import java.net.MalformedURLException;
 import java.util.List;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();

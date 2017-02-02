@@ -5,14 +5,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
+import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
+import com.sdsmdg.skipthequeue.otp.MSGApi;
 
 import java.net.MalformedURLException;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -45,6 +54,8 @@ public class SignupActivity extends AppCompatActivity {
         final User user = new User();
         user.mobile = mobileEditText.getText().toString();
 
+        sendOTP(user);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -63,5 +74,50 @@ public class SignupActivity extends AppCompatActivity {
             }
         }).run();
 
+    }
+
+    private void sendOTP (User user) {
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://control.msg91.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client.build())
+                .build();
+
+        MSGApi api = retrofit.create(MSGApi.class);
+
+        Call<Response> call = api.sendOTP(
+                "137205Asp4V4I7km85878def9",
+                user.mobile,
+                "Your client id is " + generateClientId(),
+                "CITADL",
+                4,
+                91,
+                "json"
+        );
+
+        call.enqueue(new Callback<Response>() {
+            @Override
+            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                if(response.body().getType().equals("success")) {
+                    Toast.makeText(getApplicationContext(), "OTP sent", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.i(TAG, response.body().getType());
+                    Log.i(TAG, response.body().getMessage());
+                    Toast.makeText(getApplicationContext(), "OTP not sent", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "OTP failed to send", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private int generateClientId() {
+        int id = (int)(1000 + Math.random() * 9000);
+        return id;
     }
 }

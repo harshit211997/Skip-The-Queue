@@ -15,15 +15,14 @@
         android:id="@+id/mobile_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Mobile no."
+        android:hint="Check In Id."
         android:inputType="number"/>
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:onClick="signinClicked"
-        android:text="SIGN IN"/>
+        android:textSize="20dp"
+        android:text = "Don't have check in id? Sign up"/>
 
     <Button
         android:layout_width="wrap_content"
