@@ -51,10 +51,11 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void signupClicked(View view) {
+        int clientId = generateClientId();
+
         final User user = new User();
         user.mobile = mobileEditText.getText().toString();
-
-        sendOTP(user);
+        user.ClientId = String.valueOf(clientId);
 
         new Thread(new Runnable() {
             @Override
@@ -74,9 +75,11 @@ public class SignupActivity extends AppCompatActivity {
             }
         }).run();
 
+        sendClientId(user);
+
     }
 
-    private void sendOTP (User user) {
+    private void sendClientId(User user) {
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -90,7 +93,7 @@ public class SignupActivity extends AppCompatActivity {
         Call<Response> call = api.sendOTP(
                 "137205Asp4V4I7km85878def9",
                 user.mobile,
-                "Your client id is " + generateClientId(),
+                "Your client id is " + user.ClientId,
                 "CITADL",
                 4,
                 91,
@@ -101,17 +104,17 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if(response.body().getType().equals("success")) {
-                    Toast.makeText(getApplicationContext(), "OTP sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Client id sent", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.i(TAG, response.body().getType());
                     Log.i(TAG, response.body().getMessage());
-                    Toast.makeText(getApplicationContext(), "OTP not sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "CLient id sent", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "OTP failed to send", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Client id failed to send", Toast.LENGTH_SHORT).show();
             }
         });
     }

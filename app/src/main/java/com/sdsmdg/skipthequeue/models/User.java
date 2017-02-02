@@ -6,4 +6,6 @@ public class User {
 
     public String mobile;
 
+    public String ClientId;
+
 }
