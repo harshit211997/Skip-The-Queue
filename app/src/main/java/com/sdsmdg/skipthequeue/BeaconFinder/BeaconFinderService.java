@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 
 import com.kontakt.sdk.android.ble.configuration.scan.ScanMode;
@@ -26,31 +27,33 @@ import java.util.List;
 public class BeaconFinderService extends Service {
 
 
-    private Context context;
     private ProximityManagerContract proximityManager;
     private ArrayList<IEddystoneDevice> beaconArray;
     private LocalBroadcastManager localBroadcastManager;
 
     //Testing
-    static final public String COPA_RESULT = "Service Name";
-
-    static final public String COPA_MESSAGE = "message_service";
+    static final public String intent_filter = "just_fucking_around";
+    static final public String beacons_array = "writing_cause_no_one_would_ever_read";
+    static final public String string_test = "writing_cause_read";
 
 
     @Override
     public void onCreate() {
-        //intializeSDK();
+
+        Log.i("HEy","Started");
+        intializeSDK();
         beaconArray = new ArrayList<>();
-        context = this;
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        sendResult("Hi Beacon");
+        //sendResult("Hi Beacon");
 
     }
 
     private void sendResult(String message) {
-        Intent intent = new Intent(COPA_RESULT);
+        Intent intent = new Intent(intent_filter);
         if(message != null)
-            intent.putExtra(COPA_MESSAGE, message);
+            intent.putExtra(string_test, message);
+            intent.putParcelableArrayListExtra(beacons_array, beaconArray);
+
         localBroadcastManager.sendBroadcast(intent);
     }
 
@@ -81,6 +84,8 @@ public class BeaconFinderService extends Service {
                 if(!beaconArray.contains(eddystone))
                 {
                     beaconArray.add(eddystone);
+                    Log.i("Service", "Beacon Found");
+                    sendResult("Beacon Found");
                 }
 
             }
@@ -96,6 +101,8 @@ public class BeaconFinderService extends Service {
                 if(beaconArray.contains(eddystone))
                 {
                     beaconArray.remove(eddystone);
+                    Log.i("Service", "Beacon Lost");
+                    sendResult("Beacon Lost");
                 }
 
             }
@@ -112,7 +119,8 @@ public class BeaconFinderService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        //startScanning();
+        startScanning();
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -130,7 +138,7 @@ public class BeaconFinderService extends Service {
     @Override
     public void onDestroy() {
 
-        //stopScanning();
+        stopScanning();
 
 
     }
