@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -68,7 +69,14 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Stop", Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(MainActivity.this,BeaconFinderService.class);
                             MainActivity.this.stopService(i);
-                            makeSnackbar();
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    makeSnackbar();
+                                }
+                            }, 1000);
+
                         }
                     });
             snackbar.show();
@@ -83,7 +91,13 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Start", Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(MainActivity.this,BeaconFinderService.class);
                             MainActivity.this.startService(i);
-                            makeSnackbar();
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    makeSnackbar();
+                                }
+                            }, 1000);
                         }
                     });
             snackbar.show();
