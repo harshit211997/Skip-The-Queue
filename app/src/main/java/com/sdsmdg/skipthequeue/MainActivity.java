@@ -1,5 +1,6 @@
 package com.sdsmdg.skipthequeue;
 
+import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -17,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -47,10 +50,44 @@ public class MainActivity extends AppCompatActivity {
         beaconsListView = (ListView) findViewById(R.id.beacons_list_view);
         beaconAdapter = new BeaconAdapter(this,beaconsArray);
         beaconsListView.setAdapter(beaconAdapter);
-
         makeReceiver();
         checkPermissions();
         Log.i("HEy","hi");
+        makeSnackbar();
+
+    }
+
+    private void makeSnackbar() {
+
+        if(isBeaconFinderServiceRunning(BeaconFinderService.class))
+        {
+            Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scanning For Beacons", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Stop", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getApplicationContext(),"Stop", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(MainActivity.this,BeaconFinderService.class);
+                            MainActivity.this.stopService(i);
+                            makeSnackbar();
+                        }
+                    });
+            snackbar.show();
+        }
+
+        else
+        {
+            Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scan For Beacons", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Start", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getApplicationContext(),"Start", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(MainActivity.this,BeaconFinderService.class);
+                            MainActivity.this.startService(i);
+                            makeSnackbar();
+                        }
+                    });
+            snackbar.show();
+        }
 
     }
 
@@ -192,5 +229,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private boolean isBeaconFinderServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -18,6 +18,7 @@ import com.kontakt.sdk.android.ble.spec.EddystoneFrameType;
 import com.kontakt.sdk.android.common.KontaktSDK;
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.kontakt.sdk.android.common.profile.IEddystoneNamespace;
+import com.sdsmdg.skipthequeue.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
