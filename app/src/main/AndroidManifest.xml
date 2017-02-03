@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,6 +24,7 @@
             </intent-filter>
         </activity>
         <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
+        <service android:name=".BeaconFinder.BeaconFinderService"/>
     </application>
 
 </manifest>
