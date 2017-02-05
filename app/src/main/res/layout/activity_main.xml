@@ -1,39 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:gravity="center_horizontal"
+    android:background="@drawable/background_gradient"
     tools:context="com.sdsmdg.skipthequeue.MainActivity">
 
-    <EditText
-        android:id="@+id/mobile_editText"
-        android:layout_width="match_parent"
+    <com.github.glomadrian.codeinputlib.CodeInput
+        android:id="@+id/client_id_input"
+        android:layout_width="148dp"
         android:layout_height="wrap_content"
-        android:hint="Check In Id."
-        android:inputType="number"/>
+        app:underline_color="#33ddff"
+        app:underline_selected_color="#000000"
+        app:text_color="#000000"
+        app:hint_color="#77ce9d"
+        app:hint_text="Check in Id"
+        android:layout_centerInParent="true"
+        app:codes="4" />
+
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/signin_button"
+        android:layout_below="@id/client_id_input"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#33ddff"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="30dp"
+        android:onClick="signinClicked"
+        fancy:fb_text="Sign in"
+        fancy:fb_radius="30dp"/>
+
+    <com.victor.loading.rotate.RotateLoading
+        android:id="@+id/rotateloading"
+        android:layout_marginTop="20dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:loading_width="5dp"
+        app:loading_color="#00bfff"
+        android:layout_below="@id/signin_button"
+        android:layout_centerInParent="true"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/client_id_input"
+        android:src="@drawable/logo"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
+        android:id="@+id/signup_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="18dp"
+        android:onClick="signupClicked"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="#00bfff"
         android:text = "Don't have check in id? Sign up"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SIGN IN"
-        android:onClick="signinClicked"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="signupClicked"
-        android:text="SIGN UP"/>
-
-</LinearLayout>
+</RelativeLayout>
