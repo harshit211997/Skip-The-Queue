@@ -27,12 +27,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Create the receiver-
-    //Create function to disable and enable the activity
-    //Inside the receiver keep on checking whether the received array has the beacon Id stored inside it.
-    //If it is absent then disable and show the Snackbar to restart scan/ if the beacon is found again
-    //enable the activity else keep it disabled.
-
 
     private final static String TAG = MainActivity.class.getSimpleName();
     BroadcastReceiver broadcastReceiver;
@@ -134,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void signupClicked(View view) {
+
         Intent i = new Intent(this, SignupActivity.class);
+        i.putExtra(StartingActivity.BEACON, beacon);
         startActivity(i);
     }
 

@@ -1,7 +1,12 @@
 package com.sdsmdg.skipthequeue;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -9,15 +14,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
+import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.otp.MSGApi;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -29,6 +37,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SignupActivity extends AppCompatActivity {
 
     private final static String TAG = SignupActivity.class.getSimpleName();
+
+    ArrayList<IEddystoneDevice> beaconsArray;
+    private IEddystoneDevice beacon;
+    BroadcastReceiver broadcastReceiver;
 
     private MobileServiceClient mClient;
     private MobileServiceTable<User> table;
@@ -57,6 +69,45 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         table = mClient.getTable(User.class);
+        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(StartingActivity.BEACON);
+        makeReceiver();
+    }
+
+    private void makeReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
+                Toast.makeText(getApplicationContext() , String.valueOf(beaconsArray.size()),Toast.LENGTH_SHORT).show();
+                if(!beaconsArray.contains(beacon))
+                {
+                    Toast.makeText(SignupActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(SignupActivity.this, StartingActivity.class);
+                    startActivity(i);
+                }
+
+            }
+        };
+    }
+
+    @Override
+    protected void onStart() {
+
+        //Register the receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
+                new IntentFilter(BeaconFinderService.intent_filter)
+        );
+
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+
+        //Unregister the receiver
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        super.onStop();
+
     }
 
     public void signupClicked(View view) {
