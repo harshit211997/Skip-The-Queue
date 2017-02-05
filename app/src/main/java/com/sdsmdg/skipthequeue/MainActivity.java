@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                                 i.putExtra("queue_no", queueNo);
                                 i.putExtra("queue_size", getQueueBehind(results, queueNo));
                                 i.putExtra("user", user);
+                                i.putExtra("nextOTPuser", getnextuser(results, user));
                                 i.putExtra(StartingActivity.BEACON, beacon);
                                 startActivity(i);
                             }
@@ -104,8 +105,22 @@ public class MainActivity extends AppCompatActivity {
         task.execute();
     }
 
+    private User getnextuser(List<User> users, User user) {
+
+        User nu= new User();
+        for (User nextOTPuser : users) {
+            if (nextOTPuser.queueNo == user.queueNo + 1) {
+                nu = nextOTPuser;
+                break;
+            }
+        }
+        return nu;
+
+    }
+
     //Verifies client id and returns the queue no.
     User verifyClientId(List<User> users, String clientId) {
+        //TODO : Change the filter type using indexes.
         for (User user : users) {
             if (user.ClientId.equals(clientId)) {
                 return user;

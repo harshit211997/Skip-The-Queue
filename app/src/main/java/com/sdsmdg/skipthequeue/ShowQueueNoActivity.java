@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,10 +17,18 @@ import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
+import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
+import com.sdsmdg.skipthequeue.otp.MSGApi;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShowQueueNoActivity extends AppCompatActivity {
 
@@ -45,6 +54,7 @@ public class ShowQueueNoActivity extends AppCompatActivity {
             queueSize = extras.getInt("queue_size");
             beacon = (IEddystoneDevice) extras.getSerializable(StartingActivity.BEACON);
 
+
         }
 
         tokenTextView = (TextView) findViewById(R.id.token_text_view);
@@ -54,6 +64,17 @@ public class ShowQueueNoActivity extends AppCompatActivity {
 
         int expectedTime = 2 * (queueSize);
 
+        try {
+            mClient = new MobileServiceClient(
+                    "https://skipthequeue.azurewebsites.net",
+                    this
+            );
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        table = mClient.getTable(User.class);
+
         timeTextView =(TextView) findViewById(R.id.user_time);
         timeTextView.setText( "Expected time till your chance : " + expectedTime + " min");
         makeReceiver();
@@ -61,6 +82,8 @@ public class ShowQueueNoActivity extends AppCompatActivity {
     }
 
     private void deleteToken() {
+
+
         deleteUser();
         Toast.makeText(ShowQueueNoActivity.this, "Token Deleted", Toast.LENGTH_SHORT ).show();
         Intent i = new Intent(ShowQueueNoActivity.this, StartingActivity.class);
@@ -79,19 +102,24 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         }
 
         table = mClient.getTable(User.class);
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>()
+        {
             @Override
             protected Void doInBackground(Void... params) {
 
                 try {
                     Intent i = getIntent();
                     User user = (User) i.getSerializableExtra("user");
+                    User next_user = (User) i.getSerializableExtra("nextOTPuser");
+                    sendNextOTP(next_user);
                     table.delete(user);
                 }
 
                 catch (final Exception e){
                     e.printStackTrace();
                 }
+
+
 
                 return null;
             }
@@ -136,4 +164,50 @@ public class ShowQueueNoActivity extends AppCompatActivity {
             }
         };
     }
+
+    //Adding the code to send the otp to 11th guy
+
+    private void sendNextOTP(final User user) {
+
+
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://control.msg91.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client.build())
+                .build();
+
+        MSGApi api = retrofit.create(MSGApi.class);
+
+        Call<Response> call = api.sendOTP(
+                "137205Asp4V4I7km85878def9",
+                user.mobile,
+                "Your are presently 10th on queue list. Expected waiting time is 20 mins.",
+                "CITADL",
+                4,
+                91,
+                "json"
+        );
+
+        call.enqueue(new Callback<Response>() {
+            @Override
+            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                if (response.body().getType().equals("success")) {
+                    Toast.makeText(getApplicationContext(), "Notification Sent!", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Log.i("TAG", response.body().getType());
+                    Log.i("TAG", response.body().getMessage());
+                    Toast.makeText(getApplicationContext(), "CLient id sent", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Notification send failed. ", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
