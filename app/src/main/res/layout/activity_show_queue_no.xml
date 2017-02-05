@@ -39,16 +39,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
-    <Button
-        android:text="Delete Token"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/delete_token"
-        android:layout_above="@+id/user_time"
-        android:layout_alignStart="@+id/token_text_view"
-        android:layout_gravity = "center_horizontal"
-        android:layout_marginBottom="46dp"
-        android:onClick="delete_click" />
-
 
 </LinearLayout>

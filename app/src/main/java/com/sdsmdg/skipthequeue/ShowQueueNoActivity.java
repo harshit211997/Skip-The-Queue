@@ -57,9 +57,10 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         timeTextView =(TextView) findViewById(R.id.user_time);
         timeTextView.setText( "Expected time till your chance : " + expectedTime + " min");
         makeReceiver();
+        deleteToken();
     }
 
-    public void delete_click(View view) {
+    private void deleteToken() {
         deleteUser();
         Toast.makeText(ShowQueueNoActivity.this, "Token Deleted", Toast.LENGTH_SHORT ).show();
         Intent i = new Intent(ShowQueueNoActivity.this, StartingActivity.class);
