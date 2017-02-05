@@ -61,7 +61,8 @@ public class BeaconAdapter extends BaseAdapter {
         TextView tv2 = twoLineListItem.getText2();
 
         tv1.setText("Beacon " + (i+1));
-        tv2.setText("URL : " + beacons.get(i).getUrl());
+        //Temporary using just Instance Id
+        tv2.setText("UID : " + beacons.get(i).getInstanceId());
 
         return twoLineListItem;
     }

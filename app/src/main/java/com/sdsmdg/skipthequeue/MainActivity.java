@@ -1,29 +1,46 @@
 package com.sdsmdg.skipthequeue;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.sdsmdg.skipthequeue.BeaconFinder.BeaconAdapter;
+import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.models.User;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private final static String TAG = MainActivity.class.getSimpleName();
+    //Create the receiver-
+    //Create function to disable and enable the activity
+    //Inside the receiver keep on checking whether the received array has the beacon Id stored inside it.
+    //If it is absent then disable and show the Snackbar to restart scan/ if the beacon is found again
+    //enable the activity else keep it disabled.
 
+
+    private final static String TAG = MainActivity.class.getSimpleName();
+    BroadcastReceiver broadcastReceiver;
     MobileServiceClient mClient;
     MobileServiceTable<User> table;
+    ArrayList<IEddystoneDevice> beaconsArray;
     EditText mobileEditText;
+    private IEddystoneDevice beacon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         table = mClient.getTable(User.class);
+        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(StartingActivity.BEACON);
+        makeReceiver();
+
     }
 
     public void signinClicked(View view) {
@@ -65,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                                 i.putExtra("queue_no", queueNo);
                                 i.putExtra("queue_size", getQueueBehind(results, queueNo));
                                 i.putExtra("user", user);
-
+                                i.putExtra(StartingActivity.BEACON, beacon);
                                 startActivity(i);
                             }
                         });
@@ -117,4 +137,42 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, SignupActivity.class);
         startActivity(i);
     }
+
+    @Override
+    protected void onStart() {
+
+        //Register the receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
+                new IntentFilter(BeaconFinderService.intent_filter)
+        );
+
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+
+        //Unregister the receiver
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        super.onStop();
+
+    }
+
+    private void makeReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
+                Toast.makeText(getApplicationContext() , String.valueOf(beaconsArray.size()),Toast.LENGTH_SHORT).show();
+                if(!beaconsArray.contains(beacon))
+                {
+                    Toast.makeText(MainActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(MainActivity.this, StartingActivity.class);
+                    startActivity(i);
+                }
+
+            }
+        };
+    }
+
 }

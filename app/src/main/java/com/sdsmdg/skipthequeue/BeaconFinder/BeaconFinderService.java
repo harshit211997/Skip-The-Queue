@@ -67,7 +67,7 @@ public class BeaconFinderService extends Service {
         proximityManager = new ProximityManager(this);
 
         proximityManager.configuration().
-                eddystoneFrameTypes(Arrays.asList(EddystoneFrameType.URL)).
+                eddystoneFrameTypes(Arrays.asList(EddystoneFrameType.UID)).
                 scanMode(ScanMode.LOW_LATENCY);
 
         //Setting up the listeners

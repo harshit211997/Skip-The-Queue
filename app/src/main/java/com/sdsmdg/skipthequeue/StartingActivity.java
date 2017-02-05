@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -36,6 +37,8 @@ public class StartingActivity extends AppCompatActivity {
     private final static int REQUEST_ENABLE_BT = 1;
     private final static int REQUEST_ENABLE_LOCATION = 2;
     private final static int REQUEST_ENABLE_FINE_LOCATION = 3;
+    public final static String BEACON = "UID";
+
     ListView beaconsListView;
     BroadcastReceiver broadcastReceiver;
     ArrayList<IEddystoneDevice> beaconsArray;
@@ -47,20 +50,44 @@ public class StartingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
-        beaconsArray = new ArrayList<>();
-        beaconsListView = (ListView) findViewById(R.id.beacons_list_view);
-        beaconAdapter = new BeaconAdapter(this,beaconsArray);
-        beaconsListView.setAdapter(beaconAdapter);
+        makeListView();
         makeReceiver();
         checkPermissions();
-        Log.i("HEy","hi");
         makeSnackbar();
 
     }
 
+    private void makeListView() {
+        beaconsArray = new ArrayList<>();
+        beaconsListView = (ListView) findViewById(R.id.beacons_list_view);
+        beaconAdapter = new BeaconAdapter(this,beaconsArray);
+        beaconsListView.setAdapter(beaconAdapter);
+        beaconsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                if(isServiceRunning(BeaconFinderService.class))
+                {
+                    IEddystoneDevice item = (IEddystoneDevice) beaconsListView.getItemAtPosition(i);
+                    Toast.makeText(getApplicationContext(),"You selected : " + String.valueOf(item.getInstanceId()),Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(StartingActivity.this, MainActivity.class);
+                    intent.putExtra(BEACON , item);
+                    startActivity(intent);
+                }
+
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"Please switch the beacons scanning service on.",Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+    }
+
     private void makeSnackbar() {
 
-        if(isBeaconFinderServiceRunning(BeaconFinderService.class))
+        if(isServiceRunning(BeaconFinderService.class))
         {
             Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scanning For Beacons", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Stop", new View.OnClickListener() {
@@ -245,7 +272,7 @@ public class StartingActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private boolean isBeaconFinderServiceRunning(Class<?> serviceClass) {
+    private boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {

@@ -25,6 +25,7 @@
         </activity>
         <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
         <service android:name=".BeaconFinder.BeaconFinderService"/>
+        <activity android:name=".MainActivity"/>
         <activity android:name=".SignupActivity" />
         <activity android:name=".TokenActivity" />
         <activity android:name=".ShowQueueNoActivity"></activity>
