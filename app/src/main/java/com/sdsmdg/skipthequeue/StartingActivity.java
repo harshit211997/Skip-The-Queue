@@ -30,7 +30,7 @@ import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class StartingActivity extends AppCompatActivity {
 
 
     private final static int REQUEST_ENABLE_BT = 1;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_starting);
         beaconsArray = new ArrayList<>();
         beaconsListView = (ListView) findViewById(R.id.beacons_list_view);
         beaconAdapter = new BeaconAdapter(this,beaconsArray);
@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Toast.makeText(getApplicationContext(),"Stop", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(MainActivity.this,BeaconFinderService.class);
-                            MainActivity.this.stopService(i);
+                            Intent i = new Intent(StartingActivity.this,BeaconFinderService.class);
+                            StartingActivity.this.stopService(i);
                             final Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Toast.makeText(getApplicationContext(),"Start", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(MainActivity.this,BeaconFinderService.class);
-                            MainActivity.this.startService(i);
+                            Intent i = new Intent(StartingActivity.this,BeaconFinderService.class);
+                            StartingActivity.this.startService(i);
                             final Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override

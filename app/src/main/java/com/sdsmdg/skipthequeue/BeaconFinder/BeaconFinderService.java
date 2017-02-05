@@ -1,7 +1,6 @@
 package com.sdsmdg.skipthequeue.BeaconFinder;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -18,7 +17,6 @@ import com.kontakt.sdk.android.ble.spec.EddystoneFrameType;
 import com.kontakt.sdk.android.common.KontaktSDK;
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.kontakt.sdk.android.common.profile.IEddystoneNamespace;
-import com.sdsmdg.skipthequeue.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
