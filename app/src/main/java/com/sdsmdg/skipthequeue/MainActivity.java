@@ -66,9 +66,22 @@ public class MainActivity extends AppCompatActivity {
         //The following code converts Character array to String
         Character[] code = codeInput.getCode();
         char[] codeChar = new char[code.length];
+
+        for(int i = 0; i < code.length; i++) {
+
+            if(code[i]== null || Character.isLetter(code[i].charValue()) )
+            {
+                Toast.makeText(MainActivity.this, "Please enter a valid token.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        }
+
         for(int i = 0; i < code.length; i++) {
             codeChar[i] = code[i].charValue();
         }
+
+
         String codeString = new String(codeChar);
 
         final String clientId = new String(codeString);
@@ -118,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
 
         task.execute();
     }
+
+
 
     private User getnextuser(List<User> users, User user) {
 

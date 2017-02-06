@@ -19,7 +19,7 @@
     </style>
 
     <!--My custom layout-->
-    <style name="MyCustomTheme" parent="@android:style/Theme.Holo.Light">
+    <style name="MyCustomTheme" parent="Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/MyActionBarTheme</item>
     </style>
 
