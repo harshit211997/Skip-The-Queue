@@ -245,6 +245,7 @@ public class StartingActivity extends AppCompatActivity {
         else
         {
             startService();
+            makeSnackbar();
         }
 
     }
@@ -292,22 +293,23 @@ public class StartingActivity extends AppCompatActivity {
 
         switch (requestCode){
 
+
+
+            case REQUEST_ENABLE_LOCATION:
+            {
+                if(!isLocationEnabled(getApplicationContext()))
+                    Toast.makeText(this,"Location is required!", Toast.LENGTH_SHORT).show();
+
+            }
+
             case REQUEST_ENABLE_BT:{
 
                 if(resultCode != RESULT_OK)
                     Toast.makeText(this,"Bluetooth is Required.",Toast.LENGTH_SHORT).show();
-                    break;
+                break;
 
 
             }
-
-            case REQUEST_ENABLE_LOCATION:{
-
-                if(!isLocationEnabled(getApplicationContext()))
-                    Toast.makeText(this,"Location is required.",Toast.LENGTH_SHORT).show();
-                    break;
-            }
-
 
         }
 
