@@ -67,7 +67,6 @@
         android:textColor="#00bfff"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="493dp"
         android:layout_marginBottom="42dp"
         android:text = "Don't have check in id? Generate Token"/>
 </RelativeLayout>
