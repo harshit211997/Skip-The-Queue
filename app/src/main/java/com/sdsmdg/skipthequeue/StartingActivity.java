@@ -89,7 +89,7 @@ public class StartingActivity extends AppCompatActivity {
 
         builder = new NotificationCompat.Builder(getApplicationContext());
         builder.setContentIntent(piii)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Simulate Test Beacon")
                 .setCustomBigContentView(remoteViews)
                 .setSound(alarmSound);
