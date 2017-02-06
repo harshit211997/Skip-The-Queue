@@ -26,6 +26,7 @@
         android:layout_marginTop="43dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
         android:id="@+id/beacons_list_view" />
+
 </RelativeLayout>
