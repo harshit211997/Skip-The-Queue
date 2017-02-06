@@ -10,15 +10,15 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import com.github.glomadrian.codeinputlib.CodeInput;
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
-import com.sdsmdg.skipthequeue.BeaconFinder.BeaconAdapter;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.models.User;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -33,15 +33,18 @@ public class MainActivity extends AppCompatActivity {
     MobileServiceClient mClient;
     MobileServiceTable<User> table;
     ArrayList<IEddystoneDevice> beaconsArray;
-    EditText mobileEditText;
+    CodeInput codeInput;
     private IEddystoneDevice beacon;
+    RotateLoading rotateLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mobileEditText = (EditText) findViewById(R.id.mobile_editText);
+        rotateLoading = (RotateLoading) findViewById(R.id.rotateloading);
+
+        codeInput = (CodeInput) findViewById(R.id.client_id_input);
 
         try {
             mClient = new MobileServiceClient(
@@ -59,8 +62,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void signinClicked(View view) {
-        final String clientId = mobileEditText.getText().toString();
 
+        //The following code converts Character array to String
+        Character[] code = codeInput.getCode();
+        char[] codeChar = new char[code.length];
+        for(int i = 0; i < code.length; i++) {
+            codeChar[i] = code[i].charValue();
+        }
+        String codeString = new String(codeChar);
+
+        final String clientId = new String(codeString);
+        rotateLoading.start();
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -82,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                                 i.putExtra("nextOTPuser", getnextuser(results, user));
                                 i.putExtra(StartingActivity.BEACON, beacon);
                                 startActivity(i);
+                                rotateLoading.stop();
                             }
                         });
                     } else {
@@ -89,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_SHORT).show();
+                                rotateLoading.stop();
                             }
                         });
 

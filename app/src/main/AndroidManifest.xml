@@ -15,8 +15,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".StartingActivity">
+        android:theme="@style/Theme.Design.Light.NoActionBar">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +25,7 @@
         </activity>
         <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
         <service android:name=".BeaconFinder.BeaconFinderService"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".StartingActivity"/>
         <activity android:name=".SignupActivity" />
         <activity android:name=".TokenActivity" />
         <activity android:name=".ShowQueueNoActivity"></activity>
