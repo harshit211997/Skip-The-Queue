@@ -17,17 +17,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar">
         <activity android:name=".MainActivity">
+
+        </activity>
+        <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
+        <service android:name=".BeaconFinder.BeaconFinderService"/>
+        <activity android:name=".StartingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
-        <service android:name=".BeaconFinder.BeaconFinderService"/>
-        <activity android:name=".StartingActivity"/>
         <activity android:name=".SignupActivity" />
         <activity android:name=".TokenActivity" />
         <activity android:name=".ShowQueueNoActivity"></activity>
+
+        <receiver android:name=".BeaconFinder.ConnectBeaconListener">
+            <intent-filter>
+                <action android:name="connectBeacon"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".BeaconFinder.DisconnectBeaconListener">
+            <intent-filter>
+                <action android:name="disconnectBeacon"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

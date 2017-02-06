@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Simulate Test Beacon "
+        android:textSize="20sp"
+        android:textColor="@color/bg_gradient_start"
+        android:fontFamily="sans-serif"
+        android:typeface="monospace"
+        android:textAlignment="center"
+        android:textStyle="normal|bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:weightSum="2">
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textSize="14sp"
+        android:id="@+id/connectBeacon"
+        android:text="Connect Beacon" />
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textSize="14sp"
+        android:id="@+id/disconnectBeacon"
+        android:text="Disconnect Beacon" />
+    </LinearLayout>
+
+
+</LinearLayout>
