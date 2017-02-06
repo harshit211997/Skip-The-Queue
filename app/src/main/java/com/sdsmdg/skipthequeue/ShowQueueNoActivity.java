@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,13 +81,8 @@ public class ShowQueueNoActivity extends AppCompatActivity {
     }
 
     private void deleteToken() {
-
-
         deleteUser();
         Toast.makeText(ShowQueueNoActivity.this, "Token Deleted", Toast.LENGTH_SHORT ).show();
-        Intent i = new Intent(ShowQueueNoActivity.this, StartingActivity.class);
-        startActivity(i);
-
     }
 
     private void deleteUser() {
