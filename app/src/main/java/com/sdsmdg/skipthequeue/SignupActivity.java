@@ -147,19 +147,16 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.body().getType().equals("success")) {
-                    Toast.makeText(getApplicationContext(), "Client id sent", Toast.LENGTH_SHORT).show();
                     insertEntry(user);
 
                 } else {
                     Log.i(TAG, response.body().getType());
                     Log.i(TAG, response.body().getMessage());
-                    Toast.makeText(getApplicationContext(), "CLient id sent", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Client id failed to send", Toast.LENGTH_SHORT).show();
                 rotateLoading.stop();
             }
         });

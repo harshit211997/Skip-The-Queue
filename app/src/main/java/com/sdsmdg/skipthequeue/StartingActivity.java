@@ -136,7 +136,6 @@ public class StartingActivity extends AppCompatActivity {
                     .setAction("Stop", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getApplicationContext(),"Stop", Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(StartingActivity.this,BeaconFinderService.class);
                             StartingActivity.this.stopService(i);
                             final Handler handler = new Handler();
@@ -158,7 +157,6 @@ public class StartingActivity extends AppCompatActivity {
                     .setAction("Start", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getApplicationContext(),"Start", Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(StartingActivity.this,BeaconFinderService.class);
                             StartingActivity.this.startService(i);
                             final Handler handler = new Handler();
@@ -180,7 +178,6 @@ public class StartingActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
-                Toast.makeText(getApplicationContext() , String.valueOf(beaconsArray.size()),Toast.LENGTH_SHORT).show();
                 beaconAdapter = new BeaconAdapter(getApplicationContext(),beaconsArray);
                 beaconsListView.setAdapter(beaconAdapter);
             }
@@ -292,21 +289,18 @@ public class StartingActivity extends AppCompatActivity {
 
         switch (requestCode){
 
-
-
             case REQUEST_ENABLE_LOCATION:
             {
                 if(!isLocationEnabled(getApplicationContext()))
-                    Toast.makeText(this,"Location is required!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Location is required!", Toast.LENGTH_SHORT).show();
 
             }
 
             case REQUEST_ENABLE_BT:{
 
                 if(resultCode != RESULT_OK)
-                    Toast.makeText(this,"Bluetooth is Required.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Bluetooth is Required.",Toast.LENGTH_SHORT).show();
                 break;
-
 
             }
 

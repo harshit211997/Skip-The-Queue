@@ -149,7 +149,6 @@ public class ShowQueueNoActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
-                Toast.makeText(getApplicationContext() , String.valueOf(beaconsArray.size()),Toast.LENGTH_SHORT).show();
                 if(!beaconsArray.contains(beacon))
                 {
                     Toast.makeText(ShowQueueNoActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
@@ -190,18 +189,16 @@ public class ShowQueueNoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.body().getType().equals("success")) {
-                    Toast.makeText(getApplicationContext(), "Notification Sent!", Toast.LENGTH_SHORT).show();
 
                 } else {
                     Log.i("TAG", response.body().getType());
                     Log.i("TAG", response.body().getMessage());
-                    Toast.makeText(getApplicationContext(), "CLient id sent", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Notification send failed. ", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Notification send failed. ", Toast.LENGTH_SHORT).show();
             }
         });
     }
