@@ -22,12 +22,12 @@
     <style name="MyCustomTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:elevation">0dp</item>
         <item name="android:actionBarStyle">@style/MyActionBarTheme</item>
         <item name="android:textColorPrimary">#33ddff</item>
     </style>
 
-    <style name="MyActionBarTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
+    <style name="MyActionBarTheme" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="elevation">0dp</item>
     </style>
 
 </resources>

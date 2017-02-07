@@ -29,6 +29,7 @@
             android:theme="@style/MyCustomTheme"/>
         <activity android:name=".SignupActivity"
             android:theme="@style/MyCustomTheme"
+            android:label="Get Token"
             android:parentActivityName=".MainActivity"/>
         <activity android:name=".ShowQueueNoActivity"
             android:theme="@style/MyCustomTheme"

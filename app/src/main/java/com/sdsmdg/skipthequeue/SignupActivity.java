@@ -56,6 +56,9 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        //Removes shadow from under the action bar
+        getSupportActionBar().setElevation(0);
+
         maxqueueNo = 0;
 
         rotateLoading = (RotateLoading)findViewById(R.id.rotateloading);

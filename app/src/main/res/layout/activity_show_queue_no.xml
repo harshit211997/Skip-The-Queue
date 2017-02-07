@@ -13,8 +13,8 @@
         android:text="Your no. in queue"
         android:layout_centerHorizontal="true"
         android:textColor="@color/white"
-        android:layout_marginTop="50dp"
-        android:textSize="25sp"
+        android:layout_marginTop="20dp"
+        android:textSize="24sp"
         android:textAlignment="center" />
 
     <TextView
@@ -24,7 +24,6 @@
         android:text="#52"
         android:textColor="@color/white"
         android:textSize="100sp"
-        android:layout_marginTop="20dp"
         android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:textAlignment="center" />
@@ -32,16 +31,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="Expected time : 45 min"
         android:textColor="@color/white"
-        android:textSize="22sp"
+        android:textSize="20sp"
         android:layout_gravity="center"
         android:gravity="center"
         android:id="@+id/user_time"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
+    <!--Dividing line for the ticket-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,12 +68,11 @@
 
     </FrameLayout>
 
-
     <ImageView
-        android:layout_width="300dp"
+        android:layout_width="240dp"
         android:layout_height="80dp"
-        android:layout_marginTop="40dp"
-        android:src="@drawable/bar_code_view"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/bar_code"
         android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

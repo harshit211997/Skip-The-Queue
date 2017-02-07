@@ -44,6 +44,9 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_queue_no);
 
+        //Removes shadow from under the action bar
+        getSupportActionBar().setElevation(0);
+
         int queueNo = 0;
         int queueSize = 0;
 
