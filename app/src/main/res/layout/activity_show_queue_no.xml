@@ -3,18 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
     tools:context="com.sdsmdg.skipthequeue.ShowQueueNoActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your Queue Number is :"
+        android:text="Your no. in queue"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
         android:layout_marginTop="50dp"
         android:textSize="25sp"
         android:textAlignment="center" />
@@ -23,9 +21,10 @@
         android:id="@+id/token_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="52"
+        android:text="#52"
+        android:textColor="@color/white"
         android:textSize="100sp"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:textAlignment="center" />
@@ -33,10 +32,49 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Expected time till your chance : 45 min"
+        android:layout_marginTop="20dp"
+        android:text="Expected time : 45 min"
+        android:textColor="@color/white"
         android:textSize="22sp"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:id="@+id/user_time"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="left"
+            android:src="@drawable/semi_circle_left"/>
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="right"
+            android:src="@drawable/semi_circle_right"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:background="@color/white" />
+
+    </FrameLayout>
+
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/bar_code_view"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

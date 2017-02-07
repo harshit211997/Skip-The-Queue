@@ -16,7 +16,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:supportsRtl="true">
-        <activity android:name=".StartingActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,11 +25,14 @@
         </activity>
         <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
         <service android:name=".BeaconFinder.BeaconFinderService"/>
-        <activity android:name=".MainActivity"
-            android:theme="@style/Theme.Design.Light.NoActionBar"/>
+        <activity android:name=".StartingActivity"
+            android:theme="@style/MyCustomTheme"/>
         <activity android:name=".SignupActivity"
             android:theme="@style/MyCustomTheme"
             android:parentActivityName=".MainActivity"/>
-        <activity android:name=".ShowQueueNoActivity"></activity>
+        <activity android:name=".ShowQueueNoActivity"
+            android:theme="@style/MyCustomTheme"
+            android:label="Queue no."
+            android:parentActivityName=".MainActivity" />
     </application>
 </manifest>

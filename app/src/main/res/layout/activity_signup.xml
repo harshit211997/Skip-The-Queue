@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fancy="http://schemas.android.com/apk/res-auto"
     tools:context="com.sdsmdg.skipthequeue.SignupActivity">
 
@@ -31,26 +32,45 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <TextView
-        android:id="@+id/infoTextView"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/mobile_input"
-        android:layout_gravity="center"
-        android:text="You'll now receive a one time client id via message, use that to sign in when you come back"
-        android:textSize="24sp"
-        android:visibility="gone" />
+        android:layout_above="@id/signin_button"
+        android:layout_centerInParent="true"
+        android:foregroundGravity="center">
+
+        <TextView
+            android:id="@+id/infoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:text="You'll now receive a one time client id via message, use that to sign in when you come back"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <com.victor.loading.rotate.RotateLoading
+            android:id="@+id/rotateloading"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:loading_width="5dp"
+            app:loading_color="#00bfff" />
+
+    </FrameLayout>
 
     <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/signin_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         android:padding="13dp"
         android:onClick="signupClicked"
+        android:background="#33ddff"
         android:backgroundTint="#33ddff"
         android:layout_alignParentBottom="true"
-        android:text="SIGN UP"
+        android:text="GET TOKEN"
         fancy:fb_radius="30dp"/>
 
 </RelativeLayout>

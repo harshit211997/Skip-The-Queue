@@ -57,7 +57,7 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         }
 
         tokenTextView = (TextView) findViewById(R.id.token_text_view);
-        tokenTextView.setText(queueNo + "");
+        tokenTextView.setText("#" + queueNo);
 
         //Some problem here.
 
@@ -75,7 +75,7 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         table = mClient.getTable(User.class);
 
         timeTextView =(TextView) findViewById(R.id.user_time);
-        timeTextView.setText( "Expected time till your chance : " + expectedTime + " min");
+        timeTextView.setText( "Expected time : " + expectedTime + " min");
         makeReceiver();
         deleteToken();
     }
