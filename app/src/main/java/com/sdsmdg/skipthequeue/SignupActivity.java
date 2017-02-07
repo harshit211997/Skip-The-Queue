@@ -168,10 +168,9 @@ public class SignupActivity extends AppCompatActivity {
     private String generateMessage(User user) {
 
         String str = "Your Token Number is "+ user.ClientId + ".\n" +
-                "Your Queue Number is XX."+ user.queueNo +".\n" +
+                "Your number is "+ user.queueNo +" in the queue.\n" +
                 "\n" +
-                "You are required to enter the above token number in order to utilise it.\n" +
-                "Do not use the token unless, the queue is finished "+
+                "[Note:The token no. can be used only once, so, use it when you reach the end of queue] \n\n"+
                 "Thanks for using Skip the Queue service, have a nice day.";
         return str;
 

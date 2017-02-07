@@ -23,7 +23,7 @@
         <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
         <service android:name=".BeaconFinder.BeaconFinderService"/>
         <activity android:name=".StartingActivity"
-            android:theme="@style/MyCustomTheme">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

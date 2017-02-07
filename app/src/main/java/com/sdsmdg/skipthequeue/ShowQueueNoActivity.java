@@ -56,7 +56,6 @@ public class ShowQueueNoActivity extends AppCompatActivity {
             queueSize = extras.getInt("queue_size");
             beacon = (IEddystoneDevice) extras.getSerializable(StartingActivity.BEACON);
 
-
         }
 
         tokenTextView = (TextView) findViewById(R.id.token_text_view);
@@ -107,16 +106,16 @@ public class ShowQueueNoActivity extends AppCompatActivity {
                 try {
                     Intent i = getIntent();
                     User user = (User) i.getSerializableExtra("user");
-                    User next_user = (User) i.getSerializableExtra("nextOTPuser");
-                    sendNextOTP(next_user);
+                    User nextUser = (User) i.getSerializableExtra("nextOTPuser");
+                    if(nextUser != null) {
+                        sendNextOTP(nextUser);
+                    }
                     table.delete(user);
                 }
 
                 catch (final Exception e){
                     e.printStackTrace();
                 }
-
-
 
                 return null;
             }
@@ -180,8 +179,8 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         Call<Response> call = api.sendOTP(
                 "137205Asp4V4I7km85878def9",
                 user.mobile,
-                "Your are presently 10th on queue list. Expected waiting time is 20 mins.",
-                "CITADL",
+                "Your chance has arrived. Now you can go in!",
+                "SKIPTQ",
                 4,
                 91,
                 "json"

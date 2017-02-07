@@ -14,19 +14,27 @@
         android:text="Searching queues nearby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
         android:id="@+id/textView"
         android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
         android:layout_alignParentStart="true"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textColor="?android:attr/textColorPrimary" />
 
+    <View
+        android:id="@+id/dividing_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/textView"/>
+
     <ListView
         android:layout_width="match_parent"
-        android:layout_marginTop="43dp"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/dividing_line"
         android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp"
         android:layout_height="400dp"
         android:id="@+id/beacons_list_view" />
 

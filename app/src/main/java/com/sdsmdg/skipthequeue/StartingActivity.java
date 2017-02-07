@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconAdapter;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,6 @@ public class StartingActivity extends AppCompatActivity {
     BeaconAdapter beaconAdapter;
     private BluetoothAdapter bluetoothAdapter;
     private RemoteViews remoteViews;
-
 
 
     @Override

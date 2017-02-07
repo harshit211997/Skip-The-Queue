@@ -132,11 +132,13 @@ public class MainActivity extends AppCompatActivity {
         task.execute();
     }
 
-
-
     private User getnextuser(List<User> users, User user) {
 
-        return users.get(users.indexOf(user)+1);
+        //get next user if available, else return null
+        if(users.indexOf(user) + 1 < users.size()) {
+            return users.get(users.indexOf(user) + 1);
+        }
+        return null;
 
     }
 
@@ -151,12 +153,14 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    //Returns the no. of people standing ahead in the queue
     public int getQueueAhead(List<User> users, int queueNo) {
 
         int count = 0;
         for (User user : users) {
-            if (user.queueNo < queueNo) {
-                return users.size() - count;
+            if (user.queueNo == queueNo) {
+                Log.i(TAG, "getQueueAhead: " + user.queueNo + " " + queueNo);
+                return count - 1;
             }
             count++;
         }
