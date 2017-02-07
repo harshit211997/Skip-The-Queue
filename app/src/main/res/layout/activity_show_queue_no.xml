@@ -75,4 +75,12 @@
         android:src="@drawable/bar_code"
         android:layout_gravity="center_horizontal"/>
 
+    <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textColor="@color/white"
+          android:gravity="center_horizontal"
+          android:textSize="18sp"
+          android:text="Thank you for using our service!"/>
+
 </LinearLayout>

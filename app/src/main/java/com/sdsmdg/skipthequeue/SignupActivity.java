@@ -84,7 +84,6 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
-                Toast.makeText(getApplicationContext() , String.valueOf(beaconsArray.size()),Toast.LENGTH_SHORT).show();
                 if(!beaconsArray.contains(beacon))
                 {
                     Toast.makeText(SignupActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();

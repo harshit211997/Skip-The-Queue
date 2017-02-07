@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         for (User user : users) {
             if (user.queueNo == queueNo) {
                 Log.i(TAG, "getQueueAhead: " + user.queueNo + " " + queueNo);
-                return count - 1;
+                return count;
             }
             count++;
         }
