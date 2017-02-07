@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SkipTheQueue.iml" filepath="$PROJECT_DIR$/SkipTheQueue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Skip-The-Queue.iml" filepath="$PROJECT_DIR$/Skip-The-Queue.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

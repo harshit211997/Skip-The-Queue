@@ -18,6 +18,7 @@ public class ConnectBeaconListener extends BroadcastReceiver {
 
         Toast.makeText(context,"Beacon Connected.", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(context, MainActivity.class );
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         context.startActivity(i);
 
     }

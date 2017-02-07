@@ -17,6 +17,7 @@ public class DisconnectBeaconListener extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context,"Beacon Disconnected.", Toast.LENGTH_SHORT).show();
         Intent i  = new Intent(context, StartingActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         context.startActivity(i);
     }
 }

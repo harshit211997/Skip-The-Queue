@@ -60,7 +60,7 @@ public class BeaconAdapter extends BaseAdapter {
         TextView tv1 = twoLineListItem.getText1();
         TextView tv2 = twoLineListItem.getText2();
 
-        tv1.setText("Beacon " + (i+1));
+        tv1.setText("Demo Bank ATM Service.");
         //Temporary using just Instance Id
         tv2.setText("UID : " + beacons.get(i).getInstanceId());
 

@@ -50,6 +50,7 @@ public class SignupActivity extends AppCompatActivity {
     private TextView infoTextView;
     private TextView time ;
     private RotateLoading rotateLoading;
+    private int lengthUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,12 +165,45 @@ public class SignupActivity extends AppCompatActivity {
     private String generateMessage(User user) {
 
         String str = "Your Token Number is "+ user.ClientId + ".\n" +
-                "Your number is "+ user.queueNo +" in the queue.\n" +
+                "Your number is "+ user.queueNo +" in the queue. The expected waiting time is nearly "+ getApproxtime() + ".\n"+
                 "\n" +
                 "[Note:The token no. can be used only once, so, use it when you reach the end of queue] \n\n"+
                 "Thanks for using Skip the Queue service, have a nice day.";
         return str;
 
+    }
+
+    private String getApproxtime() {
+
+        int mins = lengthUsers*2;
+
+
+         if(mins > 50 && mins < 70)
+            return "one hour.";
+
+         else if(mins > 110 && mins < 130)
+             return "two hours.";
+         else if(mins > 170 && mins < 190)
+             return "two hours.";
+         else if(mins > 230 && mins < 250)
+             return "two hours.";
+         else if(mins > 290 && mins < 310)
+             return "two hours.";
+
+
+         else
+         {
+             int hours = mins/60;
+             mins = mins%60;
+
+             if (hours > 0)
+             {
+                 return hours + " hours and " + mins + "minutes.";
+             }
+
+             else
+                 return  mins + "minutes.";
+         }
     }
 
     private void insertEntry(final User user) {
@@ -182,6 +216,7 @@ public class SignupActivity extends AppCompatActivity {
                         if (exception == null) {
                             // Insert succeeded
                             Log.i(TAG, "insert succeded");
+                            Toast.makeText(SignupActivity.this, "Token generated!", Toast.LENGTH_SHORT).show();
                             rotateLoading.stop();
                             infoTextView.setVisibility(View.VISIBLE);
                         } else {
@@ -215,6 +250,7 @@ public class SignupActivity extends AppCompatActivity {
 
                 try {
                     final List<User> results = table.where().execute().get();
+                    lengthUsers = results.size();
                     Log.i(TAG, "doInBackground: " + results.get(0).ClientId + "");
                     for (User user : results) {
                         if (user.queueNo > maxqueueNo) {

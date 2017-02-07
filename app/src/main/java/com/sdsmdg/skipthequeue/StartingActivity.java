@@ -73,16 +73,19 @@ public class StartingActivity extends AppCompatActivity {
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         remoteViews =  new RemoteViews(getPackageName(),R.layout.notification_layout);
         Intent button_intent = new Intent("connectBeacon");
-        PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(),123,button_intent,0);
+        button_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(),0,button_intent,0);
         remoteViews.setOnClickPendingIntent(R.id.connectBeacon,pi);
 
         Intent new_button_intent = new Intent("disconnectBeacon");
-        PendingIntent pii = PendingIntent.getBroadcast(getApplicationContext(),1234,new_button_intent,0);
+        new_button_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        PendingIntent pii = PendingIntent.getBroadcast(getApplicationContext(),0,new_button_intent,0);
         remoteViews.setOnClickPendingIntent(R.id.disconnectBeacon,pii);
 
         //Create the notification here
 
         Intent notification_intent = new Intent(getApplicationContext(), StartingActivity.class);
+        notification_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         PendingIntent piii = PendingIntent.getActivity(getApplicationContext(),0,notification_intent,0);
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
