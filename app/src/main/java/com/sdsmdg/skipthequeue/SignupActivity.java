@@ -23,6 +23,7 @@ import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.otp.MSGApi;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -48,14 +49,19 @@ public class SignupActivity extends AppCompatActivity {
     private int maxqueueNo = 0;
     private TextView infoTextView;
     private TextView time ;
+    private RotateLoading rotateLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        //Removes shadow from under the action bar
+        getSupportActionBar().setElevation(0);
+
         maxqueueNo = 0;
 
+        rotateLoading = (RotateLoading)findViewById(R.id.rotateloading);
         infoTextView = (TextView)findViewById(R.id.infoTextView);
         mobileEditText = (EditText) findViewById(R.id.mobile_editText);
 
@@ -113,6 +119,7 @@ public class SignupActivity extends AppCompatActivity {
     public void signupClicked(View view) {
         int clientId = generateClientId();
         generateQueueNo(String.valueOf(clientId));
+        rotateLoading.start();
     }
 
     private void sendClientId(final User user) {
@@ -153,6 +160,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Client id failed to send", Toast.LENGTH_SHORT).show();
+                rotateLoading.stop();
             }
         });
     }
@@ -179,11 +187,13 @@ public class SignupActivity extends AppCompatActivity {
                         if (exception == null) {
                             // Insert succeeded
                             Log.i(TAG, "insert succeded");
+                            rotateLoading.stop();
                             infoTextView.setVisibility(View.VISIBLE);
                         } else {
                             // Insert failed
                             exception.printStackTrace();
                             Log.i(TAG, "insert failed");
+                            rotateLoading.stop();
                             insertEntry(user);
                             Toast.makeText(SignupActivity.this, "Server error! Retry", Toast.LENGTH_SHORT).show();
                         }

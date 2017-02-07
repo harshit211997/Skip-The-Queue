@@ -20,12 +20,14 @@
 
     <!--My custom layout-->
     <style name="MyCustomTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:actionBarStyle">@style/MyActionBarTheme</item>
+        <item name="android:textColorPrimary">#33ddff</item>
     </style>
 
-    <style name="MyActionBarTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">#ffffff</item>
-        <item name="android:textColorPrimary">#33ddff</item>
+    <style name="MyActionBarTheme" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="elevation">0dp</item>
     </style>
 
 </resources>

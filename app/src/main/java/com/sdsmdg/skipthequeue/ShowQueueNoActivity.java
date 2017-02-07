@@ -44,6 +44,9 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_queue_no);
 
+        //Removes shadow from under the action bar
+        getSupportActionBar().setElevation(0);
+
         int queueNo = 0;
         int queueSize = 0;
 
@@ -57,7 +60,7 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         }
 
         tokenTextView = (TextView) findViewById(R.id.token_text_view);
-        tokenTextView.setText(queueNo + "");
+        tokenTextView.setText("#" + queueNo);
 
         //Some problem here.
 
@@ -75,7 +78,7 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         table = mClient.getTable(User.class);
 
         timeTextView =(TextView) findViewById(R.id.user_time);
-        timeTextView.setText( "Expected time till your chance : " + expectedTime + " min");
+        timeTextView.setText( "Expected time : " + expectedTime + " min");
         makeReceiver();
         deleteToken();
     }

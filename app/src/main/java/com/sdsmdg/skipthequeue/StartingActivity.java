@@ -245,7 +245,6 @@ public class StartingActivity extends AppCompatActivity {
         else
         {
             startService();
-            makeSnackbar();
         }
 
     }
