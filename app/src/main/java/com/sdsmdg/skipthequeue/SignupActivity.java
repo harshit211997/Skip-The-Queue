@@ -129,8 +129,8 @@ public class SignupActivity extends AppCompatActivity {
         Call<Response> call = api.sendOTP(
                 "137205Asp4V4I7km85878def9",
                 user.mobile,
-                "Your client id is " + user.ClientId,
-                "CITADL",
+                generateMessage(user),
+                "SKIPTQ",
                 4,
                 91,
                 "json"
@@ -155,6 +155,18 @@ public class SignupActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Client id failed to send", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private String generateMessage(User user) {
+
+        String str = "Your Token Number is "+ user.ClientId + ".\n" +
+                "Your Queue Number is XX."+ user.queueNo +".\n" +
+                "\n" +
+                "You are required to enter the above token number in order to utilise it.\n" +
+                "Do not use the token unless, the queue is finished "+
+                "Thanks for using Skip the Queue service, have a nice day.";
+        return str;
+
     }
 
     private void insertEntry(final User user) {
@@ -217,7 +229,8 @@ public class SignupActivity extends AppCompatActivity {
                 super.onPostExecute(aVoid);
 
                 final User user = new User();
-                user.mobile = mobileEditText.getText().toString();
+                //91 added to user's mobile no.
+                user.mobile = "91"+ mobileEditText.getText().toString();
                 user.ClientId = String.valueOf(clientId);
                 user.queueNo = maxqueueNo + 1;
 
