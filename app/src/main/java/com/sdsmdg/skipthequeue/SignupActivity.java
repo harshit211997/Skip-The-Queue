@@ -134,7 +134,7 @@ public class SignupActivity extends AppCompatActivity {
         MSGApi api = retrofit.create(MSGApi.class);
 
         Call<Response> call = api.sendOTP(
-                "137205Asp4V4I7km85878def9",
+                "140306A0DRBmkqhhJw589a2609",
                 user.mobile,
                 generateMessage(user),
                 "SKIPTQ",
@@ -165,9 +165,9 @@ public class SignupActivity extends AppCompatActivity {
     private String generateMessage(User user) {
 
         String str = "Your Token Number is "+ user.ClientId + ".\n" +
-                "Your number is "+ user.queueNo +" in the queue. The expected waiting time is nearly "+ getApproxtime() + ".\n"+
+                "Your number is "+ user.queueNo +" in the queue. The expected waiting time is nearly "+ getApproxtime() + "\n"+
                 "\n" +
-                "[Note:The token no. can be used only once, so, use it when you reach the end of queue] \n\n"+
+                "[Note:This token can be used only once, so, use it when you reach to end of the queue] \n\n"+
                 "Thanks for using Skip the Queue service, have a nice day.";
         return str;
 
@@ -202,7 +202,7 @@ public class SignupActivity extends AppCompatActivity {
              }
 
              else
-                 return  mins + "minutes.";
+                 return  mins + " minutes.";
          }
     }
 

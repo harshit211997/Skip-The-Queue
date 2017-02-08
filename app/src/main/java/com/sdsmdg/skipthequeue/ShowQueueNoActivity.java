@@ -176,7 +176,7 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         MSGApi api = retrofit.create(MSGApi.class);
 
         Call<Response> call = api.sendOTP(
-                "137205Asp4V4I7km85878def9",
+                "140306A0DRBmkqhhJw589a2609",
                 user.mobile,
                 "Your chance has arrived. Now you can go in!",
                 "SKIPTQ",
