@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void signinClicked(View view) {
+    public void viewStatusClicked(View view) {
 
         //The following code converts Character array to String
         Character[] code = codeInput.getCode();
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Intent i = new Intent(MainActivity.this, ShowQueueNoActivity.class);
+                                Intent i = new Intent(MainActivity.this, ViewStatusActivity.class);
                                 //If the user is found forward the data to showqueueno activity
 
                                 i.putExtra("queue_no", queueNo);

@@ -2,13 +2,16 @@ package com.sdsmdg.skipthequeue;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ShowQueueNoActivity extends AppCompatActivity {
+public class ViewStatusActivity extends AppCompatActivity {
 
     TextView tokenTextView;
     TextView timeTextView;
@@ -38,17 +41,18 @@ public class ShowQueueNoActivity extends AppCompatActivity {
     ArrayList<IEddystoneDevice> beaconsArray;
     private IEddystoneDevice beacon;
     BroadcastReceiver broadcastReceiver;
+    int queueNo = 0;
+    int queueSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_queue_no);
+        setContentView(R.layout.activity_view_status);
 
         //Removes shadow from under the action bar
         getSupportActionBar().setElevation(0);
 
-        int queueNo = 0;
-        int queueSize = 0;
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -80,12 +84,11 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         timeTextView.setText( "Expected time : " + expectedTime + " min");
 
         makeReceiver();
-        deleteToken();
     }
+
 
     private void deleteToken() {
         deleteUser();
-        Toast.makeText(ShowQueueNoActivity.this, "Token Deleted", Toast.LENGTH_SHORT ).show();
     }
 
     private void deleteUser() {
@@ -156,8 +159,8 @@ public class ShowQueueNoActivity extends AppCompatActivity {
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
                 if(!beaconsArray.contains(beacon))
                 {
-                    Toast.makeText(ShowQueueNoActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(ShowQueueNoActivity.this, StartingActivity.class);
+                    Toast.makeText(ViewStatusActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(ViewStatusActivity.this, StartingActivity.class);
                     startActivity(i);
                 }
 
@@ -208,4 +211,42 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         });
     }
 
+    public void deleteTokenOnClick(View view) {
+
+        createAlert();
+
+    }
+
+    private void createAlert() {
+        new AlertDialog.Builder(this)
+                .setTitle("Deleting Token")
+                .setMessage("Are you sure you want to delete this token?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(ViewStatusActivity.this, "Token Deleted", Toast.LENGTH_SHORT ).show();
+                        deleteToken();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dismiss
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    public void useTokenOnClick(View view) {
+        //Go ahead only if the Queue no is 1 and expected time is zero
+        if(queueNo == 1)
+        {
+            Toast.makeText(ViewStatusActivity.this, "Token Utilized.", Toast.LENGTH_SHORT ).show();
+            deleteToken();
+
+        }
+        else
+        {
+            Toast.makeText(ViewStatusActivity.this, "Your chance has not arrived yet.", Toast.LENGTH_SHORT ).show();
+        }
+    }
 }

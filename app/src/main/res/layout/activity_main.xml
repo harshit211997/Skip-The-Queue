@@ -37,8 +37,8 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingRight="30dp"
-        android:onClick="signinClicked"
-        fancy:fb_text="Use Token"
+        android:onClick="viewStatusClicked"
+        fancy:fb_text="View Status"
         fancy:fb_radius="30dp"/>
 
     <com.victor.loading.rotate.RotateLoading
@@ -69,4 +69,5 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="42dp"
         android:text = "Don't have check in id? Generate Token"/>
+
 </RelativeLayout>

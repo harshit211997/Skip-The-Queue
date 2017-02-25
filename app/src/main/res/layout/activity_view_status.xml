@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimaryDark"
-    tools:context="com.sdsmdg.skipthequeue.ShowQueueNoActivity">
+    tools:context="com.sdsmdg.skipthequeue.ViewStatusActivity">
 
     <TextView
         android:layout_width="match_parent"
@@ -82,5 +82,26 @@
           android:gravity="center_horizontal"
           android:textSize="18sp"
           android:text="Thank you for using our service!"/>
+
+    <Button
+        android:text="Use Token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/use_token"
+        android:onClick="useTokenOnClick" />
+
+    <Button
+        android:text="Delete Token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/delete_token"
+        android:onClick="deleteTokenOnClick" />
+
+    <TextView
+        android:text="Report Out of Cash"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:textAlignment="center" />
 
 </LinearLayout>

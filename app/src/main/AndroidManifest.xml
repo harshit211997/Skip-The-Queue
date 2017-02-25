@@ -33,7 +33,7 @@
             android:theme="@style/MyCustomTheme"
             android:label="Get Token"
             android:parentActivityName=".MainActivity"/>
-        <activity android:name=".ShowQueueNoActivity"
+        <activity android:name=".ViewStatusActivity"
             android:theme="@style/MyCustomTheme"
             android:label="Queue no."
             android:parentActivityName=".MainActivity" />
