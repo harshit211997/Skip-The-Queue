@@ -2,52 +2,61 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sdsmdg.skipthequeue">
 
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:supportsRtl="true">
-        <activity android:name=".MainActivity"
-            android:theme="@style/Theme.Design.Light.NoActionBar">
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar"></activity>
 
-        </activity>
-        <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
-        <service android:name=".BeaconFinder.BeaconFinderService"/>
-        <activity android:name=".StartingActivity"
+        <service
+            android:name="com.kontakt.sdk.android.ble.service.ProximityService"
+            android:exported="false" />
+        <service android:name=".BeaconFinder.BeaconFinderService" />
+
+        <activity
+            android:name=".BeaconScannerActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".SignupActivity"
+            android:label="Get Token"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/MyCustomTheme" />
+        <activity
+            android:name=".ViewStatusActivity"
+            android:label="Queue no."
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/MyCustomTheme" />
+
+        <receiver android:name=".BeaconFinder.ConnectBeaconListener">
+            <intent-filter>
+                <action android:name="connectBeacon" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".BeaconFinder.DisconnectBeaconListener">
+            <intent-filter>
+                <action android:name="disconnectBeacon" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".StartingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignupActivity"
-            android:theme="@style/MyCustomTheme"
-            android:label="Get Token"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".ViewStatusActivity"
-            android:theme="@style/MyCustomTheme"
-            android:label="Queue no."
-            android:parentActivityName=".MainActivity" />
-
-        <receiver android:name=".BeaconFinder.ConnectBeaconListener">
-            <intent-filter>
-                <action android:name="connectBeacon"/>
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".BeaconFinder.DisconnectBeaconListener">
-            <intent-filter>
-                <action android:name="disconnectBeacon"/>
-            </intent-filter>
-        </receiver>
-
     </application>
+
 </manifest>

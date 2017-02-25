@@ -36,6 +36,7 @@ public class ViewStatusActivity extends AppCompatActivity {
 
     TextView tokenTextView;
     TextView timeTextView;
+    TextView reportTextView;
     MobileServiceClient mClient;
     MobileServiceTable<User>table;
     ArrayList<IEddystoneDevice> beaconsArray;
@@ -43,11 +44,16 @@ public class ViewStatusActivity extends AppCompatActivity {
     BroadcastReceiver broadcastReceiver;
     int queueNo = 0;
     int queueSize = 0;
+    boolean allowReport;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_status);
+
+        allowReport = getIntent().getBooleanExtra("allowReport",false);
+        reportTextView = (TextView) findViewById(R.id.out_of_cash);
 
         //Removes shadow from under the action bar
         getSupportActionBar().setElevation(0);
@@ -59,7 +65,7 @@ public class ViewStatusActivity extends AppCompatActivity {
             queueNo = extras.getInt("queue_no");
             queueSize = extras.getInt("queue_size");
 
-            beacon = (IEddystoneDevice) extras.getSerializable(StartingActivity.BEACON);
+            beacon = (IEddystoneDevice) extras.getSerializable(BeaconScannerActivity.BEACON);
 
         }
 
@@ -84,6 +90,11 @@ public class ViewStatusActivity extends AppCompatActivity {
         timeTextView.setText( "Expected time : " + expectedTime + " min");
 
         makeReceiver();
+        if(!allowReport)
+        {
+            //Remove if only status is to be viewed.
+            reportTextView.setVisibility(View.GONE);
+        }
     }
 
 
@@ -160,7 +171,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                 if(!beaconsArray.contains(beacon))
                 {
                     Toast.makeText(ViewStatusActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(ViewStatusActivity.this, StartingActivity.class);
+                    Intent i = new Intent(ViewStatusActivity.this, BeaconScannerActivity.class);
                     startActivity(i);
                 }
 
@@ -238,7 +249,7 @@ public class ViewStatusActivity extends AppCompatActivity {
 
     public void useTokenOnClick(View view) {
         //Go ahead only if the Queue no is 1 and expected time is zero
-        if(queueNo == 1)
+        if(queueSize == 0)
         {
             Toast.makeText(ViewStatusActivity.this, "Token Utilized.", Toast.LENGTH_SHORT ).show();
             deleteToken();

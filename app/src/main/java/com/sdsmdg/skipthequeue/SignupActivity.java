@@ -10,7 +10,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,7 +79,7 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         table = mClient.getTable(User.class);
-        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(StartingActivity.BEACON);
+        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
         makeReceiver();
         getToken = (FancyButton)findViewById(R.id.get_token_button);
     }
@@ -93,7 +92,7 @@ public class SignupActivity extends AppCompatActivity {
                 if(!beaconsArray.contains(beacon))
                 {
                     Toast.makeText(SignupActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(SignupActivity.this, StartingActivity.class);
+                    Intent i = new Intent(SignupActivity.this, BeaconScannerActivity.class);
                     startActivity(i);
                 }
 

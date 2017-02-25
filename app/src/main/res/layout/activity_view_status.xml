@@ -101,7 +101,7 @@
         android:text="Report Out of Cash"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView4"
+        android:id="@+id/out_of_cash"
         android:textAlignment="center" />
 
 </LinearLayout>

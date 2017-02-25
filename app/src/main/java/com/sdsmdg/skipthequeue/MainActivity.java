@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.glomadrian.codeinputlib.CodeInput;
@@ -36,15 +37,23 @@ public class MainActivity extends AppCompatActivity {
     CodeInput codeInput;
     private IEddystoneDevice beacon;
     RotateLoading rotateLoading;
+    boolean allowGenerate;
+    boolean allowReport;
+    TextView generate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Default value is false
+        allowGenerate = getIntent().getBooleanExtra("allowGenerate", false);
+        allowReport = getIntent().getBooleanExtra("allowReport",false);
+
         rotateLoading = (RotateLoading) findViewById(R.id.rotateloading);
 
         codeInput = (CodeInput) findViewById(R.id.client_id_input);
+
 
         try {
             mClient = new MobileServiceClient(
@@ -56,8 +65,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         table = mClient.getTable(User.class);
-        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(StartingActivity.BEACON);
+        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
         makeReceiver();
+
+        if(!allowGenerate)
+        {
+            //view gone means the view no longer needs UI space, whereas view invisible means it is just not visible
+            generate = (TextView) findViewById(R.id.signup_button);
+            generate.setVisibility(View.GONE);
+
+        }
 
     }
 
@@ -109,11 +126,11 @@ public class MainActivity extends AppCompatActivity {
                                 i.putExtra("queue_no", queueNo);
                                 i.putExtra("queue_size", getQueueAhead(results, queueNo));
                                 i.putExtra("user", user);
-
+                                i.putExtra("allowReport",allowReport);
                                 //This sends the detail of the next user
                                 i.putExtra("nextOTPuser", getnextuser(results, user));
                                 //sends the beacon to which the app is connected, so that it checks after connection lost in case of multiple beacons
-                                i.putExtra(StartingActivity.BEACON, beacon);
+                                i.putExtra(BeaconScannerActivity.BEACON, beacon);
                                 startActivity(i);
                                 rotateLoading.stop();
                             }
@@ -179,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
     public void signupClicked(View view) {
 
         Intent i = new Intent(this, SignupActivity.class);
-        i.putExtra(StartingActivity.BEACON, beacon);
+        i.putExtra(BeaconScannerActivity.BEACON, beacon);
         startActivity(i);
     }
 
@@ -211,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!beaconsArray.contains(beacon))
                 {
                     Toast.makeText(MainActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(MainActivity.this, StartingActivity.class);
+                    Intent i = new Intent(MainActivity.this, BeaconScannerActivity.class);
                     startActivity(i);
                 }
 
