@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/mobile_input"
-        android:layout_above="@id/signin_button"
+        android:layout_above="@id/get_token_button"
         android:layout_centerInParent="true"
         android:foregroundGravity="center">
 
@@ -60,7 +60,7 @@
     </FrameLayout>
 
     <mehdi.sakout.fancybuttons.FancyButton
-        android:id="@+id/signin_button"
+        android:id="@+id/get_token_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

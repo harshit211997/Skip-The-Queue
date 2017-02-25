@@ -26,7 +26,7 @@
         app:codes="4" />
 
     <mehdi.sakout.fancybuttons.FancyButton
-        android:id="@+id/signin_button"
+        android:id="@+id/get_token_button"
         android:layout_below="@id/client_id_input"
         android:layout_width="wrap_content"
         android:layout_marginTop="30dp"
@@ -48,7 +48,7 @@
         android:layout_height="80dp"
         app:loading_width="5dp"
         app:loading_color="#00bfff"
-        android:layout_below="@id/signin_button"
+        android:layout_below="@id/get_token_button"
         android:layout_centerInParent="true"/>
 
     <ImageView

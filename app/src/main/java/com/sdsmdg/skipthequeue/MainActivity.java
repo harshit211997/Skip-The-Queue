@@ -85,14 +85,18 @@ public class MainActivity extends AppCompatActivity {
         String codeString = new String(codeChar);
 
         final String clientId = new String(codeString);
+        //here we've obtained the client id entered by the user
+
         rotateLoading.start();
+
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
 
                 try {
+                    //user list from the backend
                     final List<User> results = table.where().execute().get();
-                    final User user = verifyClientId(results, clientId);
+                    final User user = getUser(results, clientId);
                     if (user != null) {
                         final int queueNo = user.queueNo;
                         Log.i(TAG, "signin successful");
@@ -100,10 +104,15 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Intent i = new Intent(MainActivity.this, ShowQueueNoActivity.class);
+                                //If the user is found forward the data to showqueueno activity
+
                                 i.putExtra("queue_no", queueNo);
                                 i.putExtra("queue_size", getQueueAhead(results, queueNo));
                                 i.putExtra("user", user);
+
+                                //This sends the detail of the next user
                                 i.putExtra("nextOTPuser", getnextuser(results, user));
+                                //sends the beacon to which the app is connected, so that it checks after connection lost in case of multiple beacons
                                 i.putExtra(StartingActivity.BEACON, beacon);
                                 startActivity(i);
                                 rotateLoading.stop();
@@ -113,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Token does not Exist.", Toast.LENGTH_SHORT).show();
                                 rotateLoading.stop();
                             }
                         });
@@ -141,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Verifies client id and returns the queue no.
-    User verifyClientId(List<User> users, String clientId) {
+    //Returns the user if exists else null.
+    User getUser(List<User> users, String clientId) {
 
         for (User user : users) {
             if (user.ClientId.equals(clientId)) {

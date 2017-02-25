@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class User implements Serializable{
 
+    //Id is alloted implicitly by backend
     public String id;
 
     public String mobile;

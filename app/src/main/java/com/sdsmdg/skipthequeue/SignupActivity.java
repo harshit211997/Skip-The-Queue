@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
+import com.microsoft.windowsazure.mobileservices.table.TableQueryCallback;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
@@ -29,6 +31,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mehdi.sakout.fancybuttons.FancyButton;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,6 +54,7 @@ public class SignupActivity extends AppCompatActivity {
     private TextView time ;
     private RotateLoading rotateLoading;
     private int lengthUsers;
+    private FancyButton getToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,7 @@ public class SignupActivity extends AppCompatActivity {
         table = mClient.getTable(User.class);
         beacon = (IEddystoneDevice) getIntent().getSerializableExtra(StartingActivity.BEACON);
         makeReceiver();
+        getToken = (FancyButton)findViewById(R.id.get_token_button);
     }
 
     private void makeReceiver() {
@@ -117,7 +122,10 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void signupClicked(View view) {
-        int clientId = generateClientId();
+
+        //Generates a random no as clientId
+        getToken.setEnabled(false);
+        int clientId = (int) (1000 + Math.random() * 9000);
         generateQueueNo(String.valueOf(clientId));
         rotateLoading.start();
     }
@@ -209,7 +217,8 @@ public class SignupActivity extends AppCompatActivity {
     private void insertEntry(final User user) {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Void doInBackground(Void... params)
+            {
 
                 table.insert(user, new TableOperationCallback<User>() {
                     public void onCompleted(User entity, Exception exception, ServiceFilterResponse response) {
@@ -232,14 +241,15 @@ public class SignupActivity extends AppCompatActivity {
 
                 return null;
             }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+            }
         };
         task.execute();
     }
 
-    private int generateClientId() {
-        int id = (int) (1000 + Math.random() * 9000);
-        return id;
-    }
 
     //Generates the queue no. then send client id, and finally use that queue no. to enter data in database
     private void generateQueueNo(final String clientId) {
@@ -249,14 +259,40 @@ public class SignupActivity extends AppCompatActivity {
             protected Void doInBackground(Void... params) {
 
                 try {
-                    final List<User> results = table.where().execute().get();
-                    lengthUsers = results.size();
-                    Log.i(TAG, "doInBackground: " + results.get(0).ClientId + "");
-                    for (User user : results) {
-                        if (user.queueNo > maxqueueNo) {
-                            maxqueueNo = user.queueNo;
+                    //Receive results from backend, only first 50 entries are received.
+
+                    table.where().execute(new TableQueryCallback<User>() {
+                        @Override
+                        public void onCompleted(List<User> result, int count, Exception exception, ServiceFilterResponse response) {
+
+                            if(exception == null)
+                            {
+                                lengthUsers = result.size();
+                                Log.i(TAG, "doInBackground: " + lengthUsers + "");
+
+                                for (User user : result) {
+
+                                    Log.i(TAG, "qn : "+ user.queueNo + "  ci :  " + user.ClientId);
+
+                                    if (user.queueNo > maxqueueNo) {
+                                        maxqueueNo = user.queueNo;
+                                        Log.i(TAG, "maxquenoloop: " + user.queueNo);
+                                    }
+                                }
+
+                                //This runs the supposed Post Execute method only when the call succeeds.
+                                onUIthread(clientId);
+                            }
+
+                            else {
+                                generateQueueNo(clientId);
+                                Log.i(TAG, "onCompleted: Failed");
+                            }
                         }
-                    }
+
+
+                    });
+
 
                 } catch (final Exception e) {
                     e.printStackTrace();
@@ -265,21 +301,45 @@ public class SignupActivity extends AppCompatActivity {
                 return null;
             }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                final User user = new User();
-                //91 added to user's mobile no.
-                user.mobile = "91"+ mobileEditText.getText().toString();
-                user.ClientId = String.valueOf(clientId);
-                user.queueNo = maxqueueNo + 1;
-
-                sendClientId(user);
-
-            }
         };
 
         task.execute();
+    }
+
+    private void onUIthread(final String clientId) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final User user = new User();
+                //91 added to user's mobile no.
+                user.mobile = "91"+ mobileEditText.getText().toString();
+                user.ClientId = clientId;
+                user.queueNo = maxqueueNo + 1;
+
+                if(user.mobile.length() != 12 )
+                {
+                    Toast.makeText(getApplicationContext(),"Please Enter a vaild Mobile No.",Toast.LENGTH_SHORT).show();
+                    rotateLoading.stop();
+
+                }
+                else {
+
+                    //TODO : Iterate through db and allow token generation only once for a particular mobile no.
+                    //sendClientId(user);
+
+                    insertEntry(user);
+                    //disable till the request false
+
+                }
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getToken.setEnabled(true);
+
     }
 }

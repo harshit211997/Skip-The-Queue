@@ -178,6 +178,7 @@ public class StartingActivity extends AppCompatActivity {
 
     private void makeReceiver() {
         broadcastReceiver = new BroadcastReceiver() {
+            //This receiver receives the data from background BeaconFinderService.
             @Override
             public void onReceive(Context context, Intent intent) {
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);

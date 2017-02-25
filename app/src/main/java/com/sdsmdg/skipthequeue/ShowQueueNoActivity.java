@@ -54,6 +54,7 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         if (extras != null) {
             queueNo = extras.getInt("queue_no");
             queueSize = extras.getInt("queue_size");
+
             beacon = (IEddystoneDevice) extras.getSerializable(StartingActivity.BEACON);
 
         }
@@ -61,7 +62,6 @@ public class ShowQueueNoActivity extends AppCompatActivity {
         tokenTextView = (TextView) findViewById(R.id.token_text_view);
         tokenTextView.setText("#" + queueNo);
 
-        //Some problem here.
 
         int expectedTime = 2 * (queueSize);
 
@@ -78,6 +78,7 @@ public class ShowQueueNoActivity extends AppCompatActivity {
 
         timeTextView =(TextView) findViewById(R.id.user_time);
         timeTextView.setText( "Expected time : " + expectedTime + " min");
+
         makeReceiver();
         deleteToken();
     }
@@ -104,12 +105,16 @@ public class ShowQueueNoActivity extends AppCompatActivity {
             protected Void doInBackground(Void... params) {
 
                 try {
+
                     Intent i = getIntent();
                     User user = (User) i.getSerializableExtra("user");
                     User nextUser = (User) i.getSerializableExtra("nextOTPuser");
+
                     if(nextUser != null) {
-                        sendNextOTP(nextUser);
+                        //sendNextOTP(nextUser);
                     }
+
+                    //This deletes on the database as well
                     table.delete(user);
                 }
 
