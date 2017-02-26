@@ -44,4 +44,13 @@
         android:layout_alignParentStart="true"
         android:onClick="beacon_scanner_button" />
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/demo"
+        android:layout_below="@+id/textView5"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>

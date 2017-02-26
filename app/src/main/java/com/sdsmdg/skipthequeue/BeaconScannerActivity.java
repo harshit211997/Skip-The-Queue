@@ -224,7 +224,7 @@ public class BeaconScannerActivity extends AppCompatActivity {
             startActivityForResult(i,REQUEST_ENABLE_BT);
         }
 
-
+        //Turn Location Settings On
         if(!isLocationEnabled(getApplicationContext()))
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -239,6 +239,7 @@ public class BeaconScannerActivity extends AppCompatActivity {
             }).show();
         }
 
+        //Runtime Permission
         if(Build.VERSION.SDK_INT >= 23 && (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED))
         {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_ENABLE_FINE_LOCATION);
