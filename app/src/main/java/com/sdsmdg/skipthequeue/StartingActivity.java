@@ -8,8 +8,8 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +17,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -27,9 +26,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
-import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
 import com.sdsmdg.skipthequeue.models.Machine;
 
 import java.io.IOException;
@@ -61,9 +58,8 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         checkPermissions();
         buildClient();
 
-
-
-
+        //This function is called one time for testing only!
+        //initializeManagerTable();
     }
 
     private void buildClient() {
@@ -279,6 +275,38 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    MobileServiceClient mClient;
+    public void initializeManagerTable() {
+
+        try {
+             mClient = new MobileServiceClient(
+                    "https://skipthequeue.azurewebsites.net",
+                    this
+            );
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MobileServiceTable<Machine> managerTable = mClient.getTable("Manager", Machine.class);
+                Machine m1 = new Machine("UID", "29.863800", "77.894362", 0, true, "PNB_ATM");
+                Machine m2 = new Machine("UID", "29.864468", "77.895905", 0, true, "SBI ATM");
+                Machine m3 = new Machine("UID", "29.865800", "77.878831", 0, true, "Axis_Bank_ATM");
+                Machine m4 = new Machine("UID", "29.868032", "77.876627", 0, true, "IDBI_Bank_ATM");
+                Machine m5 = new Machine("UID", "29.872111", "77.876722", 0, true, "HDFC_Bank_ATM");
+                managerTable.insert(m1);
+                managerTable.insert(m2);
+                managerTable.insert(m3);
+                managerTable.insert(m4);
+                managerTable.insert(m5);
+            }
+        }).start();
+
+    }
+
 }
 
 
@@ -288,7 +316,6 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
 
 //   MobileServiceClient mClient;
-//    MobileServiceTable<Machine> table;
 //    Machine machine;
 
 
@@ -302,9 +329,9 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 //            e.printStackTrace();
 //        }
 //
-//        //Change the type and table name here that has to be queried.
+//        //Change the type and userTable name here that has to be queried.
 //
-//        table = mClient.getTable("Manager",Machine.class);
+//        userTable = mClient.getTable("Manager",Machine.class);
 //
 //        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
 //            @Override
@@ -312,12 +339,12 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 //
 //                try {
 //
-//                    final List<Machine> results = table.where().execute().get();
+//                    final List<Machine> results = userTable.where().execute().get();
 //
 //                    runOnUiThread(new Runnable() {
 //                        @Override
 //                        public void run() {
-//                            Toast.makeText(StartingActivity.this, "Length of table is : " + results.size(), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(StartingActivity.this, "Length of userTable is : " + results.size(), Toast.LENGTH_SHORT).show();
 //                        }
 //                    });
 //
@@ -327,7 +354,7 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 //                    machine.queueLength = 6;
 //                    machine.statusWorking = false;
 //
-//                    table.insert(machine, new TableOperationCallback<Machine>() {
+//                    userTable.insert(machine, new TableOperationCallback<Machine>() {
 //                        @Override
 //                        public void onCompleted(Machine entity, Exception exception, ServiceFilterResponse response) {
 //
