@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         codeInput = (CodeInput) findViewById(R.id.client_id_input);
 
-
+        //This defines the query address to the client
         try {
             mClient = new MobileServiceClient(
                     "https://skipthequeue.azurewebsites.net",
@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
         table = mClient.getTable(User.class);
         beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
         makeReceiver();
@@ -171,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
     User getUser(List<User> users, String clientId) {
 
         for (User user : users) {
-            if (user.ClientId.equals(clientId)) {
+            if (user.clientId.equals(clientId)) {
                 return user;
             }
         }

@@ -9,7 +9,7 @@ public class User implements Serializable{
 
     public String mobile;
 
-    public String ClientId;
+    public String clientId;
 
     public int queueNo;
 

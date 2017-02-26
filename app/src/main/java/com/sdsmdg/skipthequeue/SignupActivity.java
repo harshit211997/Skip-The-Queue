@@ -78,7 +78,9 @@ public class SignupActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        table = mClient.getTable(User.class);
+        //The string passed specifies the name of the table which has to be queried.
+
+        table = mClient.getTable("User",User.class);
         beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
         makeReceiver();
         getToken = (FancyButton)findViewById(R.id.get_token_button);
@@ -171,7 +173,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private String generateMessage(User user) {
 
-        String str = "Your Token Number is "+ user.ClientId + ".\n" +
+        String str = "Your Token Number is "+ user.clientId + ".\n" +
                 "Your number is "+ user.queueNo +" in the queue. The expected waiting time is nearly "+ getApproxtime() + "\n"+
                 "\n" +
                 "[Note:This token can be used only once, so, use it when you reach to end of the queue] \n\n"+
@@ -271,7 +273,7 @@ public class SignupActivity extends AppCompatActivity {
 
                                 for (User user : result) {
 
-                                    Log.i(TAG, "qn : "+ user.queueNo + "  ci :  " + user.ClientId);
+                                    Log.i(TAG, "qn : "+ user.queueNo + "  ci :  " + user.clientId);
 
                                     if (user.queueNo > maxqueueNo) {
                                         maxqueueNo = user.queueNo;
@@ -312,13 +314,15 @@ public class SignupActivity extends AppCompatActivity {
                 final User user = new User();
                 //91 added to user's mobile no.
                 user.mobile = "91"+ mobileEditText.getText().toString();
-                user.ClientId = clientId;
+                user.clientId = clientId;
                 user.queueNo = maxqueueNo + 1;
 
                 if(user.mobile.length() != 12 )
                 {
-                    Toast.makeText(getApplicationContext(),"Please Enter a vaild Mobile No.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Please Enter a valid Mobile No.",Toast.LENGTH_SHORT).show();
                     rotateLoading.stop();
+                    getToken.setEnabled(true);
+
 
                 }
                 else {
