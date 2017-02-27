@@ -56,11 +56,13 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
         checkPermissions();
+        //TODO : Fix the problem of null location for the first client.
         buildClient();
-
+        //Using Google Place API to find
 
 
 
@@ -122,9 +124,12 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
             Double lng = mLastLocation.getLongitude();
             getAdress(lat,lng);
         }
+
         else
         {
             Toast.makeText(this,"Location received as null.",Toast.LENGTH_SHORT).show();
+
+
         }
 
     }
@@ -179,7 +184,10 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
     @Override
     protected void onStop() {
+
+        if(mGoogleApiClient != null)
         mGoogleApiClient.disconnect();
+
         super.onStop();
     }
 
@@ -263,6 +271,11 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
             {
                 if(!isLocationEnabled(getApplicationContext()))
                     Toast.makeText(this, "Location is required!", Toast.LENGTH_SHORT).show();
+                else
+                {
+                    Toast.makeText(this, "Location is granted!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), StartingActivity.class));
+                }
 
             }
 
