@@ -8,6 +8,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -39,9 +40,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        //Declare the points.
+        LatLng ATM = new LatLng(getIntent().getDoubleExtra("lat",21) + .01, getIntent().getDoubleExtra("lng",57) +.01);
+        LatLng user = new LatLng(getIntent().getDoubleExtra("lat",21), getIntent().getDoubleExtra("lng",57));
+
+        mMap.addMarker(new MarkerOptions().position(user).title("Your current Position."));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
+
+        mMap.addMarker(new MarkerOptions().position(ATM).title("Position of ATM."));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(ATM));
+        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+        LatLngBounds bounds = new LatLngBounds.Builder().include(ATM)
+                .include(user).build();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+
+        //Adding the code to draw route between two markers here.
+
+
     }
 }
