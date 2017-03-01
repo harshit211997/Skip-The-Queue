@@ -30,7 +30,8 @@
         android:layout_above="@id/delete_token_textview"
         android:textColor="@color/colorPrimary"
         android:visibility="visible"
-        android:gravity="center_horizontal"/>
+        android:gravity="center_horizontal"
+        android:onClick="reportOFC" />
 
     <mehdi.sakout.fancybuttons.FancyButton
         android:id="@+id/use_token_button"

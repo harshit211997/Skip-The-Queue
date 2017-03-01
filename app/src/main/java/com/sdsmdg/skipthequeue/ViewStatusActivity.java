@@ -262,6 +262,8 @@ public class ViewStatusActivity extends AppCompatActivity {
                 .setMessage("Are you sure you want report this ATM as out of cash?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        //Argument passed will be the Manager Table.
+
                         //setMachineStatusToOFC();
                     }
                 })
