@@ -17,8 +17,11 @@ import android.widget.Toast;
 
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
+import com.sdsmdg.skipthequeue.models.Machine;
 import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.otp.MSGApi;
@@ -38,7 +41,8 @@ public class ViewStatusActivity extends AppCompatActivity {
     TextView timeTextView;
     TextView reportTextView;
     MobileServiceClient mClient;
-    MobileServiceTable<User>table;
+    MobileServiceTable<User> userTable;
+    MobileServiceTable<Machine> machinesTable;
     ArrayList<IEddystoneDevice> beaconsArray;
     private IEddystoneDevice beacon;
     BroadcastReceiver broadcastReceiver;
@@ -52,12 +56,11 @@ public class ViewStatusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_status);
 
-        allowReport = getIntent().getBooleanExtra("allowReport",false);
+        allowReport = getIntent().getBooleanExtra("allowReport", false);
         reportTextView = (TextView) findViewById(R.id.out_of_cash);
 
         //Removes shadow from under the action bar
         getSupportActionBar().setElevation(0);
-
 
 
         Bundle extras = getIntent().getExtras();
@@ -84,14 +87,13 @@ public class ViewStatusActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        table = mClient.getTable(User.class);
+        userTable = mClient.getTable(User.class);
 
-        timeTextView =(TextView) findViewById(R.id.user_time);
-        timeTextView.setText( "Expected time : " + expectedTime + " min");
+        timeTextView = (TextView) findViewById(R.id.user_time);
+        timeTextView.setText("Expected time : " + expectedTime + " min");
 
         makeReceiver();
-        if(!allowReport)
-        {
+        if (!allowReport) {
             //Remove if only status is to be viewed.
             reportTextView.setVisibility(View.GONE);
         }
@@ -112,9 +114,8 @@ public class ViewStatusActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        table = mClient.getTable(User.class);
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>()
-        {
+        userTable = mClient.getTable(User.class);
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
 
@@ -124,15 +125,13 @@ public class ViewStatusActivity extends AppCompatActivity {
                     User user = (User) i.getSerializableExtra("user");
                     User nextUser = (User) i.getSerializableExtra("nextOTPuser");
 
-                    if(nextUser != null) {
+                    if (nextUser != null) {
                         //sendNextOTP(nextUser);
                     }
 
                     //This deletes on the database as well
-                    table.delete(user);
-                }
-
-                catch (final Exception e){
+                    userTable.delete(user);
+                } catch (final Exception e) {
                     e.printStackTrace();
                 }
 
@@ -168,8 +167,7 @@ public class ViewStatusActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
-                if(!beaconsArray.contains(beacon))
-                {
+                if (!beaconsArray.contains(beacon)) {
                     Toast.makeText(ViewStatusActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(ViewStatusActivity.this, BeaconScannerActivity.class);
                     startActivity(i);
@@ -234,7 +232,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                 .setMessage("Are you sure you want to delete this token?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(ViewStatusActivity.this, "Token Deleted", Toast.LENGTH_SHORT ).show();
+                        Toast.makeText(ViewStatusActivity.this, "Token Deleted", Toast.LENGTH_SHORT).show();
                         deleteToken();
                     }
                 })
@@ -249,15 +247,88 @@ public class ViewStatusActivity extends AppCompatActivity {
 
     public void useTokenOnClick(View view) {
         //Go ahead only if the Queue no is 1 and expected time is zero
-        if(queueSize == 0)
-        {
-            Toast.makeText(ViewStatusActivity.this, "Token Utilized.", Toast.LENGTH_SHORT ).show();
+        if (queueSize == 0) {
+            Toast.makeText(ViewStatusActivity.this, "Token Utilized.", Toast.LENGTH_SHORT).show();
             deleteToken();
 
+        } else {
+            Toast.makeText(ViewStatusActivity.this, "Your chance has not arrived yet.", Toast.LENGTH_SHORT).show();
         }
-        else
-        {
-            Toast.makeText(ViewStatusActivity.this, "Your chance has not arrived yet.", Toast.LENGTH_SHORT ).show();
-        }
+    }
+
+    public void reportOFC(View view) {
+        new AlertDialog.Builder(this)
+                .setTitle("Report out of cash?")
+                .setMessage("Are you sure you want report this ATM as out of cash?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //setMachineStatusToOFC();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
+    }
+
+    public void setMachineStatusToOFC(final Machine currentMachine) {
+        machinesTable = mClient.getTable("Manager", Machine.class);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //Stores the reference to the current machine, which it receives from the previous activity
+                    currentMachine.statusWorking = false;
+                    machinesTable.update(currentMachine, new TableOperationCallback<Machine>() {
+                        @Override
+                        public void onCompleted(Machine entity, Exception exception, ServiceFilterResponse response) {
+                            if(exception == null) {
+                                Toast.makeText(ViewStatusActivity.this, "Successfully updated ATM status!", Toast.LENGTH_SHORT).show();
+                                askUserPreferenceForToken();
+                            } else {
+                                Toast.makeText(ViewStatusActivity.this, "Please Try Again!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(ViewStatusActivity.this, "Please Try Again", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * This function creates a dialog which asks the user, if he wants to:-
+     * 1. delete his token
+     * 2. shift to another queue
+     * 3. preserve his token for next transaction on the same ATM, when there is a refill
+     */
+    public void askUserPreferenceForToken() {
+        new AlertDialog.Builder(this)
+                .setTitle("What to do with your token?")
+                .setMessage("Do you want to delete your token(delete), get token for another queue(shift) nearby, or preserve your token for the same ATM(preserve)")
+                .setPositiveButton("delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //delete his entry from the azure database
+                        deleteToken();
+                    }
+                })
+                .setNeutralButton("shift", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //shift the token => go to first activity showing list of ATMs
+                    }
+                })
+                .setNegativeButton("preserve", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //preserve the token => exit the dialog => do nothing
+                    }
+                });
     }
 }

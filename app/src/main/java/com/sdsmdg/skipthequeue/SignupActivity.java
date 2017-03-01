@@ -78,9 +78,9 @@ public class SignupActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //The string passed specifies the name of the table which has to be queried.
+        //The string passed specifies the name of the userTable which has to be queried.
 
-        table = mClient.getTable("User",User.class);
+        table = mClient.getTable("User", User.class);
         beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
         makeReceiver();
         getToken = (FancyButton)findViewById(R.id.get_token_button);
