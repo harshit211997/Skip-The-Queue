@@ -43,7 +43,6 @@ public class BeaconFinderService extends Service {
         intializeSDK();
         beaconArray = new ArrayList<>();
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        //sendResult("Hi Beacon");
 
     }
 

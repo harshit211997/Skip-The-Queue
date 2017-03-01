@@ -102,36 +102,6 @@ public class BeaconScannerActivity extends AppCompatActivity {
 
     }
 
-    private void makeListView() {
-        beaconsArray = new ArrayList<>();
-        beaconsListView = (ListView) findViewById(R.id.beacons_list_view);
-        beaconAdapter = new BeaconAdapter(this,beaconsArray);
-        beaconsListView.setAdapter(beaconAdapter);
-        beaconsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                if(isServiceRunning(BeaconFinderService.class))
-                {
-                    IEddystoneDevice item = (IEddystoneDevice) beaconsListView.getItemAtPosition(i);
-                    Toast.makeText(getApplicationContext(),"You selected : " + String.valueOf(item.getInstanceId()),Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(BeaconScannerActivity.this, MainActivity.class);
-                    intent.putExtra("allowGenerate",true);
-                    intent.putExtra("allowReport",true);
-                    intent.putExtra(BEACON , item);
-                    startActivity(intent);
-                }
-
-                else
-                {
-                    Toast.makeText(getApplicationContext(),"Please switch the beacons scanning service on.",Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-    }
-
     private void makeSnackbar() {
 
         if(isServiceRunning(BeaconFinderService.class))
@@ -193,6 +163,7 @@ public class BeaconScannerActivity extends AppCompatActivity {
         Intent i = new Intent(this, BeaconFinderService.class);
         startService(i);
     }
+
 
     @Override
     protected void onStart() {
@@ -325,5 +296,36 @@ public class BeaconScannerActivity extends AppCompatActivity {
         return false;
     }
 
+
+    private void makeListView() {
+        beaconsArray = new ArrayList<>();
+        beaconsListView = (ListView) findViewById(R.id.beacons_list_view);
+        beaconAdapter = new BeaconAdapter(this,beaconsArray);
+        beaconsListView.setAdapter(beaconAdapter);
+        beaconsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                if(isServiceRunning(BeaconFinderService.class))
+                {
+                    IEddystoneDevice beacon = (IEddystoneDevice) beaconsListView.getItemAtPosition(i);
+                    Toast.makeText(getApplicationContext(),"You selected : " + String.valueOf(beacon.getInstanceId()),Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(BeaconScannerActivity.this, MainActivity.class);
+                    intent.putExtra("allowGenerate",true);
+                    intent.putExtra("allowReport",true);
+                    intent.putExtra(BEACON , beacon);
+
+                    startActivity(intent);
+                }
+
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"Please switch the beacons scanning service on.",Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+    }
 
 }
