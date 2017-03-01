@@ -55,7 +55,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private RemoteViews remoteViews;
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
-    Boolean beaconFound  = false;
 
     //https://www.tutorialspoint.com/android/android_google_maps.htm
     @Override
@@ -269,7 +268,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if(isServiceRunning(BeaconFinderService.class))
         {
-            beaconFound = false;
             Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scanning For the Queue", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Stop", new View.OnClickListener() {
                         @Override
@@ -289,7 +287,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             snackbar.show();
         }
 
-        else if()
+        else
         {
             Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scan For the Queue", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Start", new View.OnClickListener() {
@@ -336,7 +334,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Toast.makeText(getApplicationContext(),message, Toast.LENGTH_LONG).show();
                 if(message == "Beacon Found")
                 {
-                    beaconFound = true;
                     replaceSnackBar();
                 }
 
@@ -346,20 +343,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void replaceSnackBar() {
 
-        Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Queue Found", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Continue", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(MapsActivity.this, MainActivity.class);
-                        i.putExtra("allowGenerate",true);
-                        i.putExtra("allowReport",true);
-                        i.putExtra(BEACON , beaconsArray.get(0));
-                        startActivity(i);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
-                    }
-                });
 
-        snackbar.show();
+                Snackbar snackbar = Snackbar.make(MapsActivity.this.findViewById(android.R.id.content), "Queue Found", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Continue", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+
+                                Intent i = new Intent(MapsActivity.this, MainActivity.class);
+                                i.putExtra("allowGenerate",true);
+                                i.putExtra("allowReport",true);
+                                i.putExtra(BEACON , beaconsArray.get(0));
+                                startActivity(i);
+
+                            }
+                        });
+                snackbar.show();
+
+            }
+        }, 1000);
+
+
+
+
     }
 
     private void makeTestNotification() {
@@ -397,5 +408,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
+    @Override
+    protected void onResume() {
+        makeSnackbar();
+        super.onResume();
+    }
 }
