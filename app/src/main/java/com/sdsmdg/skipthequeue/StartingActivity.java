@@ -5,11 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,10 +15,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -29,16 +29,18 @@ import com.google.android.gms.location.LocationServices;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
-import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
+import com.microsoft.windowsazure.mobileservices.table.TableQueryCallback;
+import com.sdsmdg.skipthequeue.Adapters.adapter_class;
 import com.sdsmdg.skipthequeue.models.Machine;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class StartingActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String TAG = StartingActivity.class.getSimpleName();
 
     private final static int REQUEST_ENABLE_BT = 1;
     private final static int REQUEST_ENABLE_LOCATION = 2;
@@ -46,13 +48,13 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
     private BluetoothAdapter bluetoothAdapter;
 
     private GoogleApiClient mGoogleApiClient;
-    private String address;
-    private String city;
-    private String state;
-    private String country;
-    private String postalCode;
-    private String knownName;
 
+    private List<Machine> mList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private adapter_class mAdapter;
+
+    MobileServiceClient mClient;
+    MobileServiceTable<Machine> table;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,47 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         buildClient();
         //Using Google Place API to find
 
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mAdapter = new adapter_class(mList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
 
+        //Get a reference to the manager table
+        try {
+            mClient = new MobileServiceClient(
+                    "https://skipthequeue.azurewebsites.net",
+                    this
+            );
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        table = mClient.getTable("Manager", Machine.class);
+        Log.i(TAG, "onCreate: ");
+        getAtmList();
+    }
+
+    public void getAtmList() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                table.where().execute(new TableQueryCallback<Machine>() {
+                    @Override
+                    public void onCompleted(List<Machine> result, int count, Exception exception, ServiceFilterResponse response) {
+                        if(exception == null) {
+                            mList.addAll(result);
+                            mAdapter.notifyDataSetChanged();
+                            Log.i(TAG, result.get(0).tableName);
+                        } else {
+                            exception.printStackTrace();
+                            getAtmList();
+                        }
+                    }
+                });
+            }
+        }).start();
 
     }
 

@@ -11,7 +11,7 @@
     tools:context="com.sdsmdg.skipthequeue.StartingActivity">
 
     <TextView
-        android:text="List View of Nearby Places Here"
+        android:text="Nearby atms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView5"
@@ -26,31 +26,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView6"
-        android:layout_marginBottom="148dp"
+        android:layout_marginBottom="48dp"
         android:onClick="presentClick"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:textSize="24sp"
         android:textStyle="normal|bold" />
 
-    <Button
-        android:text="Switch To Beacon Scanner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView6"
-        android:layout_marginBottom="22dp"
-        android:id="@+id/beacon_scanner_button"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:onClick="beacon_scanner_button" />
+    <!--<Button-->
+        <!--android:text="Switch To Beacon Scanner"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/textView6"-->
+        <!--android:layout_marginBottom="22dp"-->
+        <!--android:id="@+id/beacon_scanner_button"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:onClick="beacon_scanner_button" />-->
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:id="@+id/demo"
-        android:layout_below="@+id/textView5"
-        android:layout_alignParentStart="true" />
+    <android.support.v7.widget.RecyclerView
+        android:id ="@+id/recycler_view"
+        android:scrollbars="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

@@ -1,22 +1,20 @@
-package com.sdsmdg.skipthequeue.otp;
+package com.sdsmdg.skipthequeue;
 
-import android.graphics.Movie;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.sdsmdg.skipthequeue.R;
+import com.sdsmdg.skipthequeue.Adapters.adapter_class;
+import com.sdsmdg.skipthequeue.models.Machine;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Atm_details extends AppCompatActivity {
 
-
-
-    private List<list> mList = new ArrayList<>();
+    private List<Machine> mList = new ArrayList<>();
     private RecyclerView recyclerView;
     private adapter_class mAdapter;
 
@@ -38,7 +36,7 @@ public class Atm_details extends AppCompatActivity {
     }
 
     private void prepareMovieData() {
-        list m1 = new list ("Atm name","LOACTION","QUEUE","TIME","STATUS");
+        Machine m1 = new Machine("Atm name", "LOACTION", "QUEUE", 34, true, "User");
         mList.add(m1);
 
         mAdapter.notifyDataSetChanged();

@@ -75,7 +75,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".otp.Atm_details"></activity>
+        <activity android:name=".Atm_details"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,5 @@
-package com.sdsmdg.skipthequeue.otp;
+package com.sdsmdg.skipthequeue.Adapters;
 
-import android.graphics.Movie;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,22 +7,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sdsmdg.skipthequeue.R;
+import com.sdsmdg.skipthequeue.models.Machine;
 
 import java.util.List;
 
-
-
-
 public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHolder> {
 
-    private List<list> mList;
+    private List<Machine> mList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView atm , location,queue , time,status;
 
         public MyViewHolder(View view) {
             super(view);
-            atm = (TextView) view.findViewById(R.id.title);
+            atm = (TextView) view.findViewById(R.id.atm);
             location = (TextView) view.findViewById(R.id.location);
             queue = (TextView) view.findViewById(R.id.queue);
             time = (TextView) view.findViewById(R.id.time);
@@ -32,27 +29,31 @@ public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHold
         }
     }
 
-
-    public adapter_class(List<list> mList) {
+    public adapter_class(List<Machine> mList) {
         this.mList = mList;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_atm_details, parent, false);
+                .inflate(R.layout.list, parent, false);
 
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        list movie = mList.get(position);
-        holder.atm.setText(movie.getatm());
-        holder.location.setText(movie.getlocation());
-        holder.queue.setText(movie.getQueue());
-        holder.time.setText(movie.getTime());
-        holder.status.setText(movie.getStatus_of_atm());
+        Machine machine = mList.get(position);
+        holder.atm.setText(machine.tableName);
+        //holder.location.setText(machine.getlocation());
+        holder.queue.setText(machine.queueLength + "");
+        holder.time.setText(machine.queueLength * 2 + "");
+
+        String s = "out of cash";
+        if(machine.statusWorking) {
+            s = "working";
+        }
+        holder.status.setText(s);
 
     }
 
