@@ -7,10 +7,6 @@ import android.widget.Toast;
 
 import com.sdsmdg.skipthequeue.MainActivity;
 
-/**
- * Created by yash on 6/2/17.
- */
-
 public class ConnectBeaconListener extends BroadcastReceiver {
 
     @Override

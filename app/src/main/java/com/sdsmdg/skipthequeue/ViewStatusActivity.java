@@ -29,11 +29,14 @@ import com.sdsmdg.skipthequeue.otp.MSGApi;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
+import mehdi.sakout.fancybuttons.FancyButton;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.sdsmdg.skipthequeue.Helper.machine;
 
 public class ViewStatusActivity extends AppCompatActivity {
 
@@ -50,11 +53,14 @@ public class ViewStatusActivity extends AppCompatActivity {
     int queueSize = 0;
     boolean allowReport;
 
+    FancyButton useTokenButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_status);
+
+        useTokenButton = (FancyButton) findViewById(R.id.use_token_button);
 
         allowReport = getIntent().getBooleanExtra("allowReport", false);
         reportTextView = (TextView) findViewById(R.id.out_of_cash);
@@ -96,6 +102,7 @@ public class ViewStatusActivity extends AppCompatActivity {
         if (!allowReport) {
             //Remove if only status is to be viewed.
             reportTextView.setVisibility(View.GONE);
+            useTokenButton.setVisibility(View.GONE);
         }
     }
 
@@ -263,8 +270,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //Argument passed will be the Manager Table.
-
-                        //setMachineStatusToOFC();
+                        setMachineStatusToOFC();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -275,7 +281,8 @@ public class ViewStatusActivity extends AppCompatActivity {
                 .show();
     }
 
-    public void setMachineStatusToOFC(final Machine currentMachine) {
+    public void setMachineStatusToOFC() {
+        final Machine currentMachine = machine;
         machinesTable = mClient.getTable("Manager", Machine.class);
         new Thread(new Runnable() {
             @Override
@@ -331,6 +338,6 @@ public class ViewStatusActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //preserve the token => exit the dialog => do nothing
                     }
-                });
+                }).show();
     }
 }

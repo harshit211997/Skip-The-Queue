@@ -56,6 +56,8 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
     MobileServiceClient mClient;
     MobileServiceTable<Machine> table;
 
+    public double lat, lng;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -66,8 +68,20 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         buildClient();
         //Using Google Place API to find
 
+        //Removes shadow from under the action bar
+        getSupportActionBar().setElevation(0);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mAdapter = new adapter_class(mList);
+        mAdapter = new adapter_class(mList, new adapter_class.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Helper.machine = mList.get(position);
+                openMapsActivity(
+                        lat,//current latitude(if available)
+                        lng//current longitude(if available)
+                );
+            }
+        });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -83,7 +97,6 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
             e.printStackTrace();
         }
         table = mClient.getTable("Manager", Machine.class);
-        Log.i(TAG, "onCreate: ");
         getAtmList();
     }
 
@@ -147,7 +160,6 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
             e.printStackTrace();
         }
 
-
     }
 
     private void getLocation() throws IOException {
@@ -155,23 +167,19 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this,"Not all the permissions are granted.", Toast.LENGTH_SHORT).show();
-
             return;
         }
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         if (mLastLocation != null) {
-
-            Double lat = mLastLocation.getLatitude();
-            Double lng = mLastLocation.getLongitude();
+            lat = mLastLocation.getLatitude();
+            lng = mLastLocation.getLongitude();
             getAdress(lat,lng);
         }
 
         else
         {
             Toast.makeText(this,"Location received as null.",Toast.LENGTH_SHORT).show();
-
-
         }
 
     }
@@ -206,10 +214,12 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 //        TextView demo = (TextView)findViewById(R.id.demo);
 //        demo.setText(s);
 
-        Intent i = new Intent(this, MapsActivity.class);
-        i.putExtra("lat", lat);
-        i.putExtra("lng",lng);
-        startActivity(i);
+//        Toast.makeText(this, "Got the location :)", Toast.LENGTH_SHORT).show();
+//
+//        Intent i = new Intent(this, MapsActivity.class);
+//        i.putExtra("lat", lat);
+//        i.putExtra("lng",lng);
+//        startActivity(i);
 
 
     }
@@ -338,79 +348,11 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    public void openMapsActivity(double lat, double lng) {
+        Intent i = new Intent(this, MapsActivity.class);
+        i.putExtra("lat", lat);
+        i.putExtra("lng", lng);
+        startActivity(i);
+    }
+
 }
-
-
-
-
-
-
-
-//   MobileServiceClient mClient;
-//    MobileServiceTable<Machine> table;
-//    Machine machine;
-
-
-//        //This defines the query address to the client
-//        try {
-//            mClient = new MobileServiceClient(
-//                    "https://skipthequeue.azurewebsites.net",
-//                    this
-//            );
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        //Change the type and table name here that has to be queried.
-//
-//        table = mClient.getTable("Manager",Machine.class);
-//
-//        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... params) {
-//
-//                try {
-//
-//                    final List<Machine> results = table.where().execute().get();
-//
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Toast.makeText(StartingActivity.this, "Length of table is : " + results.size(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//
-//                    machine = new Machine();
-//                    machine.beaconUID = "Rockabye";
-//                    machine.location = "GB Road";
-//                    machine.queueLength = 6;
-//                    machine.statusWorking = false;
-//
-//                    table.insert(machine, new TableOperationCallback<Machine>() {
-//                        @Override
-//                        public void onCompleted(Machine entity, Exception exception, ServiceFilterResponse response) {
-//
-//                            //Oncompleted runs on the UI Thread.
-//                            if(exception == null)
-//                            {
-//                                Toast.makeText(StartingActivity.this, "Insert suceeded in Manager Tabel" , Toast.LENGTH_SHORT).show();
-//
-//                            }
-//                            else
-//                            {
-//                                Toast.makeText(StartingActivity.this, "Insert failed in Manager Tabel" , Toast.LENGTH_SHORT).show();
-//
-//                            }
-//                        }
-//                    });
-//
-//
-//                } catch (final Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//                return null;
-//            }
-//        };
-//
-//        task.execute();

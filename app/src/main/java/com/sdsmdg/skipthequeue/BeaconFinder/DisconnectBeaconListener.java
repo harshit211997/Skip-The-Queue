@@ -5,12 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.sdsmdg.skipthequeue.BeaconScannerActivity;
 import com.sdsmdg.skipthequeue.MapsActivity;
-
-/**
- * Created by yash on 6/2/17.
- */
 
 public class DisconnectBeaconListener extends BroadcastReceiver {
 

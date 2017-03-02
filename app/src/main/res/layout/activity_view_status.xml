@@ -46,6 +46,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingRight="30dp"
+        android:onClick="useTokenOnClick"
         fancy:fb_textColor="@color/colorPrimaryDark"
         fancy:fb_text="Use Token"
         fancy:fb_radius="30dp"/>

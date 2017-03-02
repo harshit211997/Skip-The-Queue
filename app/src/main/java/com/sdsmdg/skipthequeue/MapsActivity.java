@@ -37,6 +37,7 @@ import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconAdapter;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.Maps.JSONParser;
+import com.sdsmdg.skipthequeue.models.Machine;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +56,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private RemoteViews remoteViews;
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
+
+    private Machine machine;
 
     //https://www.tutorialspoint.com/android/android_google_maps.htm
     @Override
@@ -102,13 +105,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Declare the points.
 
-        Double userLat = getIntent().getDoubleExtra("lat",21);
-        Double userLng =  getIntent().getDoubleExtra("lng",57);
-        Double atmLat = getIntent().getDoubleExtra("lat",21) + .01;
-        Double atmLng = getIntent().getDoubleExtra("lng",57) + .01;
+        Double userLat = getIntent().getDoubleExtra("lat", 21);
+        Double userLng = getIntent().getDoubleExtra("lng", 57);
+        machine = Helper.machine;
+        Double atmLat = Double.parseDouble(machine.lat);
+        Double atmLng = Double.parseDouble(machine.longi);
 
-        LatLng ATM = new LatLng(atmLat,atmLng);
-        LatLng user = new LatLng(userLat,userLng);
+        LatLng ATM = new LatLng(atmLat, atmLng);
+        LatLng user = new LatLng(userLat, userLng);
 
         mMap.addMarker(new MarkerOptions().position(user).title("Your current Position."));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
@@ -121,37 +125,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
 
         //Adding the code to draw route between two markers.
-        String urlPass = makeURL(userLat,userLng, atmLat ,atmLng);
+        String urlPass = makeURL(userLat, userLng, atmLat, atmLng);
         ConnectAsyncTask asyncTask = new ConnectAsyncTask(urlPass);
         asyncTask.execute();
         //Make the SnackBar after the request is executed.
         //makeSnackbar();
 
 
-
     }
 
-    public String makeURL (double sourcelat, double sourcelog, double destlat, double destlog ){
+    public String makeURL(double sourcelat, double sourcelog, double destlat, double destlog) {
         StringBuilder urlString = new StringBuilder();
         urlString.append("https://maps.googleapis.com/maps/api/directions/json");
         urlString.append("?origin=");// from
         urlString.append(Double.toString(sourcelat));
         urlString.append(",");
         urlString
-                .append(Double.toString( sourcelog));
+                .append(Double.toString(sourcelog));
         urlString.append("&destination=");// to
         urlString
-                .append(Double.toString( destlat));
+                .append(Double.toString(destlat));
         urlString.append(",");
-        urlString.append(Double.toString( destlog));
+        urlString.append(Double.toString(destlog));
         urlString.append("&sensor=false&mode=driving&alternatives=true");
         urlString.append("&key=AIzaSyCzMYoH0gJDstUbcWsicITDcIURScd42Y0");
-        Log.i("TAG", "makeURL: "+ urlString.toString());
+        Log.i("TAG", "makeURL: " + urlString.toString());
         return urlString.toString();
 
     }
 
-    public void drawPath(String  result) {
+    public void drawPath(String result) {
 
         try {
             //Tranform the string into a json object
@@ -180,8 +183,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .color(Color.BLUE).geodesic(true));
             }
            */
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
 
         }
     }
@@ -212,8 +214,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lng += dlng;
 
-            LatLng p = new LatLng( (((double) lat / 1E5)),
-                    (((double) lng / 1E5) ));
+            LatLng p = new LatLng((((double) lat / 1E5)),
+                    (((double) lng / 1E5)));
             poly.add(p);
         }
 
@@ -223,9 +225,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private class ConnectAsyncTask extends AsyncTask<Void, Void, String> {
         private ProgressDialog progressDialog;
         String url;
-        ConnectAsyncTask(String urlPass){
+
+        ConnectAsyncTask(String urlPass) {
             url = urlPass;
         }
+
         @Override
         protected void onPreExecute() {
             // TODO Auto-generated method stub
@@ -235,25 +239,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             progressDialog.setIndeterminate(true);
             progressDialog.show();
         }
+
         @Override
         protected String doInBackground(Void... params) {
             JSONParser jParser = new JSONParser();
             String json = jParser.getJSONFromUrl(url);
             return json;
         }
+
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.hide();
-            if(result!=null){
+            if (result != null) {
 
-                Toast.makeText(getApplicationContext(),"Path Available", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Path Available", Toast.LENGTH_SHORT).show();
                 drawPath(result);
-            }
-
-            else
-            {
-                Toast.makeText(getApplicationContext(),"Path Not Available", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Path Not Available", Toast.LENGTH_SHORT).show();
             }
 
             //Make the SnackBar after the request is executed.
@@ -266,13 +269,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void makeSnackbar() {
 
-        if(isServiceRunning(BeaconFinderService.class))
-        {
+        if (isServiceRunning(BeaconFinderService.class)) {
             Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scanning For the Queue", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Stop", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent i = new Intent(MapsActivity.this,BeaconFinderService.class);
+                            Intent i = new Intent(MapsActivity.this, BeaconFinderService.class);
                             MapsActivity.this.stopService(i);
                             final Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
@@ -285,15 +287,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     });
             snackbar.show();
-        }
-
-        else
-        {
+        } else {
             Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scan For the Queue", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Start", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent i = new Intent(MapsActivity.this,BeaconFinderService.class);
+                            Intent i = new Intent(MapsActivity.this, BeaconFinderService.class);
                             MapsActivity.this.startService(i);
                             final Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
@@ -331,9 +330,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 String message = intent.getStringExtra(BeaconFinderService.string_test);
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
-                Toast.makeText(getApplicationContext(),message, Toast.LENGTH_LONG).show();
-                if(message == "Beacon Found")
-                {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                if (message == "Beacon Found") {
                     replaceSnackBar();
                 }
 
@@ -354,11 +352,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             @Override
                             public void onClick(View v) {
 
-
                                 Intent i = new Intent(MapsActivity.this, MainActivity.class);
-                                i.putExtra("allowGenerate",true);
-                                i.putExtra("allowReport",true);
-                                i.putExtra(BEACON , beaconsArray.get(0));
+                                i.putExtra("machine", machine);
+                                i.putExtra("allowGenerate", true);
+                                i.putExtra("allowReport", true);
+                                i.putExtra(BEACON, beaconsArray.get(0));
                                 startActivity(i);
 
                             }
@@ -369,29 +367,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }, 1000);
 
 
-
-
     }
 
     private void makeTestNotification() {
 
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        remoteViews =  new RemoteViews(getPackageName(),R.layout.notification_layout);
+        remoteViews = new RemoteViews(getPackageName(), R.layout.notification_layout);
         Intent button_intent = new Intent("connectBeacon");
         button_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(),0,button_intent,0);
-        remoteViews.setOnClickPendingIntent(R.id.connectBeacon,pi);
+        PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, button_intent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.connectBeacon, pi);
 
         Intent new_button_intent = new Intent("disconnectBeacon");
         new_button_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        PendingIntent pii = PendingIntent.getBroadcast(getApplicationContext(),0,new_button_intent,0);
-        remoteViews.setOnClickPendingIntent(R.id.disconnectBeacon,pii);
+        PendingIntent pii = PendingIntent.getBroadcast(getApplicationContext(), 0, new_button_intent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.disconnectBeacon, pii);
 
         //Create the notification here
 
         Intent notification_intent = new Intent(getApplicationContext(), BeaconScannerActivity.class);
         notification_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        PendingIntent piii = PendingIntent.getActivity(getApplicationContext(),0,notification_intent,0);
+        PendingIntent piii = PendingIntent.getActivity(getApplicationContext(), 0, notification_intent, 0);
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -404,7 +400,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Sticky notification made
         Notification notification = builder.build();
         //notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-        notificationManager.notify(01,notification);
+        notificationManager.notify(01, notification);
 
     }
 

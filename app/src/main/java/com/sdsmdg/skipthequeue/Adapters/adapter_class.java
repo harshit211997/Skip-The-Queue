@@ -14,6 +14,11 @@ import java.util.List;
 public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHolder> {
 
     private List<Machine> mList;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        public void onClick(int position);
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView atm , location,queue , time,status;
@@ -29,8 +34,9 @@ public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHold
         }
     }
 
-    public adapter_class(List<Machine> mList) {
+    public adapter_class(List<Machine> mList, OnItemClickListener listener) {
         this.mList = mList;
+        this.listener = listener;
     }
 
     @Override
@@ -42,7 +48,7 @@ public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHold
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         Machine machine = mList.get(position);
         holder.atm.setText(machine.tableName);
         //holder.location.setText(machine.getlocation());
@@ -54,6 +60,14 @@ public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHold
             s = "working";
         }
         holder.status.setText(s);
+
+        //set onclick listener to the row
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onClick(position);
+            }
+        });
 
     }
 

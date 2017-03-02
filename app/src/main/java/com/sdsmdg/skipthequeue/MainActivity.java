@@ -25,6 +25,8 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sdsmdg.skipthequeue.Helper.machine;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     boolean allowGenerate;
     boolean allowReport;
     TextView generate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                             public void run() {
                                 Intent i = new Intent(MainActivity.this, ViewStatusActivity.class);
                                 //If the user is found forward the data to showqueueno activity
-
+                                i.putExtra("machine", machine);
                                 i.putExtra("queue_no", queueNo);
                                 i.putExtra("queue_size", getQueueAhead(results, queueNo));
                                 i.putExtra("user", user);
