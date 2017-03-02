@@ -42,5 +42,6 @@ dependencies {
     compile 'com.victor:lib:1.0.4'
     compile 'com.google.android.gms:play-services-location:10.2.0'
     compile 'com.google.android.gms:play-services:10.2.0'
+    compile 'com.android.support:recyclerview-v7:25.2.0'
     testCompile 'junit:junit:4.12'
 }
