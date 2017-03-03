@@ -56,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private RemoteViews remoteViews;
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
-
+    private ProgressDialog progressDialog;
     private Machine machine;
 
     //https://www.tutorialspoint.com/android/android_google_maps.htm
@@ -102,7 +102,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
         //Declare the points.
 
         Double userLat = getIntent().getDoubleExtra("lat", 21);
@@ -111,18 +110,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Double atmLat = Double.parseDouble(machine.lat);
         Double atmLng = Double.parseDouble(machine.longi);
 
-        LatLng ATM = new LatLng(atmLat, atmLng);
-        LatLng user = new LatLng(userLat, userLng);
+        final LatLng ATM = new LatLng(atmLat, atmLng);
+        final LatLng user = new LatLng(userLat, userLng);
 
         mMap.addMarker(new MarkerOptions().position(user).title("Your current Position."));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
 
         mMap.addMarker(new MarkerOptions().position(ATM).title("Position of ATM."));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(ATM));
+
         googleMap.getUiSettings().setZoomGesturesEnabled(true);
-        LatLngBounds bounds = new LatLngBounds.Builder().include(ATM)
-                .include(user).build();
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+        mMap.animateCamera( CameraUpdateFactory.zoomTo( 17.0f ) );
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                LatLngBounds bounds = new LatLngBounds.Builder().include(ATM)
+                        .include(user).build();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+                progressDialog.hide();
+            }
+        });
+
 
         //Adding the code to draw route between two markers.
         String urlPass = makeURL(userLat, userLng, atmLat, atmLng);
@@ -223,7 +231,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private class ConnectAsyncTask extends AsyncTask<Void, Void, String> {
-        private ProgressDialog progressDialog;
         String url;
 
         ConnectAsyncTask(String urlPass) {
@@ -238,6 +245,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             progressDialog.setMessage("Fetching route, Please wait...");
             progressDialog.setIndeterminate(true);
             progressDialog.show();
+
         }
 
         @Override
@@ -250,7 +258,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            progressDialog.hide();
             if (result != null) {
 
                 Toast.makeText(getApplicationContext(), "Path Available", Toast.LENGTH_SHORT).show();
@@ -307,7 +314,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
-
 
     private boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
