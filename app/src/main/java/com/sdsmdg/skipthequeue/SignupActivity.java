@@ -143,7 +143,7 @@ public class SignupActivity extends AppCompatActivity {
         MSGApi api = retrofit.create(MSGApi.class);
 
         Call<Response> call = api.sendOTP(
-                "140306A0DRBmkqhhJw589a2609",
+                Keys.MSG_KEY,
                 user.mobile,
                 generateMessage(user),
                 "SKIPTQ",
