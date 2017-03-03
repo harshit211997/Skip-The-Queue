@@ -21,6 +21,7 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
 import com.microsoft.windowsazure.mobileservices.table.TableQueryCallback;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
+import com.sdsmdg.skipthequeue.models.Machine;
 import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.otp.MSGApi;
@@ -229,6 +230,7 @@ public class SignupActivity extends AppCompatActivity {
                             Toast.makeText(SignupActivity.this, "Token generated!", Toast.LENGTH_SHORT).show();
                             rotateLoading.stop();
                             infoTextView.setVisibility(View.VISIBLE);
+                            changeQueueNoInManagerTable(1);
                         } else {
                             // Insert failed
                             exception.printStackTrace();
@@ -251,6 +253,22 @@ public class SignupActivity extends AppCompatActivity {
         task.execute();
     }
 
+    //TODO : Add this function in ViewStatus Activity when the user is deleted
+    public void changeQueueNoInManagerTable(final int error) {
+        MobileServiceTable<Machine> managerTable = mClient.getTable("Manager", Machine.class);
+        Machine currentMachine = Helper.machine;
+        currentMachine.queueLength += error;
+        managerTable.update(currentMachine, new TableOperationCallback<Machine>() {
+            @Override
+            public void onCompleted(Machine entity, Exception exception, ServiceFilterResponse response) {
+                if(exception != null) {
+                    changeQueueNoInManagerTable(error);
+                } else {
+                    Toast.makeText(SignupActivity.this, "Queue no. updated in manager table", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
     //Generates the queue no. then send client id, and finally use that queue no. to enter data in database
     private void generateQueueNo(final String clientId) {

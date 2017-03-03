@@ -317,7 +317,8 @@ public class ViewStatusActivity extends AppCompatActivity {
                                 mobileNos.add(user.mobile);
                             }
                         }
-                        sendOFCNotifViaSMS(mobileNos);
+                        //TODO : Remove comments from following line after testing is complete
+                        //sendOFCNotifViaSMS(mobileNos);
                     }
                 });
             }
