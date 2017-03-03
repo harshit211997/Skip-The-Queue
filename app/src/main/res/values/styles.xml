@@ -30,7 +30,6 @@
     <style name="MyCustomTheme.NoActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:alertDialogTheme">@style/YourAlertDialogTheme</item>
     </style>
 
     <style name="MyActionBarTheme" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
