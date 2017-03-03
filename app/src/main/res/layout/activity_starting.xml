@@ -38,13 +38,12 @@
         android:textSize="22sp"
         android:textColor="@color/colorPrimary"
         android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
         android:text="Nearby Atms"/>
 
     <android.support.v7.widget.RecyclerView
         android:id ="@+id/recycler_view"
         android:scrollbars="vertical"
-        android:layout_marginTop="10dp"
         android:layout_above="@id/view_status_frame"
         android:layout_below="@id/nearby_atm_textview"
         android:layout_width="match_parent"
