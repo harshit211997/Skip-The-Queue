@@ -68,10 +68,10 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         checkPermissions();
         //TODO : Fix the problem of null location for the first client.
         buildClient();
-
         makeRecyclerView();
         initalizeClient();
         getAtmList();
+        initializeManagerTable();
     }
 
     private void initalizeClient() {
@@ -164,12 +164,6 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         i.putExtra("allowReport", false);
         startActivity(i);
     }
-
-    public void beacon_scanner_button(View view) {
-        Intent i = new Intent(this, BeaconScannerActivity.class);
-        startActivity(i);
-    }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -375,6 +369,31 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         i.putExtra("lng", lng);
 
         startActivity(i);
+    }
+
+
+    public void initializeManagerTable() {
+
+        try {
+            mClient = new MobileServiceClient(
+                    "https://skipthequeue.azurewebsites.net",
+                    this
+            );
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MobileServiceTable<Machine> managerTable = mClient.getTable("Manager", Machine.class);
+                Machine m2 = new Machine("UID", "29.864468", "77.895905", 0, true, "SBI_ATM");
+                managerTable.insert(m2);
+                Toast.makeText(getApplicationContext(), "Db updated", Toast.LENGTH_LONG).show();
+
+            }
+        }).start();
+
     }
 
 }
