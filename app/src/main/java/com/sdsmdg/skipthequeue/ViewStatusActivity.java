@@ -187,7 +187,6 @@ public class ViewStatusActivity extends AppCompatActivity {
 
     private void sendNextOTP(final User user) {
 
-
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -233,7 +232,7 @@ public class ViewStatusActivity extends AppCompatActivity {
     }
 
     private void createAlert() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.YourAlertDialogTheme)
                 .setTitle("Deleting Token")
                 .setMessage("Are you sure you want to delete this token?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -262,7 +261,7 @@ public class ViewStatusActivity extends AppCompatActivity {
     }
 
     public void reportOFC(View view) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.YourAlertDialogTheme)
                 .setTitle("Report out of cash?")
                 .setMessage("Are you sure you want report this ATM as out of cash?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -315,7 +314,7 @@ public class ViewStatusActivity extends AppCompatActivity {
      * 3. preserve his token for next transaction on the same ATM, when there is a refill
      */
     public void askUserPreferenceForToken() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.YourAlertDialogTheme)
                 .setTitle("What to do with your token?")
                 .setMessage("Do you want to delete your token(delete), get token for another queue(shift) nearby, or preserve your token for the same ATM(preserve)")
                 .setPositiveButton("delete", new DialogInterface.OnClickListener() {

@@ -23,7 +23,7 @@
         >
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.Design.Light.NoActionBar" />
+            android:theme="@style/MyCustomTheme.NoActionBar" />
 
         <service
             android:name="com.kontakt.sdk.android.ble.service.ProximityService"
@@ -33,7 +33,7 @@
         <activity
             android:screenOrientation="portrait"
             android:name=".BeaconScannerActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/MyCustomTheme.NoActionBar" />
         <activity
             android:screenOrientation="portrait"
             android:name=".SignupActivity"
@@ -60,8 +60,7 @@
 
         <activity android:name=".StartingActivity"
             android:screenOrientation="portrait"
-            android:label="Nearby Atms"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/MyCustomTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
