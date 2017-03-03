@@ -21,7 +21,7 @@ public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHold
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView atm , location,queue , time,status;
+        public TextView atm, location, queue, time, status;
 
         public MyViewHolder(View view) {
             super(view);
@@ -49,14 +49,14 @@ public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        Machine machine = mList.get(position);
-        holder.atm.setText(machine.tableName);
+        final Machine machine = mList.get(position);
+        holder.atm.setText(machine.tableName.replaceAll("_", " "));
         //holder.location.setText(machine.getlocation());
         holder.queue.setText(machine.queueLength + " people in queue");
         holder.time.setText(machine.queueLength * 2 + " min waiting time");
 
         String s = "out of cash";
-        if(machine.statusWorking) {
+        if (machine.statusWorking) {
             s = "working";
         }
         holder.status.setText(s);
@@ -65,7 +65,10 @@ public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onClick(position);
+                //TODO:Rempve the following comment after testing
+                //if (machine.statusWorking) {
+                    listener.onClick(position);
+                //}
             }
         });
 

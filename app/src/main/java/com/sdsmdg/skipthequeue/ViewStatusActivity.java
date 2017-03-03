@@ -233,7 +233,7 @@ public class ViewStatusActivity extends AppCompatActivity {
 
     private void createAlert() {
         new AlertDialog.Builder(this, R.style.YourAlertDialogTheme)
-                .setTitle("Deleting Token")
+                .setTitle("Delete Token?")
                 .setMessage("Are you sure you want to delete this token?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -245,7 +245,6 @@ public class ViewStatusActivity extends AppCompatActivity {
                         //dismiss
                     }
                 })
-                .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
 
