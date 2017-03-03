@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkPermits() {
         //Default value is false
-        allowGenerate = getIntent().getBooleanExtra("allowGenerate", false);
-        allowReport = getIntent().getBooleanExtra("allowReport",false);
+        allowGenerate = getIntent().getBooleanExtra("allowGenerate", true);
+        allowReport = getIntent().getBooleanExtra("allowReport",true);
         if(!allowGenerate)
         {
             //view gone means the view no longer needs UI space, whereas view invisible means it is just not visible
