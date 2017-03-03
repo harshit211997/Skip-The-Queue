@@ -252,16 +252,17 @@ public class SignupActivity extends AppCompatActivity {
         task.execute();
     }
 
-    //TODO : Add this function in ViewStatus Activity when the user is deleted
-    public void changeQueueNoInManagerTable(final int error) {
+    //Give the change that is to be made as signed argument.
+
+    public void changeQueueNoInManagerTable(final int change) {
         MobileServiceTable<Machine> managerTable = mClient.getTable("Manager", Machine.class);
         Machine currentMachine = Helper.machine;
-        currentMachine.queueLength += error;
+        currentMachine.queueLength += change;
         managerTable.update(currentMachine, new TableOperationCallback<Machine>() {
             @Override
             public void onCompleted(Machine entity, Exception exception, ServiceFilterResponse response) {
                 if(exception != null) {
-                    changeQueueNoInManagerTable(error);
+                    changeQueueNoInManagerTable(change);
                 } else {
                     Toast.makeText(SignupActivity.this, "Queue no. updated in manager table", Toast.LENGTH_SHORT).show();
                 }

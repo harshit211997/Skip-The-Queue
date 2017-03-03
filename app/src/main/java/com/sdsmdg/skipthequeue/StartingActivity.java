@@ -65,8 +65,8 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
-        checkPermissions();
         //TODO : Fix the problem of null location for the first client.
+        checkPermissions();
         buildClient();
         makeRecyclerView();
         initalizeClient();

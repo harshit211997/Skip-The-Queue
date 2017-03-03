@@ -93,7 +93,7 @@ public class ViewStatusActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        userTable = mClient.getTable(Helper.machine.tableName,User.class);
+        userTable = mClient.getTable(Helper.machine.tableName, User.class);
 
     }
 
@@ -135,11 +135,10 @@ public class ViewStatusActivity extends AppCompatActivity {
                         public void onCompleted(Exception exception, ServiceFilterResponse response) {
 
                             //Also update the queue length in manager table.
-                            if(exception == null)
-                            {
+                            if (exception == null) {
                                 Toast.makeText(ViewStatusActivity.this, "Token Deleted.", Toast.LENGTH_SHORT).show();
-                            }
-                            else
+                                changeQueueNoInManagerTable(-1);
+                            } else
                                 Toast.makeText(ViewStatusActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
 
 
@@ -148,7 +147,7 @@ public class ViewStatusActivity extends AppCompatActivity {
 
 
                 } catch (final Exception e) {
-                     Toast.makeText(ViewStatusActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewStatusActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
 
@@ -301,7 +300,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                     machinesTable.update(currentMachine, new TableOperationCallback<Machine>() {
                         @Override
                         public void onCompleted(Machine entity, Exception exception, ServiceFilterResponse response) {
-                            if(exception == null) {
+                            if (exception == null) {
                                 Toast.makeText(ViewStatusActivity.this, "Successfully updated ATM status!", Toast.LENGTH_SHORT).show();
                                 askUserPreferenceForToken();
                                 notifyOFCToUsers();
@@ -327,9 +326,9 @@ public class ViewStatusActivity extends AppCompatActivity {
                 userTable.where().execute(new TableQueryCallback<User>() {
                     @Override
                     public void onCompleted(List<User> result, int count, Exception exception, ServiceFilterResponse response) {
-                        User currentUser = (User)getIntent().getSerializableExtra("user");
-                        for(User user : result) {
-                            if(!user.clientId.equals(currentUser.clientId)) {
+                        User currentUser = (User) getIntent().getSerializableExtra("user");
+                        for (User user : result) {
+                            if (!user.clientId.equals(currentUser.clientId)) {
                                 mobileNos.add(user.mobile);
                             }
                         }
@@ -404,7 +403,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //shift the token => go to first activity showing list of ATMs
-                        Toast.makeText(ViewStatusActivity.this,"Token to be shifted.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ViewStatusActivity.this, "Token to be shifted.", Toast.LENGTH_LONG).show();
                         deleteToken();
                         redirectMain();
                     }
@@ -413,15 +412,31 @@ public class ViewStatusActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //preserve the token => exit the dialog => do nothing
-                        Toast.makeText(ViewStatusActivity.this,"Token preserved.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ViewStatusActivity.this, "Token preserved.", Toast.LENGTH_LONG).show();
                     }
                 }).show();
     }
 
     private void redirectMain() {
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        Intent i = new Intent(getApplicationContext(), StartingActivity.class);
         i.putExtra("Privileges", 1);
         startActivity(i);
 
+    }
+
+    public void changeQueueNoInManagerTable(final int change) {
+        MobileServiceTable<Machine> managerTable = mClient.getTable("Manager", Machine.class);
+        Machine currentMachine = Helper.machine;
+        currentMachine.queueLength += change;
+        managerTable.update(currentMachine, new TableOperationCallback<Machine>() {
+            @Override
+            public void onCompleted(Machine entity, Exception exception, ServiceFilterResponse response) {
+                if (exception != null) {
+                    changeQueueNoInManagerTable(change);
+                } else {
+                    Toast.makeText(ViewStatusActivity.this, "Queue no. updated in manager table", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }
