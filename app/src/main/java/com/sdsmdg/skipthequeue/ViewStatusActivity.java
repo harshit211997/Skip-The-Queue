@@ -15,11 +15,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kontakt.sdk.android.cloud.util.StringUtils;
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
+import com.microsoft.windowsazure.mobileservices.table.TableQueryCallback;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.models.Machine;
 import com.sdsmdg.skipthequeue.models.Response;
@@ -28,6 +30,7 @@ import com.sdsmdg.skipthequeue.otp.MSGApi;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import mehdi.sakout.fancybuttons.FancyButton;
 import okhttp3.OkHttpClient;
@@ -112,16 +115,7 @@ public class ViewStatusActivity extends AppCompatActivity {
     }
 
     private void deleteUser() {
-        try {
-            mClient = new MobileServiceClient(
-                    "https://skipthequeue.azurewebsites.net",
-                    this
-            );
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
 
-        userTable = mClient.getTable(User.class);
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -199,7 +193,7 @@ public class ViewStatusActivity extends AppCompatActivity {
         MSGApi api = retrofit.create(MSGApi.class);
 
         Call<Response> call = api.sendOTP(
-                "140306A0DRBmkqhhJw589a2609",
+                Keys.MSG_KEY,
                 user.mobile,
                 "Your chance has arrived. Now you can go in!",
                 "SKIPTQ",
@@ -294,6 +288,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                             if(exception == null) {
                                 Toast.makeText(ViewStatusActivity.this, "Successfully updated ATM status!", Toast.LENGTH_SHORT).show();
                                 askUserPreferenceForToken();
+                                notifyOFCToUsers();
                             } else {
                                 Toast.makeText(ViewStatusActivity.this, "Please Try Again!", Toast.LENGTH_SHORT).show();
                             }
@@ -306,6 +301,69 @@ public class ViewStatusActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    private void notifyOFCToUsers() {
+        final List<String> mobileNos = new ArrayList<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                userTable.where().execute(new TableQueryCallback<User>() {
+                    @Override
+                    public void onCompleted(List<User> result, int count, Exception exception, ServiceFilterResponse response) {
+                        User currentUser = (User)getIntent().getSerializableExtra("user");
+                        for(User user : result) {
+                            if(!user.clientId.equals(currentUser.clientId)) {
+                                mobileNos.add(user.mobile);
+                            }
+                        }
+                        sendOFCNotifViaSMS(mobileNos);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void sendOFCNotifViaSMS(List<String> mobileNos) {
+        String mobileNoString = StringUtils.join(mobileNos, ",");
+
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://control.msg91.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client.build())
+                .build();
+
+        MSGApi api = retrofit.create(MSGApi.class);
+
+        Call<Response> call = api.sendOTP(
+                Keys.MSG_KEY,
+                mobileNoString,
+                "Unfortunately the atm you were on is out of cash! Please open SkipTheQueue app, for further actions",
+                "SKIPTQ",
+                4,
+                91,
+                "json"
+        );
+
+        call.enqueue(new Callback<Response>() {
+            @Override
+            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                if (response.body().getType().equals("success")) {
+
+                } else {
+                    Log.i("TAG", response.body().getType());
+                    Log.i("TAG", response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "Notification send failed. ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     /**
