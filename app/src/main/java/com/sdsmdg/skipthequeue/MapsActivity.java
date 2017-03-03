@@ -137,7 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ConnectAsyncTask asyncTask = new ConnectAsyncTask(urlPass);
         asyncTask.execute();
         //Make the SnackBar after the request is executed.
-        //makeSnackbar();
+        makeSnackbar();
 
 
     }
@@ -391,7 +391,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Create the notification here
 
-        Intent notification_intent = new Intent(getApplicationContext(), BeaconScannerActivity.class);
+        Intent notification_intent = new Intent(getApplicationContext(), StartingActivity.class);
         notification_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         PendingIntent piii = PendingIntent.getActivity(getApplicationContext(), 0, notification_intent, 0);
 
@@ -412,6 +412,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onResume() {
+
         makeSnackbar();
         super.onResume();
     }

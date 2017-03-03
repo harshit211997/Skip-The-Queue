@@ -59,31 +59,27 @@ public class ViewStatusActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_status);
-
+        getExtras();
         useTokenButton = (FancyButton) findViewById(R.id.use_token_button);
-
         allowReport = getIntent().getBooleanExtra("allowReport", false);
         reportTextView = (TextView) findViewById(R.id.out_of_cash);
-
         //Removes shadow from under the action bar
         getSupportActionBar().setElevation(0);
-
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            queueNo = extras.getInt("queue_no");
-            queueSize = extras.getInt("queue_size");
-
-            beacon = (IEddystoneDevice) extras.getSerializable(BeaconScannerActivity.BEACON);
-
-        }
-
+        int expectedTime = 2 * (queueSize);
+        timeTextView = (TextView) findViewById(R.id.user_time);
+        timeTextView.setText("Expected time : " + expectedTime + " min");
         tokenTextView = (TextView) findViewById(R.id.token_text_view);
         tokenTextView.setText("#" + queueNo);
+        makeClient();
+        makeReceiver();
+        if (!allowReport) {
+            //Remove if only status is to be viewed.
+            reportTextView.setVisibility(View.GONE);
+            useTokenButton.setVisibility(View.GONE);
+        }
+    }
 
-
-        int expectedTime = 2 * (queueSize);
-
+    private void makeClient() {
         try {
             mClient = new MobileServiceClient(
                     "https://skipthequeue.azurewebsites.net",
@@ -93,16 +89,18 @@ public class ViewStatusActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        userTable = mClient.getTable(User.class);
+        userTable = mClient.getTable(Helper.machine.tableName,User.class);
 
-        timeTextView = (TextView) findViewById(R.id.user_time);
-        timeTextView.setText("Expected time : " + expectedTime + " min");
+    }
 
-        makeReceiver();
-        if (!allowReport) {
-            //Remove if only status is to be viewed.
-            reportTextView.setVisibility(View.GONE);
-            useTokenButton.setVisibility(View.GONE);
+    private void getExtras() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            queueNo = extras.getInt("queue_no");
+            queueSize = extras.getInt("queue_size");
+
+            beacon = (IEddystoneDevice) extras.getSerializable(BeaconScannerActivity.BEACON);
+
         }
     }
 
@@ -138,6 +136,7 @@ public class ViewStatusActivity extends AppCompatActivity {
 
                     //This deletes on the database as well
                     userTable.delete(user);
+                    Toast.makeText(ViewStatusActivity.this, "Token Deleted", Toast.LENGTH_SHORT).show();
                 } catch (final Exception e) {
                     e.printStackTrace();
                 }
@@ -176,7 +175,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
                 if (!beaconsArray.contains(beacon)) {
                     Toast.makeText(ViewStatusActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(ViewStatusActivity.this, BeaconScannerActivity.class);
+                    Intent i = new Intent(ViewStatusActivity.this, StartingActivity.class);
                     startActivity(i);
                 }
 
@@ -239,7 +238,6 @@ public class ViewStatusActivity extends AppCompatActivity {
                 .setMessage("Are you sure you want to delete this token?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(ViewStatusActivity.this, "Token Deleted", Toast.LENGTH_SHORT).show();
                         deleteToken();
                     }
                 })

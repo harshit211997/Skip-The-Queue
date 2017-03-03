@@ -21,6 +21,7 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
 import com.microsoft.windowsazure.mobileservices.table.TableQueryCallback;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
+import com.sdsmdg.skipthequeue.models.Machine;
 import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.otp.MSGApi;
@@ -59,15 +60,19 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
         //Removes shadow from under the action bar
         getSupportActionBar().setElevation(0);
-
         maxqueueNo = 0;
-
         rotateLoading = (RotateLoading)findViewById(R.id.rotateloading);
         infoTextView = (TextView)findViewById(R.id.infoTextView);
         mobileEditText = (EditText) findViewById(R.id.mobile_editText);
+        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
+        makeClient();
+        makeReceiver();
+        getToken = (FancyButton)findViewById(R.id.get_token_button);
+    }
+
+    private void makeClient() {
 
         try {
             mClient = new MobileServiceClient(
@@ -78,12 +83,7 @@ public class SignupActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //The string passed specifies the name of the userTable which has to be queried.
-
-        table = mClient.getTable("User", User.class);
-        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
-        makeReceiver();
-        getToken = (FancyButton)findViewById(R.id.get_token_button);
+        table = mClient.getTable(Helper.machine.tableName, User.class);
     }
 
     private void makeReceiver() {
@@ -94,7 +94,7 @@ public class SignupActivity extends AppCompatActivity {
                 if(!beaconsArray.contains(beacon))
                 {
                     Toast.makeText(SignupActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(SignupActivity.this, BeaconScannerActivity.class);
+                    Intent i = new Intent(SignupActivity.this, StartingActivity.class);
                     startActivity(i);
                 }
 

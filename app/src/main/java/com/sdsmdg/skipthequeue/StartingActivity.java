@@ -71,7 +71,7 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         makeRecyclerView();
         initalizeClient();
         getAtmList();
-        initializeManagerTable();
+//        initializeManagerTable();
     }
 
     private void initalizeClient() {
@@ -96,6 +96,8 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
                 if(lat != null && lng != null)
                 {
+                    //Making the static object of the machine being used for further transactions.
+
                     Helper.machine = mList.get(position);
                     openMapsActivity(
                             lat,//current latitude(if available)

@@ -48,15 +48,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Default value is false
-        allowGenerate = getIntent().getBooleanExtra("allowGenerate", false);
-        allowReport = getIntent().getBooleanExtra("allowReport",false);
-
         rotateLoading = (RotateLoading) findViewById(R.id.rotateloading);
-
         codeInput = (CodeInput) findViewById(R.id.client_id_input);
+        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
+        checkPermits();
+        makeClient();
+        makeReceiver();
+    }
 
+    private void makeClient() {
         //This defines the query address to the client
         try {
             mClient = new MobileServiceClient(
@@ -66,10 +66,14 @@ public class MainActivity extends AppCompatActivity {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        table = mClient.getTable(User.class);
-        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
-        makeReceiver();
+        table = mClient.getTable(Helper.machine.tableName,User.class);
+        Log.i(TAG, "makeClient: " +Helper.machine.tableName );
+    }
 
+    private void checkPermits() {
+        //Default value is false
+        allowGenerate = getIntent().getBooleanExtra("allowGenerate", false);
+        allowReport = getIntent().getBooleanExtra("allowReport",false);
         if(!allowGenerate)
         {
             //view gone means the view no longer needs UI space, whereas view invisible means it is just not visible
@@ -77,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
             generate.setVisibility(View.GONE);
 
         }
-
     }
 
     public void viewStatusClicked(View view) {
@@ -230,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!beaconsArray.contains(beacon))
                 {
                     Toast.makeText(MainActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(MainActivity.this, BeaconScannerActivity.class);
+                    Intent i = new Intent(MainActivity.this, StartingActivity.class);
                     startActivity(i);
                 }
 
