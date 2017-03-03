@@ -52,8 +52,8 @@ public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHold
         Machine machine = mList.get(position);
         holder.atm.setText(machine.tableName);
         //holder.location.setText(machine.getlocation());
-        holder.queue.setText(machine.queueLength + "");
-        holder.time.setText(machine.queueLength * 2 + "");
+        holder.queue.setText(machine.queueLength + " people in queue");
+        holder.time.setText(machine.queueLength * 2 + " min waiting time");
 
         String s = "out of cash";
         if(machine.statusWorking) {
