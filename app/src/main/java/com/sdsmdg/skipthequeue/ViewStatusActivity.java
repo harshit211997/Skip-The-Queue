@@ -19,6 +19,7 @@ import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.microsoft.windowsazure.mobileservices.table.TableDeleteCallback;
 import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.models.Machine;
@@ -110,16 +111,9 @@ public class ViewStatusActivity extends AppCompatActivity {
     }
 
     private void deleteUser() {
-        try {
-            mClient = new MobileServiceClient(
-                    "https://skipthequeue.azurewebsites.net",
-                    this
-            );
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
 
-        userTable = mClient.getTable(User.class);
+        //Deleting that particular user from the db.
+        userTable = mClient.getTable(Helper.machine.tableName ,User.class);
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -135,9 +129,25 @@ public class ViewStatusActivity extends AppCompatActivity {
                     }
 
                     //This deletes on the database as well
-                    userTable.delete(user);
-                    Toast.makeText(ViewStatusActivity.this, "Token Deleted", Toast.LENGTH_SHORT).show();
+                    userTable.delete(user, new TableDeleteCallback() {
+                        @Override
+                        public void onCompleted(Exception exception, ServiceFilterResponse response) {
+
+                            //Also update the queue length in manager table.
+                            if(exception == null)
+                            {
+                                Toast.makeText(ViewStatusActivity.this, "Token Deleted.", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                                Toast.makeText(ViewStatusActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+
+
+                        }
+                    });
+
+
                 } catch (final Exception e) {
+                     Toast.makeText(ViewStatusActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
 
@@ -261,8 +271,8 @@ public class ViewStatusActivity extends AppCompatActivity {
 
     public void reportOFC(View view) {
         new AlertDialog.Builder(this, R.style.YourAlertDialogTheme)
-                .setTitle("Report out of cash?")
-                .setMessage("Are you sure you want report this ATM as out of cash?")
+                .setTitle("Report Out of Cash ?")
+                .setMessage("Are you sure you want report this ATM as Out of Cash ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //Argument passed will be the Manager Table.
@@ -286,6 +296,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                 try {
                     //Stores the reference to the current machine, which it receives from the previous activity
                     currentMachine.statusWorking = false;
+                    //Update function replaces the entry of current machine
                     machinesTable.update(currentMachine, new TableOperationCallback<Machine>() {
                         @Override
                         public void onCompleted(Machine entity, Exception exception, ServiceFilterResponse response) {
@@ -323,17 +334,28 @@ public class ViewStatusActivity extends AppCompatActivity {
                         deleteToken();
                     }
                 })
-                .setNeutralButton("shift", new DialogInterface.OnClickListener() {
+                .setNegativeButton("shift", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //shift the token => go to first activity showing list of ATMs
+                        Toast.makeText(ViewStatusActivity.this,"Token to be shifted.", Toast.LENGTH_LONG).show();
+                        deleteToken();
+                        redirectMain();
                     }
                 })
-                .setNegativeButton("preserve", new DialogInterface.OnClickListener() {
+                .setNeutralButton("preserve", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //preserve the token => exit the dialog => do nothing
+                        Toast.makeText(ViewStatusActivity.this,"Token preserved.", Toast.LENGTH_LONG).show();
                     }
                 }).show();
+    }
+
+    private void redirectMain() {
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        i.putExtra("Privileges", 1);
+        startActivity(i);
+
     }
 }
