@@ -14,7 +14,6 @@ public class Machine implements Serializable{
 
     public Machine(String beaconUID, String lat, String longi, int queueLength, boolean statusWorking, String tableName) {
         this.beaconUID = beaconUID;
-        this.id = id;
         this.lat = lat;
         this.longi = longi;
         this.queueLength = queueLength;

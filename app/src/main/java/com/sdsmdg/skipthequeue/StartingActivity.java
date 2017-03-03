@@ -58,7 +58,7 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
     MobileServiceClient mClient;
     MobileServiceTable<Machine> table;
 
-    public double lat, lng;
+    public Double lat, lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,27 +68,13 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         checkPermissions();
         //TODO : Fix the problem of null location for the first client.
         buildClient();
-        //Using Google Place API to find
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mAdapter = new adapter_class(mList, new adapter_class.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-                Helper.machine = mList.get(position);
-                openMapsActivity(
-                        lat,//current latitude(if available)
-                        lng//current longitude(if available)
-                );
-            }
-        });
-        final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.addOnScrollListener(new CenterScrollListener());
-        layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
+        makeRecyclerView();
+        initalizeClient();
+        getAtmList();
+    }
 
+    private void initalizeClient() {
         //Get a reference to the manager table
         try {
             mClient = new MobileServiceClient(
@@ -99,7 +85,40 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
             e.printStackTrace();
         }
         table = mClient.getTable("Manager", Machine.class);
-        getAtmList();
+    }
+
+    private void makeRecyclerView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mAdapter = new adapter_class(mList, new adapter_class.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                //Onclick is set on the adapter.
+
+                if(lat != null && lng != null)
+                {
+                    Helper.machine = mList.get(position);
+                    openMapsActivity(
+                            lat,//current latitude(if available)
+                            lng//current longitude(if available)
+                    );
+                }
+                else
+                {
+                    //Open Maps before using.
+                    Toast.makeText(StartingActivity.this, " Please make a Location Request.", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+        final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.addOnScrollListener(new CenterScrollListener());
+        layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
+
     }
 
     public void getAtmList() {
@@ -354,6 +373,7 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         Intent i = new Intent(this, MapsActivity.class);
         i.putExtra("lat", lat);
         i.putExtra("lng", lng);
+
         startActivity(i);
     }
 
