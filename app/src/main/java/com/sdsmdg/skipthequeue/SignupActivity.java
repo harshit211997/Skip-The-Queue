@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -38,6 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class SignupActivity extends AppCompatActivity {
 
     private final static String TAG = SignupActivity.class.getSimpleName();
@@ -56,10 +59,15 @@ public class SignupActivity extends AppCompatActivity {
     private int lengthUsers;
     private FancyButton getToken;
 
+    SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        prefs = getDefaultSharedPreferences(this);
+
         //Removes shadow from under the action bar
         getSupportActionBar().setElevation(0);
         maxqueueNo = 0;
@@ -157,7 +165,10 @@ public class SignupActivity extends AppCompatActivity {
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.body().getType().equals("success")) {
                     insertEntry(user);
-
+                    //save the atm table name in user preferences(For use in view status button on starting activity)
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("table_name", Helper.machine.tableName);
+                    editor.apply();
                 } else {
                     Log.i(TAG, response.body().getType());
                     Log.i(TAG, response.body().getMessage());

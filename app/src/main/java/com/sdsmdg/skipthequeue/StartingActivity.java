@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -41,6 +42,8 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class StartingActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = StartingActivity.class.getSimpleName();
@@ -63,10 +66,14 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
     RotateLoading rotateLoading;
 
+    SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
+
+        prefs = getDefaultSharedPreferences(this);
 
         rotateLoading = (RotateLoading)findViewById(R.id.rotate_loading);
         rotateLoading.start();
@@ -168,6 +175,8 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
     public void presentClick(View view) {
 
+        Helper.machine = findRegisteredMachine();
+
         //If machine is null, that means we haven't received the machine, user wishes to view his status for
         if(Helper.machine != null) {
             Intent i = new Intent(this, MainActivity.class);
@@ -177,6 +186,16 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         } else {
             Toast.makeText(StartingActivity.this, "Please specify the atm, for which, you wish to view your status", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //Returns the machine where the user has registered previously
+    private Machine findRegisteredMachine() {
+        for(Machine machine:mList) {
+            if(machine.tableName.equals(prefs.getString("table_name", null))) {
+                return machine;
+            }
+        }
+        return null;
     }
 
     @Override
