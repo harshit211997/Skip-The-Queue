@@ -56,6 +56,10 @@ public class ViewStatusActivity extends AppCompatActivity {
     int queueNo = 0;
     int queueSize = 0;
     boolean allowReport;
+    TextView outOfCashButton;
+    TextView yourQueueNoTextView;
+    TextView expectedTimeTextView;
+    TextView deleteTokenTextView;
 
     FancyButton useTokenButton;
 
@@ -64,6 +68,12 @@ public class ViewStatusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_status);
         getExtras();
+
+        outOfCashButton = (TextView)findViewById(R.id.out_of_cash);
+        yourQueueNoTextView = (TextView)findViewById(R.id.your_queue_no_textview);
+        expectedTimeTextView = (TextView)findViewById(R.id.user_time);
+        deleteTokenTextView = (TextView)findViewById(R.id.delete_token_textview);
+
         useTokenButton = (FancyButton) findViewById(R.id.use_token_button);
         allowReport = getIntent().getBooleanExtra("allowReport", false);
         reportTextView = (TextView) findViewById(R.id.out_of_cash);
@@ -80,6 +90,11 @@ public class ViewStatusActivity extends AppCompatActivity {
             //Remove if only status is to be viewed.
             reportTextView.setVisibility(View.GONE);
             useTokenButton.setVisibility(View.GONE);
+        }
+
+        //If the machine is out of cash, the ui should correspondingly change
+        if(!Helper.machine.statusWorking) {
+            onOutOfCash();
         }
     }
 
@@ -304,6 +319,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                                 Toast.makeText(ViewStatusActivity.this, "Successfully updated ATM status!", Toast.LENGTH_SHORT).show();
                                 askUserPreferenceForToken();
                                 notifyOFCToUsers();
+                                onOutOfCash();
                             } else {
                                 Toast.makeText(ViewStatusActivity.this, "Please Try Again!", Toast.LENGTH_SHORT).show();
                             }
@@ -316,6 +332,14 @@ public class ViewStatusActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    private void onOutOfCash() {
+        deleteTokenTextView.setVisibility(View.GONE);
+        outOfCashButton.setText("What to do with your token?");
+        useTokenButton.setVisibility(View.GONE);
+        yourQueueNoTextView.setText("Your queue no. in queue was");
+        expectedTimeTextView.setText("The atm has gone out cash");
     }
 
     private void notifyOFCToUsers() {
