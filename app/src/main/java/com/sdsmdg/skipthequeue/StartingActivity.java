@@ -34,6 +34,7 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.TableQueryCallback;
 import com.sdsmdg.skipthequeue.Adapters.adapter_class;
 import com.sdsmdg.skipthequeue.models.Machine;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -60,11 +61,16 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
     public Double lat, lng;
 
+    RotateLoading rotateLoading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
+
+        rotateLoading = (RotateLoading)findViewById(R.id.rotate_loading);
+        rotateLoading.start();
+
         checkPermissions();
         buildClient();
         makeRecyclerView();
@@ -138,6 +144,8 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
                             exception.printStackTrace();
                             getAtmList();
                         }
+                        //stop the progress bar
+                        rotateLoading.stop();
                     }
                 });
             }
