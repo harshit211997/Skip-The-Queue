@@ -65,7 +65,6 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
-        //TODO : Fix the problem of null location for the first client.
         checkPermissions();
         buildClient();
         makeRecyclerView();
@@ -161,10 +160,15 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
     public void presentClick(View view) {
 
-        Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("allowGenerate", false);
-        i.putExtra("allowReport", false);
-        startActivity(i);
+        //If machine is null, that means we haven't received the machine, user wishes to view his status for
+        if(Helper.machine != null) {
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("allowGenerate", false);
+            i.putExtra("allowReport", false);
+            startActivity(i);
+        } else {
+            Toast.makeText(StartingActivity.this, "Please specify the atm, for which, you wish to view your status", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
