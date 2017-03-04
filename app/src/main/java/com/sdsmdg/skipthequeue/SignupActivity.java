@@ -346,10 +346,10 @@ public class SignupActivity extends AppCompatActivity {
                 else {
 
                     //TODO : Iterate through db and allow token generation only once for a particular mobile no.
-                    //sendClientId(user);
+                    sendClientId(user);
 
-                    insertEntry(user);
-                    //disable till the request false
+//                    insertEntry(user);
+//                    //disable till the request false
 
                 }
 

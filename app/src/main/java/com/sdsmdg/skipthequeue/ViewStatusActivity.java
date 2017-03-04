@@ -126,7 +126,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                     User nextUser = (User) i.getSerializableExtra("nextOTPuser");
 
                     if (nextUser != null) {
-                        //sendNextOTP(nextUser);
+                        sendNextOTP(nextUser);
                     }
 
                     //This deletes on the database as well
@@ -332,8 +332,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                                 mobileNos.add(user.mobile);
                             }
                         }
-                        //TODO : Remove comments from following line after testing is complete
-                        //sendOFCNotifViaSMS(mobileNos);
+                        sendOFCNotifViaSMS(mobileNos);
                     }
                 });
             }
