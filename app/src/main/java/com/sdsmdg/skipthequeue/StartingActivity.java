@@ -419,10 +419,14 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
             @Override
             public void run() {
                 MobileServiceTable<Machine> managerTable = mClient.getTable("Manager", Machine.class);
-                Machine m2 = new Machine("UID", "29.864468", "77.895905", 0, true, "SBI_ATM");
+                Machine m2 = new Machine("UID", "29.864468", "77.895905", 6, true, "IDBI_Bank_ATM");
                 managerTable.insert(m2);
-                Toast.makeText(getApplicationContext(), "Db updated", Toast.LENGTH_LONG).show();
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Db updated", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }).start();
 

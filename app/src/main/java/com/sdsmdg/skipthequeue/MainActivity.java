@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -43,17 +44,23 @@ public class MainActivity extends AppCompatActivity {
     boolean allowReport;
     TextView generate;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        generate = (TextView) findViewById(R.id.signup_button);
         rotateLoading = (RotateLoading) findViewById(R.id.rotateloading);
         codeInput = (CodeInput) findViewById(R.id.client_id_input);
         beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
         checkPermits();
         makeClient();
         makeReceiver();
+
+        if(!Helper.machine.statusWorking) {
+            generate.setEnabled(false);
+            generate.setTextColor(Color.argb(255, 214, 214, 214));
+        }
     }
 
     private void makeClient() {
@@ -77,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         if(!allowGenerate)
         {
             //view gone means the view no longer needs UI space, whereas view invisible means it is just not visible
-            generate = (TextView) findViewById(R.id.signup_button);
             generate.setVisibility(View.GONE);
 
         }
