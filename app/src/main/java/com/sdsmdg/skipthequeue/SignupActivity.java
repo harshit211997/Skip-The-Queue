@@ -170,6 +170,7 @@ public class SignupActivity extends AppCompatActivity {
                     editor.putString("table_name", Helper.machine.tableName);
                     editor.apply();
                 } else {
+                    Toast.makeText(getApplicationContext(), "Problem with message API", Toast.LENGTH_LONG).show();
                     Log.i(TAG, response.body().getType());
                     Log.i(TAG, response.body().getMessage());
                 }
