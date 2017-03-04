@@ -225,7 +225,6 @@ public class SignupActivity extends AppCompatActivity {
                     public void onCompleted(User entity, Exception exception, ServiceFilterResponse response) {
                         if (exception == null) {
                             // Insert succeeded
-                            Log.i(TAG, "insert succeded");
                             Toast.makeText(SignupActivity.this, "Token generated!", Toast.LENGTH_SHORT).show();
                             rotateLoading.stop();
                             infoTextView.setVisibility(View.VISIBLE);
@@ -233,10 +232,8 @@ public class SignupActivity extends AppCompatActivity {
                         } else {
                             // Insert failed
                             exception.printStackTrace();
-                            Log.i(TAG, "insert failed");
                             rotateLoading.stop();
                             insertEntry(user);
-                            Toast.makeText(SignupActivity.this, "Server error! Retry", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -264,7 +261,7 @@ public class SignupActivity extends AppCompatActivity {
                 if(exception != null) {
                     changeQueueNoInManagerTable(change);
                 } else {
-                    Toast.makeText(SignupActivity.this, "Queue no. updated in manager table", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(SignupActivity.this, "Queue no. updated in manager table", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -276,43 +273,29 @@ public class SignupActivity extends AppCompatActivity {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-
                 try {
                     //Receive results from backend, only first 50 entries are received.
-
                     table.where().execute(new TableQueryCallback<User>() {
                         @Override
                         public void onCompleted(List<User> result, int count, Exception exception, ServiceFilterResponse response) {
-
                             if(exception == null)
                             {
                                 lengthUsers = result.size();
-                                Log.i(TAG, "doInBackground: " + lengthUsers + "");
-
                                 for (User user : result) {
-
-                                    Log.i(TAG, "qn : "+ user.queueNo + "  ci :  " + user.clientId);
-
                                     if (user.queueNo > maxqueueNo) {
                                         maxqueueNo = user.queueNo;
-                                        Log.i(TAG, "maxquenoloop: " + user.queueNo);
                                     }
                                 }
-
                                 //This runs the supposed Post Execute method only when the call succeeds.
                                 onUIthread(clientId);
                             }
-
                             else {
                                 generateQueueNo(clientId);
-                                Log.i(TAG, "onCompleted: Failed");
                             }
                         }
 
 
                     });
-
-
                 } catch (final Exception e) {
                     e.printStackTrace();
                 }
@@ -321,7 +304,6 @@ public class SignupActivity extends AppCompatActivity {
             }
 
         };
-
         task.execute();
     }
 
@@ -340,17 +322,10 @@ public class SignupActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Please Enter a valid Mobile No.",Toast.LENGTH_SHORT).show();
                     rotateLoading.stop();
                     getToken.setEnabled(true);
-
-
                 }
                 else {
-
                     //TODO : Iterate through db and allow token generation only once for a particular mobile no.
                     sendClientId(user);
-
-//                    insertEntry(user);
-//                    //disable till the request false
-
                 }
 
             }
@@ -361,6 +336,5 @@ public class SignupActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         getToken.setEnabled(true);
-
     }
 }

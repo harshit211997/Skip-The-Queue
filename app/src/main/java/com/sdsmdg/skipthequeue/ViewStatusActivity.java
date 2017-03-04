@@ -335,11 +335,19 @@ public class ViewStatusActivity extends AppCompatActivity {
     }
 
     private void onOutOfCash() {
-        deleteTokenTextView.setVisibility(View.GONE);
+        deleteTokenTextView.setVisibility(View.INVISIBLE);
         outOfCashButton.setText("What to do with your token?");
-        useTokenButton.setVisibility(View.GONE);
+        useTokenButton.setVisibility(View.INVISIBLE);
         yourQueueNoTextView.setText("Your queue no. in queue was");
         expectedTimeTextView.setText("The atm has gone out cash");
+
+        //On clicking the what to do with your token button, the user should be presented with a dialog, asking the same
+        outOfCashButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                askUserPreferenceForToken();
+            }
+        });
     }
 
     private void notifyOFCToUsers() {

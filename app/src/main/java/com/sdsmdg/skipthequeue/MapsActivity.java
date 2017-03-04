@@ -13,16 +13,15 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,6 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    private static final String TAG = MapsActivity.class.getSimpleName();
 
     private GoogleMap mMap;
     BroadcastReceiver broadcastReceiver;
@@ -259,11 +260,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             if (result != null) {
-
-                Toast.makeText(getApplicationContext(), "Path Available", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "onPostExecute: Path Available");
                 drawPath(result);
             } else {
-                Toast.makeText(getApplicationContext(), "Path Not Available", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "onPostExecute: Path Not Available");
             }
 
             //Make the SnackBar after the request is executed.
@@ -336,7 +336,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 String message = intent.getStringExtra(BeaconFinderService.string_test);
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                 if (message == "Beacon Found") {
                     replaceSnackBar();
                 }
