@@ -201,7 +201,6 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
-        Toast.makeText(this, "Api Client Connected", Toast.LENGTH_SHORT).show();
         try {
             getLocation();
         } catch (IOException e) {
