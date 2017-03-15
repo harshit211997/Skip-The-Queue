@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/app_background"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/restaurant_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="125dp"
+            android:layout_marginStart="43dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/restaurant_icon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/restaurant_icon" />
+
+            <TextView
+                android:textColor="#ffffff"
+                android:id="@+id/restaurant_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Restaurant"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="26dp"
+            android:orientation="vertical"
+            android:layout_alignTop="@+id/atm_container"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/linearLayout3">
+
+            <ImageView
+                android:id="@+id/movie_icon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/popcorn" />
+
+            <TextView
+                android:id="@+id/movie_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movies"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ticket_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignTop="@+id/restaurant_container"
+            android:layout_alignStart="@+id/linearLayout3">
+
+            <ImageView
+                android:id="@+id/ticket_icon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/tickets" />
+
+            <TextView
+                android:id="@+id/ticket_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#ffffff"
+                android:text="Tickets" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/atm_container"
+            android:layout_marginBottom="131dp"
+            android:layout_above="@+id/restaurant_container"
+            android:layout_alignStart="@+id/restaurant_container">
+
+            <ImageView
+                android:id="@+id/atm_icon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/atm_icon" />
+
+            <TextView
+                android:id="@+id/atm_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Atm"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>
