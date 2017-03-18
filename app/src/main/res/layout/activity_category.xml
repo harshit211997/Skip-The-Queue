@@ -34,24 +34,27 @@
                 android:id="@+id/movie_icon"
                 android:src="@drawable/popcorn" />
 
-            <TextView
-                android:id="@+id/movie_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Movies"
-                android:textColor="#ffffff"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:layout_gravity="center_horizontal"/>
-
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/movie_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Movies"
+            android:textColor="#ffffff"
+            android:layout_below="@id/movie_container"
+            android:layout_alignRight="@id/movie_container"
+            android:layout_alignLeft="@id/movie_container"
+            android:gravity="center_horizontal"
+            android:textSize="18sp"
+            android:layout_gravity="center_horizontal"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_widthPercent="35%"
             app:layout_aspectRatio="80%"
-            app:layout_marginTopPercent="15%"
+            app:layout_marginTopPercent="10%"
             android:orientation="vertical"
             android:id="@+id/atm_container"
             android:layout_alignStart="@+id/restaurant_container"
@@ -72,7 +75,9 @@
             android:text="Atm"
             android:layout_below="@id/movie_container"
             android:layout_alignLeft="@id/atm_container"
+            android:layout_alignRight="@id/atm_container"
             android:textColor="#ffffff"
+            android:gravity="center_horizontal"
             android:textSize="18sp"
             android:layout_gravity="center_horizontal"/>
 
@@ -83,9 +88,9 @@
             app:layout_widthPercent="35%"
             app:layout_aspectRatio="80%"
             app:layout_marginLeftPercent="10%"
-            app:layout_marginBottomPercent="15%"
             android:orientation="vertical"
-            android:layout_alignParentBottom="true"
+            app:layout_marginTopPercent="15%"
+            android:layout_below="@id/atm_container"
             android:layout_alignParentStart="true"
             android:animateLayoutChanges="true"
             android:onClick="restaurantSelected">
@@ -96,17 +101,19 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/restaurant_icon" />
 
-            <TextView
-                android:textColor="#ffffff"
-                android:id="@+id/restaurant_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Restaurant"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:layout_gravity="center_horizontal"/>
-
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/restaurant_text"
+            android:textColor="#ffffff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Restaurant"
+            android:layout_below="@id/restaurant_container"
+            android:layout_alignRight="@id/restaurant_container"
+            android:layout_alignLeft="@id/restaurant_container"
+            android:gravity="center_horizontal"
+            android:textSize="18sp"/>
 
         <LinearLayout
             android:id="@+id/ticket_container"
@@ -125,17 +132,20 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/tickets" />
 
-            <TextView
-                android:id="@+id/ticket_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="#ffffff"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:text="Tickets" />
-
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/ticket_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:layout_below="@id/ticket_container"
+            android:layout_alignLeft="@id/ticket_container"
+            android:layout_alignRight="@id/ticket_container"
+            android:gravity="center_horizontal"
+            android:textSize="18sp"
+            android:text="Tickets" />
 
     </android.support.percent.PercentRelativeLayout>
 
