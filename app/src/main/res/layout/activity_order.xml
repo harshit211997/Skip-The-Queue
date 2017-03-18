@@ -14,20 +14,21 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get Token"
-        android:onClick="getTokenClicked"/>
+        android:text="Proceed Ahead"
+        android:onClick="getTokenClicked"
+        android:id="@+id/getToken" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Give Your Order"
-        android:onClick="giveOrderClicked"/>
+        android:text="Start My Order"
+        android:onClick="giveOrderClicked"
+        android:id="@+id/giveOrder" />
 
     <Button
-        android:text="View Status"
+        android:text="View Order Status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button2"
         android:onClick="viewOrderStatus"
         />
 

@@ -11,6 +11,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
@@ -25,7 +27,8 @@ public class OrderActivity extends AppCompatActivity {
     BroadcastReceiver broadcastReceiver;
     ArrayList<IEddystoneDevice> beaconsArray;
     public final static String BEACON = "UID";
-
+    Button giveOrder,getToken;
+    boolean beacon_found, order_placed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +36,44 @@ public class OrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order);
         makeReceiver();
         makeSnackbar();
+        disableButtonsSetFlags();
+    }
+
+    private void disableButtonsSetFlags() {
+        beacon_found = false;
+        order_placed = false;
     }
 
     public void getTokenClicked(View view) {
-        Intent i = new Intent(this, MovieGenTokenActivity.class);
-        startActivity(i);
+        if(beacon_found && order_placed)
+        {
+            Intent i = new Intent(this, MovieGenTokenActivity.class);
+            startActivity(i);
+        }
+        else if(beacon_found)
+        {
+            Toast.makeText(this,"Place the order first then proceed.", Toast.LENGTH_LONG).show();
+
+        }
+        else {
+            Toast.makeText(this,"Please Connect to a beacon first.", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void giveOrderClicked(View view) {
-        //TODO: make a webview that renders the page provided by the food caterer
+
+        if(beacon_found)
+        {
+            //TODO: make a webview that renders the page provided by the food caterer
+
+            order_placed = true;
+            Toast.makeText(this,"Order is Placed.", Toast.LENGTH_LONG).show();
+
+        }
+        else
+        {
+            Toast.makeText(this,"Please Connect to a beacon first.", Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -127,6 +159,7 @@ public class OrderActivity extends AppCompatActivity {
                 String message = intent.getStringExtra(BeaconFinderService.string_test);
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
                 if (message == "Beacon Found") {
+                    beacon_found = true;
                     replaceSnackBar();
                 }
 
