@@ -63,28 +63,32 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/atm_icon" />
 
-            <TextView
-                android:id="@+id/atm_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Atm"
-                android:textColor="#ffffff"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:layout_gravity="center_horizontal"/>
-
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/atm_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Atm"
+            android:layout_below="@id/movie_container"
+            android:layout_alignLeft="@id/atm_container"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:layout_gravity="center_horizontal"/>
 
         <LinearLayout
             android:id="@+id/restaurant_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_widthPercent="35%"
-            app:layout_aspectRatio="120%"
+            app:layout_aspectRatio="80%"
             app:layout_marginLeftPercent="10%"
+            app:layout_marginBottomPercent="15%"
             android:orientation="vertical"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="true"
+            android:animateLayoutChanges="true"
+            android:onClick="restaurantSelected">
 
             <ImageView
                 android:id="@+id/restaurant_icon"
@@ -109,10 +113,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_widthPercent="35%"
-            app:layout_aspectRatio="120%"
+            app:layout_aspectRatio="80%"
             android:orientation="vertical"
             android:layout_alignTop="@+id/restaurant_container"
-            android:layout_alignStart="@+id/movie_container">
+            android:layout_alignStart="@+id/movie_container"
+            android:onClick="ticketsSelected">
 
             <ImageView
                 android:id="@+id/ticket_icon"
