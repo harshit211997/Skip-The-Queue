@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical"
+    tools:context="com.sdsmdg.skipthequeue.movies.ViewStatusActivity">
+
+    <TextView
+        android:id="@+id/delete_token_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:gravity="center_horizontal"
+        android:onClick="deleteTokenOnClick"
+        android:text="I won't go, delete my token"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:visibility="visible" />
+
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/use_token_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/delete_token_textview"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:onClick="useTokenOnClick"
+        android:paddingBottom="10dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="10dp"
+        android:visibility="visible"
+        fancy:fb_radius="30dp"
+        fancy:fb_text="Use Token"
+        fancy:fb_textColor="@color/colorPrimaryDark" />
+
+    <LinearLayout
+        android:id="@+id/ticket_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/use_token_button"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/ticket"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="40dp">
+
+        <TextView
+            android:id="@+id/your_queue_no_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="You no. in queue is"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/token_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="#52"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="80sp" />
+
+        <TextView
+            android:id="@+id/user_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Expected time : 45 min"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <!--The following thank you text will be visible when show status is clicked
+    i.e. the beacon is disconnected-->
+
+    <TextView
+        android:id="@+id/thank_you_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ticket_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="30dp"
+        android:gravity="center_horizontal"
+        android:text="Thank you for using our service!"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:visibility="invisible" />
+
+</RelativeLayout>

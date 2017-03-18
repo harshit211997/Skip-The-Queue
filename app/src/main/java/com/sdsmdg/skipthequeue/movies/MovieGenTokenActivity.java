@@ -1,4 +1,4 @@
-package com.sdsmdg.skipthequeue;
+package com.sdsmdg.skipthequeue.movies;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,7 +22,12 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
 import com.microsoft.windowsazure.mobileservices.table.TableQueryCallback;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
-import com.sdsmdg.skipthequeue.models.Machine;
+import com.sdsmdg.skipthequeue.BeaconScannerActivity;
+import com.sdsmdg.skipthequeue.Keys;
+import com.sdsmdg.skipthequeue.MainActivity;
+import com.sdsmdg.skipthequeue.R;
+import com.sdsmdg.skipthequeue.SignupActivity;
+import com.sdsmdg.skipthequeue.StartingActivity;
 import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.otp.MSGApi;
@@ -41,7 +46,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public class SignupActivity extends AppCompatActivity {
+public class MovieGenTokenActivity extends AppCompatActivity {
 
     private final static String TAG = SignupActivity.class.getSimpleName();
 
@@ -61,10 +66,12 @@ public class SignupActivity extends AppCompatActivity {
 
     SharedPreferences prefs;
 
+    private String tableName = "User";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_movie_gen_token);
 
         prefs = getDefaultSharedPreferences(this);
 
@@ -91,7 +98,7 @@ public class SignupActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        table = mClient.getTable(Helper.machine.tableName, User.class);
+        table = mClient.getTable(tableName, User.class);
     }
 
     private void makeReceiver() {
@@ -101,8 +108,8 @@ public class SignupActivity extends AppCompatActivity {
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
                 if(!beaconsArray.contains(beacon))
                 {
-                    Toast.makeText(SignupActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(SignupActivity.this, StartingActivity.class);
+                    Toast.makeText(MovieGenTokenActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(MovieGenTokenActivity.this, StartingActivity.class);
                     startActivity(i);
                 }
 
@@ -167,7 +174,7 @@ public class SignupActivity extends AppCompatActivity {
                     insertEntry(user);
                     //save the atm table name in user preferences(For use in view status button on starting activity)
                     SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("table_name", Helper.machine.tableName);
+                    editor.putString("table_name", "User");
                     editor.apply();
                 } else {
                     Toast.makeText(getApplicationContext(), "Problem with message API", Toast.LENGTH_LONG).show();
@@ -199,32 +206,32 @@ public class SignupActivity extends AppCompatActivity {
         int mins = lengthUsers*2;
 
 
-         if(mins > 50 && mins < 70)
+        if(mins > 50 && mins < 70)
             return "one hour.";
 
-         else if(mins > 110 && mins < 130)
-             return "two hours.";
-         else if(mins > 170 && mins < 190)
-             return "two hours.";
-         else if(mins > 230 && mins < 250)
-             return "two hours.";
-         else if(mins > 290 && mins < 310)
-             return "two hours.";
+        else if(mins > 110 && mins < 130)
+            return "two hours.";
+        else if(mins > 170 && mins < 190)
+            return "two hours.";
+        else if(mins > 230 && mins < 250)
+            return "two hours.";
+        else if(mins > 290 && mins < 310)
+            return "two hours.";
 
 
-         else
-         {
-             int hours = mins/60;
-             mins = mins%60;
+        else
+        {
+            int hours = mins/60;
+            mins = mins%60;
 
-             if (hours > 0)
-             {
-                 return hours + " hours and " + mins + "minutes.";
-             }
+            if (hours > 0)
+            {
+                return hours + " hours and " + mins + "minutes.";
+            }
 
-             else
-                 return  mins + " minutes.";
-         }
+            else
+                return  mins + " minutes.";
+        }
     }
 
     private void insertEntry(final User user) {
@@ -237,10 +244,9 @@ public class SignupActivity extends AppCompatActivity {
                     public void onCompleted(User entity, Exception exception, ServiceFilterResponse response) {
                         if (exception == null) {
                             // Insert succeeded
-                            Toast.makeText(SignupActivity.this, "Token generated!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MovieGenTokenActivity.this, "Token generated!", Toast.LENGTH_SHORT).show();
                             rotateLoading.stop();
                             infoTextView.setVisibility(View.VISIBLE);
-                            changeQueueNoInManagerTable(1);
                             openLoginActivity();
                         } else {
                             // Insert failed
@@ -260,24 +266,6 @@ public class SignupActivity extends AppCompatActivity {
             }
         };
         task.execute();
-    }
-
-    //Give the change that is to be made as signed argument.
-
-    public void changeQueueNoInManagerTable(final int change) {
-        MobileServiceTable<Machine> managerTable = mClient.getTable("Manager", Machine.class);
-        Machine currentMachine = Helper.machine;
-        currentMachine.queueLength += change;
-        managerTable.update(currentMachine, new TableOperationCallback<Machine>() {
-            @Override
-            public void onCompleted(Machine entity, Exception exception, ServiceFilterResponse response) {
-                if(exception != null) {
-                    changeQueueNoInManagerTable(change);
-                } else {
-                    //Toast.makeText(SignupActivity.this, "Queue no. updated in manager table", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
 
     //Generates the queue no. then send client id, and finally use that queue no. to enter data in database
@@ -356,4 +344,5 @@ public class SignupActivity extends AppCompatActivity {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.sdsmdg.skipthequeue;
+package com.sdsmdg.skipthequeue.movies;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,6 +19,12 @@ import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
+import com.sdsmdg.skipthequeue.BeaconScannerActivity;
+import com.sdsmdg.skipthequeue.MainActivity;
+import com.sdsmdg.skipthequeue.R;
+import com.sdsmdg.skipthequeue.SignupActivity;
+import com.sdsmdg.skipthequeue.StartingActivity;
+import com.sdsmdg.skipthequeue.ViewStatusActivity;
 import com.sdsmdg.skipthequeue.models.User;
 import com.victor.loading.rotate.RotateLoading;
 
@@ -28,8 +34,7 @@ import java.util.List;
 
 import static com.sdsmdg.skipthequeue.Helper.machine;
 
-
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
     BroadcastReceiver broadcastReceiver;
@@ -43,10 +48,12 @@ public class MainActivity extends AppCompatActivity {
     boolean allowReport;
     TextView generate;
 
+    private String tableName = "User";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         generate = (TextView) findViewById(R.id.signup_button);
         rotateLoading = (RotateLoading) findViewById(R.id.rotateloading);
@@ -56,10 +63,9 @@ public class MainActivity extends AppCompatActivity {
         makeClient();
         makeReceiver();
 
-        if(!Helper.machine.statusWorking) {
-            generate.setEnabled(false);
-            generate.setTextColor(Color.argb(255, 214, 214, 214));
-        }
+        generate.setEnabled(false);
+        generate.setTextColor(Color.argb(255, 214, 214, 214));
+
     }
 
     private void makeClient() {
@@ -72,15 +78,14 @@ public class MainActivity extends AppCompatActivity {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        table = mClient.getTable(Helper.machine.tableName,User.class);
+        table = mClient.getTable(tableName, User.class);
     }
 
     private void checkPermits() {
         //Default value is false
         allowGenerate = getIntent().getBooleanExtra("allowGenerate", true);
-        allowReport = getIntent().getBooleanExtra("allowReport",true);
-        if(!allowGenerate)
-        {
+        allowReport = getIntent().getBooleanExtra("allowReport", true);
+        if (!allowGenerate) {
             //view gone means the view no longer needs UI space, whereas view invisible means it is just not visible
             generate.setVisibility(View.GONE);
 
@@ -93,17 +98,16 @@ public class MainActivity extends AppCompatActivity {
         Character[] code = codeInput.getCode();
         char[] codeChar = new char[code.length];
 
-        for(int i = 0; i < code.length; i++) {
+        for (int i = 0; i < code.length; i++) {
 
-            if(code[i]== null || Character.isLetter(code[i].charValue()) )
-            {
-                Toast.makeText(MainActivity.this, "Please enter a valid token.", Toast.LENGTH_SHORT).show();
+            if (code[i] == null || Character.isLetter(code[i].charValue())) {
+                Toast.makeText(LoginActivity.this, "Please enter a valid token.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
         }
 
-        for(int i = 0; i < code.length; i++) {
+        for (int i = 0; i < code.length; i++) {
             codeChar[i] = code[i].charValue();
         }
 
@@ -129,13 +133,13 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Intent i = new Intent(MainActivity.this, ViewStatusActivity.class);
+                                Intent i = new Intent(LoginActivity.this, ViewStatusActivity.class);
                                 //If the user is found forward the data to showqueueno activity
                                 i.putExtra("machine", machine);
                                 i.putExtra("queue_no", queueNo);
                                 i.putExtra("queue_size", getQueueAhead(results, queueNo));
                                 i.putExtra("user", user);
-                                i.putExtra("allowReport",allowReport);
+                                i.putExtra("allowReport", allowReport);
                                 //This sends the detail of the next user
                                 i.putExtra("nextOTPuser", getnextuser(results, user));
                                 //sends the beacon to which the app is connected, so that it checks after connection lost in case of multiple beacons
@@ -148,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(MainActivity.this, "Token does not Exist.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Token does not Exist.", Toast.LENGTH_SHORT).show();
                                 rotateLoading.stop();
                             }
                         });
@@ -169,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     private User getnextuser(List<User> users, User user) {
 
         //get next user if available, else return null
-        if(users.indexOf(user) + 1 < users.size()) {
+        if (users.indexOf(user) + 1 < users.size()) {
             return users.get(users.indexOf(user) + 1);
         }
         return null;
@@ -234,10 +238,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
-                if(!beaconsArray.contains(beacon))
-                {
-                    Toast.makeText(MainActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(MainActivity.this, StartingActivity.class);
+                if (!beaconsArray.contains(beacon)) {
+                    Toast.makeText(LoginActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(LoginActivity.this, StartingActivity.class);
                     startActivity(i);
                 }
 

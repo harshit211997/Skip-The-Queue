@@ -22,6 +22,7 @@
             android:orientation="vertical"
             android:layout_alignTop="@+id/atm_container"
             android:layout_alignParentEnd="true"
+            android:onClick="moviesSelected"
             android:id="@+id/linearLayout3">
 
             <ImageView
@@ -49,7 +50,8 @@
             android:id="@+id/atm_container"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/restaurant_container"
-            android:layout_marginTop="68dp">
+            android:layout_marginTop="68dp"
+            android:onClick="atmSelected">
 
             <ImageView
                 android:id="@+id/atm_icon"
