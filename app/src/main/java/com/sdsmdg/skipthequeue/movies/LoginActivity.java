@@ -21,6 +21,7 @@ import com.sdsmdg.skipthequeue.BeaconScannerActivity;
 import com.sdsmdg.skipthequeue.MainActivity;
 import com.sdsmdg.skipthequeue.R;
 import com.sdsmdg.skipthequeue.StartingActivity;
+import com.sdsmdg.skipthequeue.models.Order;
 import com.sdsmdg.skipthequeue.models.User;
 import com.victor.loading.rotate.RotateLoading;
 
@@ -35,13 +36,13 @@ public class LoginActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
     BroadcastReceiver broadcastReceiver;
     MobileServiceClient mClient;
-    MobileServiceTable<User> table;
+    MobileServiceTable<Order> table;
     ArrayList<IEddystoneDevice> beaconsArray;
     CodeInput codeInput;
     private IEddystoneDevice beacon;
     RotateLoading rotateLoading;
 
-    private String tableName = "User";
+    private String tableName = "OrderTable";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         codeInput = (CodeInput) findViewById(R.id.order_id_input);
         beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
         makeClient();
-        makeReceiver();
+//        makeReceiver();
 
     }
 
@@ -66,10 +67,10 @@ public class LoginActivity extends AppCompatActivity {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        table = mClient.getTable(tableName, User.class);
+        table = mClient.getTable(tableName, Order.class);
     }
 
-    public void viewStatusClicked(View view) {
+    public void viewOrderStatusClicked(View view) {
 
         //The following code converts Character array to String
         Character[] code = codeInput.getCode();
@@ -91,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String codeString = new String(codeChar);
 
-        final String clientId = new String(codeString);
+        final String orderId = new String(codeString);
         //here we've obtained the client id entered by the user
 
         rotateLoading.start();
@@ -102,10 +103,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 try {
                     //user list from the backend
-                    final List<User> results = table.where().execute().get();
-                    final User user = getUser(results, clientId);
-                    if (user != null) {
-                        final int queueNo = user.queueNo;
+                    final List<Order> results = table.where().execute().get();
+                    final Order order = getUser(results, orderId);
+                    if (order != null) {
+                        final int queueNo = order.queueNo;
                         Log.i(TAG, "signin successful");
                         runOnUiThread(new Runnable() {
                             @Override
@@ -115,9 +116,9 @@ public class LoginActivity extends AppCompatActivity {
                                 i.putExtra("machine", machine);
                                 i.putExtra("queue_no", queueNo);
                                 i.putExtra("queue_size", getQueueAhead(results, queueNo));
-                                i.putExtra("user", user);
+                                i.putExtra("user", order);
                                 //This sends the detail of the next user
-                                i.putExtra("nextOTPuser", getnextuser(results, user));
+                                i.putExtra("nextOTPuser", getnextuser(results, order));
                                 //sends the beacon to which the app is connected, so that it checks after connection lost in case of multiple beacons
                                 i.putExtra(BeaconScannerActivity.BEACON, beacon);
                                 startActivity(i);
@@ -146,34 +147,34 @@ public class LoginActivity extends AppCompatActivity {
         task.execute();
     }
 
-    private User getnextuser(List<User> users, User user) {
+    private Order getnextuser(List<Order> orders, Order order) {
 
         //get next user if available, else return null
-        if (users.indexOf(user) + 1 < users.size()) {
-            return users.get(users.indexOf(user) + 1);
+        if (orders.indexOf(order) + 1 < orders.size()) {
+            return orders.get(orders.indexOf(order) + 1);
         }
         return null;
 
     }
 
     //Returns the user if exists else null.
-    User getUser(List<User> users, String clientId) {
+    Order getUser(List<Order> orders, String orderId) {
 
-        for (User user : users) {
-            if (user.clientId.equals(clientId)) {
-                return user;
+        for (Order order : orders) {
+            if (order.orderId.equals(orderId)) {
+                return order;
             }
         }
         return null;
     }
 
     //Returns the no. of people standing ahead in the queue
-    public int getQueueAhead(List<User> users, int queueNo) {
+    public int getQueueAhead(List<Order> orders, int queueNo) {
 
         int count = 0;
-        for (User user : users) {
-            if (user.queueNo == queueNo) {
-                Log.i(TAG, "getQueueAhead: " + user.queueNo + " " + queueNo);
+        for (Order order : orders) {
+            if (order.queueNo == queueNo) {
+                Log.i(TAG, "getQueueAhead: " + order.queueNo + " " + queueNo);
                 return count;
             }
             count++;
@@ -185,10 +186,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
 
-        //Register the receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
-                new IntentFilter(BeaconFinderService.intent_filter)
-        );
+//        //Register the receiver
+//        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
+//                new IntentFilter(BeaconFinderService.intent_filter)
+//        );
 
         super.onStart();
     }
@@ -197,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStop() {
 
         //Unregister the receiver
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         super.onStop();
 
     }

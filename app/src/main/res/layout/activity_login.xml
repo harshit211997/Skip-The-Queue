@@ -37,7 +37,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingRight="30dp"
-        android:onClick="viewStatusClicked"
+        android:onClick="viewOrderStatusClicked"
         fancy:fb_text="View Order Status"
         fancy:fb_radius="30dp"/>
 

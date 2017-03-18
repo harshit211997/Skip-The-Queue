@@ -80,7 +80,7 @@ public class ViewStatusActivity extends AppCompatActivity {
         tokenTextView = (TextView) findViewById(R.id.token_text_view);
         tokenTextView.setText("#" + queueNo);
         makeClient();
-        makeReceiver();
+        //makeReceiver();
 
         boolean showOrderCompleteDialog = getIntent().getBooleanExtra("showOrderCompleteDialog", false);
         if(showOrderCompleteDialog) {
@@ -185,10 +185,10 @@ public class ViewStatusActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
 
-        //Register the receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
-                new IntentFilter(BeaconFinderService.intent_filter)
-        );
+//        //Register the receiver
+//        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
+//                new IntentFilter(BeaconFinderService.intent_filter)
+//        );
 
         super.onStart();
     }
@@ -197,7 +197,7 @@ public class ViewStatusActivity extends AppCompatActivity {
     protected void onStop() {
 
         //Unregister the receiver
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         super.onStop();
 
     }
