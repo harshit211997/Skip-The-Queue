@@ -3,11 +3,9 @@ package com.sdsmdg.skipthequeue.movies;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -27,11 +25,10 @@ import com.sdsmdg.skipthequeue.Keys;
 import com.sdsmdg.skipthequeue.R;
 import com.sdsmdg.skipthequeue.SignupActivity;
 import com.sdsmdg.skipthequeue.StartingActivity;
+import com.sdsmdg.skipthequeue.models.Order;
 import com.sdsmdg.skipthequeue.models.Response;
-import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.otp.MSGApi;
 import com.victor.loading.rotate.RotateLoading;
-import com.sdsmdg.skipthequeue.models.Order;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -347,6 +344,7 @@ public class MovieGenTokenActivity extends AppCompatActivity {
         Intent i = new Intent(this, ViewStatusActivity.class);
         i.putExtra("queue_no", order.queueNo);
         i.putExtra("queue_size", activeOrders);
+        i.putExtra("showOrderCompleteDialog", true);
         startActivity(i);
 
     }

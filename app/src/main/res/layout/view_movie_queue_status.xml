@@ -15,29 +15,11 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
         android:gravity="center_horizontal"
-        android:onClick="deleteTokenOnClick"
-        android:text="I won't go, delete my token"
+        android:onClick="deleteOrderOnClick"
+        android:text="I won't go, delete my order"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         android:visibility="visible" />
-
-    <mehdi.sakout.fancybuttons.FancyButton
-        android:id="@+id/use_token_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/delete_token_textview"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:onClick="useTokenOnClick"
-        android:paddingBottom="10dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:paddingTop="10dp"
-        android:visibility="visible"
-        fancy:fb_radius="30dp"
-        fancy:fb_text="Use Token"
-        fancy:fb_textColor="@color/colorPrimaryDark" />
 
     <LinearLayout
         android:id="@+id/ticket_layout"
@@ -48,6 +30,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="30dp"
+        android:layout_marginBottom="80dp"
         android:background="@drawable/ticket"
         android:orientation="vertical"
         android:paddingLeft="30dp"

@@ -1,5 +1,6 @@
 package com.sdsmdg.skipthequeue.movies;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,11 +89,23 @@ public class ViewStatusActivity extends AppCompatActivity {
     }
 
     private void showOrderCompleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_order_complete, null);
 
-        builder.setView(inflater.inflate(R.layout.dialog_order_complete, null));
-        builder.show();
+        Button okButton = (Button)view.findViewById(R.id.ok_button);
+
+        builder.setView(view);
+        final Dialog dialog = builder.create();
+
+        dialog.show();
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
 
     }
 
@@ -121,7 +135,7 @@ public class ViewStatusActivity extends AppCompatActivity {
     }
 
 
-    private void deleteToken() {
+    private void deleteOrder() {
         deleteUser();
     }
 
@@ -244,17 +258,17 @@ public class ViewStatusActivity extends AppCompatActivity {
         });
     }
 
-    public void deleteTokenOnClick(View view) {
+    public void deleteOrderOnClick(View view) {
         createAlert();
     }
 
     private void createAlert() {
         new AlertDialog.Builder(this, R.style.YourAlertDialogTheme)
-                .setTitle("Delete Token?")
-                .setMessage("Are you sure you want to delete this token?")
+                .setTitle("Delete Order?")
+                .setMessage("Are you sure you want to delete your order?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteToken();
+                        deleteOrder();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -263,17 +277,6 @@ public class ViewStatusActivity extends AppCompatActivity {
                     }
                 })
                 .show();
-    }
-
-    public void useTokenOnClick(View view) {
-        //Go ahead only if the Queue no is 1 and expected time is zero
-        if (queueSize == 0) {
-            Toast.makeText(ViewStatusActivity.this, "Token Utilized.", Toast.LENGTH_SHORT).show();
-            deleteToken();
-
-        } else {
-            Toast.makeText(ViewStatusActivity.this, "Your chance has not arrived yet.", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void redirectMain() {
