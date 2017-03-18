@@ -76,17 +76,25 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait" />
-        <activity android:name=".CategoryActivity">
+
+        <activity android:name=".CategoryActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".movies.OrderActivity" />
+
         <activity android:name=".movies.MovieGenTokenActivity" />
-        <activity android:name=".movies.LoginActivity" />
+
+        <activity android:name=".movies.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <activity android:name=".movies.ViewStatusActivity"></activity>
+
     </application>
 
 </manifest>

@@ -24,7 +24,6 @@ import com.microsoft.windowsazure.mobileservices.table.TableQueryCallback;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.BeaconScannerActivity;
 import com.sdsmdg.skipthequeue.Keys;
-import com.sdsmdg.skipthequeue.MainActivity;
 import com.sdsmdg.skipthequeue.R;
 import com.sdsmdg.skipthequeue.SignupActivity;
 import com.sdsmdg.skipthequeue.StartingActivity;
@@ -341,7 +340,7 @@ public class MovieGenTokenActivity extends AppCompatActivity {
 
     //This function is called just after the signup is successful
     private void openLoginActivity() {
-        Intent i = new Intent(this, MainActivity.class);
+        Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
     }
 

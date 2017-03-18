@@ -24,7 +24,6 @@ import com.sdsmdg.skipthequeue.MainActivity;
 import com.sdsmdg.skipthequeue.R;
 import com.sdsmdg.skipthequeue.SignupActivity;
 import com.sdsmdg.skipthequeue.StartingActivity;
-import com.sdsmdg.skipthequeue.ViewStatusActivity;
 import com.sdsmdg.skipthequeue.models.User;
 import com.victor.loading.rotate.RotateLoading;
 
@@ -88,7 +87,6 @@ public class LoginActivity extends AppCompatActivity {
         if (!allowGenerate) {
             //view gone means the view no longer needs UI space, whereas view invisible means it is just not visible
             generate.setVisibility(View.GONE);
-
         }
     }
 

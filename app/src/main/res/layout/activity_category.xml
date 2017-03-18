@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <ImageView
         android:layout_width="match_parent"
@@ -10,25 +11,27 @@
         android:src="@drawable/app_background"
         android:scaleType="centerCrop"/>
 
-    <RelativeLayout
+    <android.support.percent.PercentRelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="26dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_widthPercent="35%"
+            app:layout_aspectRatio="80%"
             android:orientation="vertical"
             android:layout_alignTop="@+id/atm_container"
             android:layout_alignParentEnd="true"
+            app:layout_marginRightPercent="10%"
             android:onClick="moviesSelected"
-            android:id="@+id/linearLayout3">
+            android:id="@+id/movie_container">
 
             <ImageView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
                 android:id="@+id/movie_icon"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
                 android:src="@drawable/popcorn" />
 
             <TextView
@@ -44,19 +47,20 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_widthPercent="35%"
+            app:layout_aspectRatio="80%"
+            app:layout_marginTopPercent="15%"
             android:orientation="vertical"
             android:id="@+id/atm_container"
-            android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/restaurant_container"
-            android:layout_marginTop="68dp"
             android:onClick="atmSelected">
 
             <ImageView
                 android:id="@+id/atm_icon"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:src="@drawable/atm_icon" />
 
             <TextView
@@ -73,18 +77,19 @@
 
         <LinearLayout
             android:id="@+id/restaurant_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_widthPercent="35%"
+            app:layout_aspectRatio="120%"
+            app:layout_marginLeftPercent="10%"
             android:orientation="vertical"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="46dp"
-            android:layout_marginBottom="82dp">
+            android:layout_alignParentStart="true">
 
             <ImageView
                 android:id="@+id/restaurant_icon"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:src="@drawable/restaurant_icon" />
 
             <TextView
@@ -101,16 +106,18 @@
 
         <LinearLayout
             android:id="@+id/ticket_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_widthPercent="35%"
+            app:layout_aspectRatio="120%"
             android:orientation="vertical"
             android:layout_alignTop="@+id/restaurant_container"
-            android:layout_alignStart="@+id/linearLayout3">
+            android:layout_alignStart="@+id/movie_container">
 
             <ImageView
                 android:id="@+id/ticket_icon"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:src="@drawable/tickets" />
 
             <TextView
@@ -125,6 +132,6 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </android.support.percent.PercentRelativeLayout>
 
 </FrameLayout>
