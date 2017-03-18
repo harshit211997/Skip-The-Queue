@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,6 +79,20 @@ public class ViewStatusActivity extends AppCompatActivity {
         tokenTextView.setText("#" + queueNo);
         makeClient();
         makeReceiver();
+
+        boolean showOrderCompleteDialog = getIntent().getBooleanExtra("showOrderCompleteDialog", false);
+        if(showOrderCompleteDialog) {
+            showOrderCompleteDialog();
+        }
+    }
+
+    private void showOrderCompleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        builder.setView(inflater.inflate(R.layout.dialog_order_complete, null));
+        builder.show();
+
     }
 
     private void makeClient() {

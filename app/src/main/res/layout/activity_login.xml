@@ -14,20 +14,20 @@
     tools:context="com.sdsmdg.skipthequeue.movies.LoginActivity">
 
     <com.github.glomadrian.codeinputlib.CodeInput
-        android:id="@+id/client_id_input"
+        android:id="@+id/order_id_input"
         android:layout_width="148dp"
         android:layout_height="wrap_content"
         app:underline_color="#33ddff"
         app:underline_selected_color="#000000"
         app:text_color="#000000"
         app:hint_color="#77ce9d"
-        app:hint_text="Check in Id"
+        app:hint_text="Order Id"
         android:layout_centerInParent="true"
         app:codes="4" />
 
     <mehdi.sakout.fancybuttons.FancyButton
         android:id="@+id/get_token_button"
-        android:layout_below="@id/client_id_input"
+        android:layout_below="@id/order_id_input"
         android:layout_width="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         android:paddingBottom="10dp"
         android:paddingRight="30dp"
         android:onClick="viewStatusClicked"
-        fancy:fb_text="View Status"
+        fancy:fb_text="View Order Status"
         fancy:fb_radius="30dp"/>
 
     <com.victor.loading.rotate.RotateLoading
@@ -54,20 +54,8 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/client_id_input"
+        android:layout_above="@id/order_id_input"
         android:src="@drawable/logo"
         android:layout_centerHorizontal="true"/>
-
-    <TextView
-        android:id="@+id/signup_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18dp"
-        android:onClick="signupClicked"
-        android:textColor="#00bfff"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="42dp"
-        android:text = "Don't have check in id? Generate Token"/>
 
 </RelativeLayout>

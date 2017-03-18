@@ -4,14 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.glomadrian.codeinputlib.CodeInput;
@@ -22,7 +20,6 @@ import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.BeaconScannerActivity;
 import com.sdsmdg.skipthequeue.MainActivity;
 import com.sdsmdg.skipthequeue.R;
-import com.sdsmdg.skipthequeue.SignupActivity;
 import com.sdsmdg.skipthequeue.StartingActivity;
 import com.sdsmdg.skipthequeue.models.User;
 import com.victor.loading.rotate.RotateLoading;
@@ -43,9 +40,6 @@ public class LoginActivity extends AppCompatActivity {
     CodeInput codeInput;
     private IEddystoneDevice beacon;
     RotateLoading rotateLoading;
-    boolean allowGenerate;
-    boolean allowReport;
-    TextView generate;
 
     private String tableName = "User";
 
@@ -54,16 +48,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        generate = (TextView) findViewById(R.id.signup_button);
         rotateLoading = (RotateLoading) findViewById(R.id.rotateloading);
-        codeInput = (CodeInput) findViewById(R.id.client_id_input);
+        codeInput = (CodeInput) findViewById(R.id.order_id_input);
         beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
-        checkPermits();
         makeClient();
         makeReceiver();
-
-        generate.setEnabled(false);
-        generate.setTextColor(Color.argb(255, 214, 214, 214));
 
     }
 
@@ -78,16 +67,6 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         table = mClient.getTable(tableName, User.class);
-    }
-
-    private void checkPermits() {
-        //Default value is false
-        allowGenerate = getIntent().getBooleanExtra("allowGenerate", true);
-        allowReport = getIntent().getBooleanExtra("allowReport", true);
-        if (!allowGenerate) {
-            //view gone means the view no longer needs UI space, whereas view invisible means it is just not visible
-            generate.setVisibility(View.GONE);
-        }
     }
 
     public void viewStatusClicked(View view) {
@@ -137,7 +116,6 @@ public class LoginActivity extends AppCompatActivity {
                                 i.putExtra("queue_no", queueNo);
                                 i.putExtra("queue_size", getQueueAhead(results, queueNo));
                                 i.putExtra("user", user);
-                                i.putExtra("allowReport", allowReport);
                                 //This sends the detail of the next user
                                 i.putExtra("nextOTPuser", getnextuser(results, user));
                                 //sends the beacon to which the app is connected, so that it checks after connection lost in case of multiple beacons
@@ -202,13 +180,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return 0;
-    }
-
-    public void signupClicked(View view) {
-
-        Intent i = new Intent(this, SignupActivity.class);
-        i.putExtra(BeaconScannerActivity.BEACON, beacon);
-        startActivity(i);
     }
 
     @Override
