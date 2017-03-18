@@ -31,6 +31,7 @@ import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.otp.MSGApi;
 import com.victor.loading.rotate.RotateLoading;
+import com.sdsmdg.skipthequeue.models.Order;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -54,18 +55,18 @@ public class MovieGenTokenActivity extends AppCompatActivity {
     BroadcastReceiver broadcastReceiver;
 
     private MobileServiceClient mClient;
-    private MobileServiceTable<User> table;
+    private MobileServiceTable<Order> table;
     EditText mobileEditText;
     private int maxqueueNo = 0;
     private TextView infoTextView;
     private TextView time ;
     private RotateLoading rotateLoading;
-    private int lengthUsers;
+    private int activeOrders;
     private FancyButton getToken;
 
     SharedPreferences prefs;
 
-    private String tableName = "User";
+    private String tableName = "OrderTable";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,7 @@ public class MovieGenTokenActivity extends AppCompatActivity {
         mobileEditText = (EditText) findViewById(R.id.mobile_editText);
         beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
         makeClient();
-        makeReceiver();
+        //makeReceiver(); // Receiver not required any more here once the URL is known.
         getToken = (FancyButton)findViewById(R.id.get_token_button);
     }
 
@@ -97,7 +98,7 @@ public class MovieGenTokenActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        table = mClient.getTable(tableName, User.class);
+        table = mClient.getTable(tableName, Order.class);
     }
 
     private void makeReceiver() {
@@ -119,10 +120,10 @@ public class MovieGenTokenActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
 
-        //Register the receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
-                new IntentFilter(BeaconFinderService.intent_filter)
-        );
+//        //Register the receiver
+//        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
+//                new IntentFilter(BeaconFinderService.intent_filter)
+//        );
 
         super.onStart();
     }
@@ -131,21 +132,21 @@ public class MovieGenTokenActivity extends AppCompatActivity {
     protected void onStop() {
 
         //Unregister the receiver
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         super.onStop();
 
     }
 
-    public void signupClicked(View view) {
+    public void payClicked(View view) {
 
         //Generates a random no as clientId
         getToken.setEnabled(false);
-        int clientId = (int) (1000 + Math.random() * 9000);
-        generateQueueNo(String.valueOf(clientId));
+        int orderId = (int) (1000 + Math.random() * 9000);
+        generateOrder(String.valueOf(orderId));
         rotateLoading.start();
     }
 
-    private void sendClientId(final User user) {
+    private void sendOrderId(final Order order) {
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -158,8 +159,8 @@ public class MovieGenTokenActivity extends AppCompatActivity {
 
         Call<Response> call = api.sendOTP(
                 Keys.MSG_KEY,
-                user.mobile,
-                generateMessage(user),
+                order.mobile,
+                generateMessage(order),
                 "SKIPTQ",
                 4,
                 91,
@@ -170,7 +171,7 @@ public class MovieGenTokenActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.body().getType().equals("success")) {
-                    insertEntry(user);
+                    insertEntry(order);
                     //save the atm table name in user preferences(For use in view status button on starting activity)
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("table_name", "User");
@@ -189,12 +190,12 @@ public class MovieGenTokenActivity extends AppCompatActivity {
         });
     }
 
-    private String generateMessage(User user) {
+    private String generateMessage(Order order) {
 
-        String str = "Your Token Number is "+ user.clientId + ".\n" +
-                "Your number is "+ user.queueNo +" in the queue. The expected waiting time is nearly "+ getApproxtime() + "\n"+
+        String str = "Your Order Id is "+ order.orderId + ".\n" +
+                "Your Order number is "+ order.queueNo +" in the queue. "+ "\n"+
                 "\n" +
-                "[Note:This token can be used only once, so, use it when you reach to end of the queue] \n\n"+
+                "Please Monitor your order from the above Order Id mentioned. \n\n"+
                 "Thanks for using Skip the Queue service, have a nice day.";
         return str;
 
@@ -202,7 +203,8 @@ public class MovieGenTokenActivity extends AppCompatActivity {
 
     private String getApproxtime() {
 
-        int mins = lengthUsers*2;
+        //Waiting time
+        int mins = activeOrders*20;
 
 
         if(mins > 50 && mins < 70)
@@ -233,25 +235,25 @@ public class MovieGenTokenActivity extends AppCompatActivity {
         }
     }
 
-    private void insertEntry(final User user) {
+    private void insertEntry(final Order order) {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params)
             {
 
-                table.insert(user, new TableOperationCallback<User>() {
-                    public void onCompleted(User entity, Exception exception, ServiceFilterResponse response) {
+                table.insert(order, new TableOperationCallback<Order>() {
+                    public void onCompleted(Order entity, Exception exception, ServiceFilterResponse response) {
                         if (exception == null) {
                             // Insert succeeded
-                            Toast.makeText(MovieGenTokenActivity.this, "Token generated!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MovieGenTokenActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
                             rotateLoading.stop();
                             infoTextView.setVisibility(View.VISIBLE);
-                            openLoginActivity();
+                            openViewStatusActivity(order);
                         } else {
                             // Insert failed
                             exception.printStackTrace();
                             rotateLoading.stop();
-                            insertEntry(user);
+                            insertEntry(order);
                         }
                     }
                 });
@@ -268,29 +270,31 @@ public class MovieGenTokenActivity extends AppCompatActivity {
     }
 
     //Generates the queue no. then send client id, and finally use that queue no. to enter data in database
-    private void generateQueueNo(final String clientId) {
+    private void generateOrder(final String orderId) {
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
                     //Receive results from backend, only first 50 entries are received.
-                    table.where().execute(new TableQueryCallback<User>() {
+                    table.where().execute(new TableQueryCallback<Order>() {
                         @Override
-                        public void onCompleted(List<User> result, int count, Exception exception, ServiceFilterResponse response) {
+                        public void onCompleted(List<Order> result, int count, Exception exception, ServiceFilterResponse response) {
                             if(exception == null)
                             {
-                                lengthUsers = result.size();
-                                for (User user : result) {
-                                    if (user.queueNo > maxqueueNo) {
-                                        maxqueueNo = user.queueNo;
+                                //This will give the approximate Time for preparing the order, by knowing presently active orders.
+                                activeOrders = result.size();
+                                for (Order order : result) {
+                                    if (order.queueNo > maxqueueNo) {
+                                        //This is used to generate the next queue no.
+                                        maxqueueNo = order.queueNo;
                                     }
                                 }
                                 //This runs the supposed Post Execute method only when the call succeeds.
-                                onUIthread(clientId);
+                                onUIthread(orderId);
                             }
                             else {
-                                generateQueueNo(clientId);
+                                generateOrder(orderId);
                             }
                         }
 
@@ -307,17 +311,17 @@ public class MovieGenTokenActivity extends AppCompatActivity {
         task.execute();
     }
 
-    private void onUIthread(final String clientId) {
+    private void onUIthread(final String orderId) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final User user = new User();
+                final Order order = new Order();
                 //91 added to user's mobile no.
-                user.mobile = "91"+ mobileEditText.getText().toString();
-                user.clientId = clientId;
-                user.queueNo = maxqueueNo + 1;
+                order.mobile = "91"+ mobileEditText.getText().toString();
+                order.orderId = orderId;
+                order.queueNo = maxqueueNo + 1;
 
-                if(user.mobile.length() != 12 )
+                if(order.mobile.length() != 12 )
                 {
                     Toast.makeText(getApplicationContext(),"Please Enter a valid Mobile No.",Toast.LENGTH_SHORT).show();
                     rotateLoading.stop();
@@ -325,7 +329,7 @@ public class MovieGenTokenActivity extends AppCompatActivity {
                 }
                 else {
                     //TODO : Iterate through db and allow token generation only once for a particular mobile no.
-                    sendClientId(user);
+                    sendOrderId(order);
                 }
 
             }
@@ -339,9 +343,12 @@ public class MovieGenTokenActivity extends AppCompatActivity {
     }
 
     //This function is called just after the signup is successful
-    private void openLoginActivity() {
-        Intent i = new Intent(this, LoginActivity.class);
+    private void openViewStatusActivity(Order order) {
+        Intent i = new Intent(this, ViewStatusActivity.class);
+        i.putExtra("queue_no", order.queueNo);
+        i.putExtra("queue_size", activeOrders);
         startActivity(i);
+
     }
 
 }

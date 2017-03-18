@@ -66,11 +66,11 @@
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         android:padding="13dp"
-        android:onClick="signupClicked"
+        android:onClick="payClicked"
         android:background="#33ddff"
         android:backgroundTint="#33ddff"
         android:layout_alignParentBottom="true"
-        android:text="GET TOKEN"
+        android:text="PAY"
         fancy:fb_radius="30dp"/>
 
 </RelativeLayout>
