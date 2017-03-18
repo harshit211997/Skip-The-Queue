@@ -23,4 +23,12 @@
         android:text="Give Your Order"
         android:onClick="giveOrderClicked"/>
 
+    <Button
+        android:text="View Status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button2"
+        android:onClick="viewOrderStatus"
+        />
+
 </LinearLayout>

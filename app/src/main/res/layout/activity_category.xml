@@ -79,7 +79,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_marginStart="46dp"
-            android:layout_marginBottom="82dp">
+            android:layout_marginBottom="82dp"
+            android:animateLayoutChanges="true"
+            android:onClick="restaurantSelected">
 
             <ImageView
                 android:id="@+id/restaurant_icon"
@@ -105,7 +107,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_alignTop="@+id/restaurant_container"
-            android:layout_alignStart="@+id/linearLayout3">
+            android:layout_alignStart="@+id/linearLayout3"
+            android:onClick="ticketsSelected">
 
             <ImageView
                 android:id="@+id/ticket_icon"
