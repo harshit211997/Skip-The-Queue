@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     boolean allowReport;
     TextView generate;
 
+    private String tableName = "User";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        table = mClient.getTable(Helper.machine.tableName,User.class);
+        table = mClient.getTable(tableName, User.class);
     }
 
     private void checkPermits() {
@@ -83,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         {
             //view gone means the view no longer needs UI space, whereas view invisible means it is just not visible
             generate.setVisibility(View.GONE);
-
         }
     }
 

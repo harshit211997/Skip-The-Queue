@@ -14,11 +14,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get Token"/>
+        android:text="Get Token"
+        android:onClick="getTokenClicked"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Give Your Order"/>
+        android:text="Give Your Order"
+        android:onClick="giveOrderClicked"/>
 
 </LinearLayout>
