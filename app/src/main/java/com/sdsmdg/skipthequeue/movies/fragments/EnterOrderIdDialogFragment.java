@@ -80,7 +80,7 @@ public class EnterOrderIdDialogFragment extends DialogFragment {
         for (int i = 0; i < code.length; i++) {
 
             if (code[i] == null || Character.isLetter(code[i].charValue())) {
-                Toast.makeText(getActivity(), "Please enter a valid token.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Please enter a valid order id.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -127,7 +127,7 @@ public class EnterOrderIdDialogFragment extends DialogFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getActivity(), "Token does not Exist.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Order does not Exist.", Toast.LENGTH_SHORT).show();
                                 rotateLoading.stop();
                                 signInButton.setVisibility(View.VISIBLE);
                             }

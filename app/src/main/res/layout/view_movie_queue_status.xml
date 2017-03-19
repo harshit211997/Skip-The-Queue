@@ -1,88 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
+    android:background="@color/colorPrimaryDarkMovie"
     tools:context="com.sdsmdg.skipthequeue.movies.Activities.ViewStatusActivity">
 
-    <TextView
-        android:id="@+id/delete_token_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
-        android:gravity="center_horizontal"
-        android:onClick="deleteOrderOnClick"
-        android:text="I won't go, delete my order"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        android:visibility="visible" />
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_widthPercent="60%"
+        app:layout_aspectRatio="80%"
+        app:layout_marginLeftPercent="20%"
+        app:layout_marginTopPercent="15%"
+        android:src="@drawable/food_token"/>
 
-    <LinearLayout
-        android:id="@+id/ticket_layout"
+    <TextView
+        android:id="@+id/token_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="60%"
+        app:layout_marginLeftPercent="20%"
+        app:layout_marginTopPercent="48%"
+        android:textSize="40sp"
+        android:text="#45"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="60%"
+        app:layout_marginLeftPercent="20%"
+        app:layout_marginTopPercent="45%"
+        android:text="Token No"
+        android:textSize="18sp"
+        android:gravity="center_horizontal"/>
+
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/got_my_order_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/use_token_button"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="80dp"
-        android:background="@drawable/ticket"
-        android:orientation="vertical"
+        android:backgroundTint="#ffffff"
+        android:layout_centerHorizontal="true"
         android:paddingLeft="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:paddingRight="30dp"
-        android:paddingTop="40dp">
-
-        <TextView
-            android:id="@+id/your_queue_no_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="You no. in queue is"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/token_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="#52"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="80sp" />
-
-        <TextView
-            android:id="@+id/user_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:text="Expected time : 45 min"
-            android:textColor="#000000"
-            android:textSize="18sp" />
-
-    </LinearLayout>
-
-    <!--The following thank you text will be visible when show status is clicked
-    i.e. the beacon is disconnected-->
+        android:onClick="gotMyOrderClicked"
+        app:layout_marginTopPercent="76%"
+        app:fb_text="Got My Order"
+        app:fb_radius="30dp"
+        app:fb_textColor="@color/colorPrimaryDarkMovie"/>
 
     <TextView
-        android:id="@+id/thank_you_textview"
+        android:id="@id/delete_token_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ticket_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="30dp"
-        android:gravity="center_horizontal"
-        android:text="Thank you for using our service!"
+        app:layout_marginTopPercent="90%"
+        android:text="I won't go, cancel my Order"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
-        android:visibility="invisible" />
+        android:onClick="cancelOrderOnClick"
+        android:gravity="center_horizontal"/>
 
-</RelativeLayout>
+    <com.victor.loading.rotate.RotateLoading
+        android:id="@+id/rotate_loading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_marginTopPercent="72%"
+        app:layout_marginLeftPercent="40%"/>
+
+</android.support.percent.PercentRelativeLayout>

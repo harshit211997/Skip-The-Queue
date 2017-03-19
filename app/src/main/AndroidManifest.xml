@@ -88,10 +88,6 @@
         <activity
             android:name=".movies.Activities.OrderActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".movies.Activities.MovieGenTokenActivity" />
-        <activity
-            android:name=".movies.Activities.LoginActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".movies.Activities.ViewStatusActivity" />
         <activity android:name=".movies.Activities.OrderSummary"
             android:theme="@style/MovieTheme"

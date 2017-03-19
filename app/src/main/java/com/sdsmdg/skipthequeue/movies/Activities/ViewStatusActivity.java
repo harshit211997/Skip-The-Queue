@@ -43,7 +43,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ViewStatusActivity extends AppCompatActivity {
 
     TextView tokenTextView;
-    TextView timeTextView;
     MobileServiceClient mClient;
     MobileServiceTable<Order> orderTable;
     ArrayList<IEddystoneDevice> beaconsArray;
@@ -52,9 +51,9 @@ public class ViewStatusActivity extends AppCompatActivity {
     int queueNo = 0;
     int queueSize = 0;
     TextView yourQueueNoTextView;
-    TextView expectedTimeTextView;
     TextView deleteTokenTextView;
     FancyButton useTokenButton;
+
     private String tableName = "OrderTable";
 
     @Override
@@ -64,15 +63,11 @@ public class ViewStatusActivity extends AppCompatActivity {
         getExtras();
 
         yourQueueNoTextView = (TextView)findViewById(R.id.your_queue_no_textview);
-        expectedTimeTextView = (TextView)findViewById(R.id.user_time);
         deleteTokenTextView = (TextView)findViewById(R.id.delete_token_textview);
 
         useTokenButton = (FancyButton) findViewById(R.id.use_token_button);
         //Removes shadow from under the action bar
         getSupportActionBar().setElevation(0);
-        int expectedTime = 2 * (queueSize);
-        timeTextView = (TextView) findViewById(R.id.user_time);
-        timeTextView.setText("Expected time : " + expectedTime + " min");
         tokenTextView = (TextView) findViewById(R.id.token_text_view);
         tokenTextView.setText("#" + queueNo);
         makeClient();
@@ -130,7 +125,7 @@ public class ViewStatusActivity extends AppCompatActivity {
         }
     }
 
-    private void deleteOrder() {
+    private void cancelOrder() {
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -169,7 +164,6 @@ public class ViewStatusActivity extends AppCompatActivity {
         task.execute();
     }
 
-    //TODO: call this method after the orderFinished button is clicked.
     private void completeOrder() {
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -291,17 +285,26 @@ public class ViewStatusActivity extends AppCompatActivity {
         });
     }
 
-    public void deleteOrderOnClick(View view) {
+    public void cancelOrderOnClick(View view) {
         createAlert();
+    }
+
+    public void gotMyOrderClicked(View view) {
+        if (queueSize == 0) {
+            Toast.makeText(this, "Token Utilized.", Toast.LENGTH_SHORT).show();
+            completeOrder();
+        } else {
+            Toast.makeText(this, "Your chance has not arrived yet.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void createAlert() {
         new AlertDialog.Builder(this, R.style.YourAlertDialogTheme)
                 .setTitle("Delete Order?")
-                .setMessage("Are you sure you want to delete your order?")
+                .setMessage("Are you sure you want to cancel your order?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteOrder();
+                        cancelOrder();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
