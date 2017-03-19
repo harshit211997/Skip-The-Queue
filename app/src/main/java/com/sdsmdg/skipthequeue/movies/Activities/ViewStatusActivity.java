@@ -300,7 +300,7 @@ public class ViewStatusActivity extends AppCompatActivity {
 
     private void createAlert() {
         new AlertDialog.Builder(this, R.style.YourAlertDialogTheme)
-                .setTitle("Delete Order?")
+                .setTitle("Cancel Order?")
                 .setMessage("Are you sure you want to cancel your order?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
