@@ -1,35 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_order"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="com.sdsmdg.skipthequeue.movies.OrderActivity">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Proceed Ahead"
+    <ImageView
+        android:id="@+id/get_token_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_widthPercent="30%"
+        app:layout_aspectRatio="100%"
+        app:layout_marginLeftPercent="34%"
+        app:layout_marginTopPercent="10%"
+        android:layout_alignParentTop="true"
         android:onClick="getTokenClicked"
-        android:id="@+id/getToken" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/cell_phone_with_burger"
+        android:text="Proceed Ahead" />
 
-    <Button
+    <TextView
+        android:id="@+id/make_order_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start My Order"
+        android:layout_below="@id/get_token_button"
+        android:layout_alignRight="@id/get_token_button"
+        android:layout_alignLeft="@id/get_token_button"
+        android:gravity="center_horizontal"
+        android:text="Make Order"
+        android:textSize="18sp"/>
+
+
+    <ImageView
+        android:id="@+id/give_order_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_aspectRatio="100%"
+        app:layout_widthPercent="30%"
+        app:layout_marginLeftPercent="34%"
+        app:layout_marginTopPercent="10%"
+        android:layout_below="@id/make_order_textView"
         android:onClick="giveOrderClicked"
-        android:id="@+id/giveOrder" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/ticket_icon"
+        android:text="Start My Order" />
 
-    <Button
-        android:text="View Order Status"
+    <TextView
+        android:id="@+id/give_order_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="viewOrderStatus"
-        />
+        android:layout_below="@id/give_order_button"
+        android:layout_alignLeft="@id/give_order_button"
+        android:layout_alignRight="@id/give_order_button"
+        android:gravity="center_horizontal"
+        android:text="Get order id"
+        android:textSize="18sp"/>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/order_status_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_aspectRatio="100%"
+        app:layout_widthPercent="30%"
+        app:layout_marginLeftPercent="34%"
+        app:layout_marginTopPercent="10%"
+        android:layout_below="@id/give_order_textView"
+        android:onClick="giveOrderClicked"
+        android:scaleType="fitCenter"
+        android:src="@drawable/pizza"
+        android:text="Start My Order" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/order_status_button"
+        android:layout_alignLeft="@id/order_status_button"
+        android:layout_alignRight="@id/order_status_button"
+        android:gravity="center_horizontal"
+        android:text="Check Status"
+        android:textSize="18sp"/>
+
+</android.support.percent.PercentRelativeLayout>
