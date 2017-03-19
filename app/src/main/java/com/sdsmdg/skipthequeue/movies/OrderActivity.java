@@ -78,7 +78,7 @@ public class OrderActivity extends AppCompatActivity {
 
 
     public void viewOrderStatus(View view) {
-        //TODO : Add the view status activity here.
+        //TODO : Call Login Activity from here.
     }
 
     @Override

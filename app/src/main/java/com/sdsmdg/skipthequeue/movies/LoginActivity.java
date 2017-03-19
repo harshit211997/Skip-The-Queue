@@ -51,7 +51,8 @@ public class LoginActivity extends AppCompatActivity {
 
         rotateLoading = (RotateLoading) findViewById(R.id.rotateloading);
         codeInput = (CodeInput) findViewById(R.id.order_id_input);
-        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
+//        beacon ain't required anymore
+//        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
         makeClient();
 //        makeReceiver();
 
@@ -112,13 +113,13 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Intent i = new Intent(LoginActivity.this, ViewStatusActivity.class);
-                                //If the user is found forward the data to showqueueno activity
-                                i.putExtra("machine", machine);
+                                //If the oder is found forward the data to ViewStatus activity
+//                                i.putExtra("machine", machine);
                                 i.putExtra("queue_no", queueNo);
                                 i.putExtra("queue_size", getQueueAhead(results, queueNo));
-                                i.putExtra("user", order);
+                                i.putExtra("order", order);
                                 //This sends the detail of the next user
-                                i.putExtra("nextOTPuser", getnextuser(results, order));
+                                i.putExtra("nextOrder", getNextOrder(results, order));
                                 //sends the beacon to which the app is connected, so that it checks after connection lost in case of multiple beacons
                                 i.putExtra(BeaconScannerActivity.BEACON, beacon);
                                 startActivity(i);
@@ -147,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
         task.execute();
     }
 
-    private Order getnextuser(List<Order> orders, Order order) {
+    private Order getNextOrder(List<Order> orders, Order order) {
 
         //get next user if available, else return null
         if (orders.indexOf(order) + 1 < orders.size()) {

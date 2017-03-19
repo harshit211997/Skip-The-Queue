@@ -28,6 +28,7 @@ import com.sdsmdg.skipthequeue.BeaconScannerActivity;
 import com.sdsmdg.skipthequeue.Keys;
 import com.sdsmdg.skipthequeue.R;
 import com.sdsmdg.skipthequeue.StartingActivity;
+import com.sdsmdg.skipthequeue.models.Order;
 import com.sdsmdg.skipthequeue.models.Response;
 import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.otp.MSGApi;
@@ -47,7 +48,7 @@ public class ViewStatusActivity extends AppCompatActivity {
     TextView tokenTextView;
     TextView timeTextView;
     MobileServiceClient mClient;
-    MobileServiceTable<User> userTable;
+    MobileServiceTable<Order> orderTable;
     ArrayList<IEddystoneDevice> beaconsArray;
     private IEddystoneDevice beacon;
     BroadcastReceiver broadcastReceiver;
@@ -56,10 +57,8 @@ public class ViewStatusActivity extends AppCompatActivity {
     TextView yourQueueNoTextView;
     TextView expectedTimeTextView;
     TextView deleteTokenTextView;
-
     FancyButton useTokenButton;
-
-    private String tableName = "User";
+    private String tableName = "OrderTable";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +118,7 @@ public class ViewStatusActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        userTable = mClient.getTable(tableName, User.class);
+        orderTable = mClient.getTable(tableName, Order.class);
 
     }
 
@@ -134,12 +133,47 @@ public class ViewStatusActivity extends AppCompatActivity {
         }
     }
 
-
     private void deleteOrder() {
-        deleteUser();
+
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                try {
+
+                    //Just delete the order do not send alert to the next user.
+                    Intent i = getIntent();
+                    Order order = (Order) i.getSerializableExtra("order");
+
+                    //This deletes on the database as well
+                    orderTable.delete(order, new TableDeleteCallback() {
+                        @Override
+                        public void onCompleted(Exception exception, ServiceFilterResponse response) {
+
+                            //Also update the queue length in manager table.
+                            if (exception == null) {
+                                Toast.makeText(ViewStatusActivity.this, "Order Deleted.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ViewStatusActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+
+                } catch (final Exception e) {
+                    Toast.makeText(ViewStatusActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        };
+
+        task.execute();
     }
 
-    private void deleteUser() {
+    //TODO: call this method after the order is completed.
+    private void completeOrder() {
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -148,21 +182,22 @@ public class ViewStatusActivity extends AppCompatActivity {
                 try {
 
                     Intent i = getIntent();
-                    User user = (User) i.getSerializableExtra("user");
-                    User nextUser = (User) i.getSerializableExtra("nextOTPuser");
+                    Order order = (Order) i.getSerializableExtra("order");
+                    Order nextOrder = (Order) i.getSerializableExtra("nextOrder");
 
-                    if (nextUser != null) {
-                        sendNextOTP(nextUser);
+                    //Send alert to the next user.
+                    if (nextOrder != null) {
+                        sendNextOrderAlert(nextOrder);
                     }
 
                     //This deletes on the database as well
-                    userTable.delete(user, new TableDeleteCallback() {
+                    orderTable.delete(order, new TableDeleteCallback() {
                         @Override
                         public void onCompleted(Exception exception, ServiceFilterResponse response) {
 
                             //Also update the queue length in manager table.
                             if (exception == null) {
-                                Toast.makeText(ViewStatusActivity.this, "Token Deleted.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ViewStatusActivity.this, "Order Deleted.", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(ViewStatusActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
                             }
@@ -217,8 +252,8 @@ public class ViewStatusActivity extends AppCompatActivity {
         };
     }
 
-    //Adding the code to send the otp to 11th guy
-    private void sendNextOTP(final User user) {
+    //Adding the code to send the alert to the next person
+    private void sendNextOrderAlert(final Order order) {
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
@@ -231,9 +266,10 @@ public class ViewStatusActivity extends AppCompatActivity {
         MSGApi api = retrofit.create(MSGApi.class);
 
         Call<Response> call = api.sendOTP(
+                //TODO : Change the order text here
                 Keys.MSG_KEY,
-                user.mobile,
-                "Your chance has arrived. Now you can go in!",
+                order.mobile,
+                "Your Order"+" will be ready in 5-10 mins.",
                 "SKIPTQ",
                 4,
                 91,
@@ -253,7 +289,7 @@ public class ViewStatusActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(), "Notification send failed. ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Next Notification send failed. ", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -273,15 +309,10 @@ public class ViewStatusActivity extends AppCompatActivity {
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        //dismiss
+                        completeOrder();
                     }
                 })
                 .show();
     }
 
-    private void redirectMain() {
-        Intent i = new Intent(getApplicationContext(), StartingActivity.class);
-        i.putExtra("Privileges", 1);
-        startActivity(i);
-    }
 }

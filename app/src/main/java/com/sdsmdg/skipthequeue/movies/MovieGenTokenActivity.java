@@ -345,6 +345,8 @@ public class MovieGenTokenActivity extends AppCompatActivity {
         i.putExtra("queue_no", order.queueNo);
         i.putExtra("queue_size", activeOrders);
         i.putExtra("showOrderCompleteDialog", true);
+        i.putExtra("order",order);
+        //nextOrder is null
         startActivity(i);
 
     }
