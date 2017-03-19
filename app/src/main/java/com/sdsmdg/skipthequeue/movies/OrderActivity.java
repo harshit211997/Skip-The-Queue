@@ -79,6 +79,9 @@ public class OrderActivity extends AppCompatActivity {
 
     public void viewOrderStatus(View view) {
         //TODO : Call Login Activity from here.
+        Intent i = new Intent(this, LoginActivity.class);
+        startActivity(i);
+
     }
 
     @Override

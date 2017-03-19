@@ -172,7 +172,7 @@ public class ViewStatusActivity extends AppCompatActivity {
         task.execute();
     }
 
-    //TODO: call this method after the order is completed.
+    //TODO: call this method after the orderFinished button is clicked.
     private void completeOrder() {
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -309,7 +309,7 @@ public class ViewStatusActivity extends AppCompatActivity {
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        completeOrder();
+
                     }
                 })
                 .show();
