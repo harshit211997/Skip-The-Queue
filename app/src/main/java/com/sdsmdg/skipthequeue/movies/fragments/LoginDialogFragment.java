@@ -16,7 +16,7 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.sdsmdg.skipthequeue.R;
 import com.sdsmdg.skipthequeue.models.User;
-import com.sdsmdg.skipthequeue.movies.ViewStatusActivity;
+import com.sdsmdg.skipthequeue.movies.Activities.ViewStatusActivity;
 import com.victor.loading.rotate.RotateLoading;
 
 import java.net.MalformedURLException;

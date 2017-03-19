@@ -6,7 +6,7 @@
     android:background="#ffffff"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fancy="http://schemas.android.com/apk/res-auto"
-    tools:context="com.sdsmdg.skipthequeue.movies.MovieGenTokenActivity">
+    tools:context="com.sdsmdg.skipthequeue.movies.Activities.MovieGenTokenActivity">
 
     <ImageView
         android:id="@+id/queue_image_view"

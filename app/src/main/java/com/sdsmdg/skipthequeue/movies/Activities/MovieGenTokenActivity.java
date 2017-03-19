@@ -1,4 +1,4 @@
-package com.sdsmdg.skipthequeue.movies;
+package com.sdsmdg.skipthequeue.movies.Activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

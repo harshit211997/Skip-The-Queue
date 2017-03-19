@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
-    tools:context="com.sdsmdg.skipthequeue.movies.ViewStatusActivity">
+    tools:context="com.sdsmdg.skipthequeue.movies.Activities.ViewStatusActivity">
 
     <TextView
         android:id="@+id/delete_token_textview"

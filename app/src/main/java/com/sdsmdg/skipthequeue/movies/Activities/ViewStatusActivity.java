@@ -1,14 +1,12 @@
-package com.sdsmdg.skipthequeue.movies;
+package com.sdsmdg.skipthequeue.movies.Activities;
 
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -30,7 +28,6 @@ import com.sdsmdg.skipthequeue.R;
 import com.sdsmdg.skipthequeue.StartingActivity;
 import com.sdsmdg.skipthequeue.models.Order;
 import com.sdsmdg.skipthequeue.models.Response;
-import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.otp.MSGApi;
 
 import java.net.MalformedURLException;

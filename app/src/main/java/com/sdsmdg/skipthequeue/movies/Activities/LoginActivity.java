@@ -1,12 +1,10 @@
-package com.sdsmdg.skipthequeue.movies;
+package com.sdsmdg.skipthequeue.movies.Activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,14 +20,11 @@ import com.sdsmdg.skipthequeue.MainActivity;
 import com.sdsmdg.skipthequeue.R;
 import com.sdsmdg.skipthequeue.StartingActivity;
 import com.sdsmdg.skipthequeue.models.Order;
-import com.sdsmdg.skipthequeue.models.User;
 import com.victor.loading.rotate.RotateLoading;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.sdsmdg.skipthequeue.Helper.machine;
 
 public class LoginActivity extends AppCompatActivity {
 

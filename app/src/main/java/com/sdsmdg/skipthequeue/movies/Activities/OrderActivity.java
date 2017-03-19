@@ -1,4 +1,4 @@
-package com.sdsmdg.skipthequeue.movies;
+package com.sdsmdg.skipthequeue.movies.Activities;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -26,7 +26,7 @@ public class OrderActivity extends AppCompatActivity {
     BroadcastReceiver broadcastReceiver;
     ArrayList<IEddystoneDevice> beaconsArray;
     public final static String BEACON = "UID";
-    Button giveOrder,getToken;
+    Button giveOrder, getToken;
     boolean beacon_found, order_placed;
 
     @Override
@@ -48,8 +48,12 @@ public class OrderActivity extends AppCompatActivity {
         //TODO:Remove comments from the following code after testing
         //if(beacon_found && order_placed)
         //{
-            Intent i = new Intent(this, MovieGenTokenActivity.class);
-            startActivity(i);
+
+        Toast.makeText(this, "Generated dummy orders", Toast.LENGTH_SHORT).show();
+
+        Intent i = new Intent(this, OrderSummary.class);
+        startActivity(i);
+
         //}
 //        else if(beacon_found)
 //        {
@@ -63,17 +67,14 @@ public class OrderActivity extends AppCompatActivity {
 
     public void giveOrderClicked(View view) {
 
-        if(beacon_found)
-        {
+        if (beacon_found) {
             //TODO: make a webview that renders the page provided by the food caterer
 
             order_placed = true;
-            Toast.makeText(this,"Order is Placed.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Order is Placed.", Toast.LENGTH_LONG).show();
 
-        }
-        else
-        {
-            Toast.makeText(this,"Please Connect to a beacon first.", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Please Connect to a beacon first.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -183,7 +184,6 @@ public class OrderActivity extends AppCompatActivity {
 
 
     }
-
 
 
 }
