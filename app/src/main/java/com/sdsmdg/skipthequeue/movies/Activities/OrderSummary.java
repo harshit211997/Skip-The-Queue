@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.sdsmdg.skipthequeue.Adapters.FoodListAdapter;
 import com.sdsmdg.skipthequeue.R;
 import com.sdsmdg.skipthequeue.models.Food;
+import com.sdsmdg.skipthequeue.movies.fragments.GenOrderDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,11 @@ public class OrderSummary extends AppCompatActivity {
         foodList.add(iceCream);
 
         adapter.notifyDataSetChanged();
+    }
+
+    public void payClicked(View view) {
+        GenOrderDialogFragment dialog = new GenOrderDialogFragment();
+        dialog.show(getSupportFragmentManager(), "GenerateOrder");
     }
 
 }

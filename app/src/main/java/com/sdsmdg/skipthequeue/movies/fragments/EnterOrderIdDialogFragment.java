@@ -27,7 +27,7 @@ import mehdi.sakout.fancybuttons.FancyButton;
 import static android.content.ContentValues.TAG;
 import static com.sdsmdg.skipthequeue.Helper.machine;
 
-public class LoginDialogFragment extends DialogFragment {
+public class EnterOrderIdDialogFragment extends DialogFragment {
 
     RotateLoading rotateLoading;
     FancyButton signInButton;
@@ -40,7 +40,7 @@ public class LoginDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_login, null);
+        View view = inflater.inflate(R.layout.dialog_enter_order_id, null);
         signInButton = (FancyButton)view.findViewById(R.id.get_token_button);
         rotateLoading = (RotateLoading)view.findViewById(R.id.rotate_loading);
         codeInput = (CodeInput) view.findViewById(R.id.order_id_input);

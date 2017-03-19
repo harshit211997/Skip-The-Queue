@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
 import com.sdsmdg.skipthequeue.R;
-import com.sdsmdg.skipthequeue.movies.fragments.LoginDialogFragment;
+import com.sdsmdg.skipthequeue.movies.fragments.EnterOrderIdDialogFragment;
 
 import java.util.ArrayList;
 
@@ -79,8 +79,8 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public void viewOrderStatus(View view) {
-        LoginDialogFragment dialog = new LoginDialogFragment();
-        dialog.show(getSupportFragmentManager(), "LoginDialogFragment");
+        EnterOrderIdDialogFragment dialog = new EnterOrderIdDialogFragment();
+        dialog.show(getSupportFragmentManager(), "EnterOrderIdDialogFragment");
     }
 
     @Override
