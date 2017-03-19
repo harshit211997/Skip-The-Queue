@@ -102,7 +102,7 @@ public class OrderActivity extends AppCompatActivity {
     private void makeSnackbar() {
 
         if (isServiceRunning(BeaconFinderService.class)) {
-            Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scanning For the Queue", Snackbar.LENGTH_INDEFINITE)
+            Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scanning for Available Vendors", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Stop", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -120,7 +120,7 @@ public class OrderActivity extends AppCompatActivity {
                     });
             snackbar.show();
         } else {
-            Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scan For the Queue", Snackbar.LENGTH_INDEFINITE)
+            Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "Scan for Available Vendors", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Start", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
