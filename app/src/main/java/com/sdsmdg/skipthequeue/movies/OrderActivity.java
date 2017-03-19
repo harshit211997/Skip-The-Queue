@@ -16,9 +16,8 @@ import android.widget.Toast;
 
 import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
-import com.sdsmdg.skipthequeue.MainActivity;
-import com.sdsmdg.skipthequeue.MapsActivity;
 import com.sdsmdg.skipthequeue.R;
+import com.sdsmdg.skipthequeue.movies.fragments.LoginDialogFragment;
 
 import java.util.ArrayList;
 
@@ -45,19 +44,21 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public void getTokenClicked(View view) {
-        if(beacon_found && order_placed)
-        {
+
+        //TODO:Remove comments from the following code after testing
+        //if(beacon_found && order_placed)
+        //{
             Intent i = new Intent(this, MovieGenTokenActivity.class);
             startActivity(i);
-        }
-        else if(beacon_found)
-        {
-            Toast.makeText(this,"Place the order first then proceed.", Toast.LENGTH_LONG).show();
-
-        }
-        else {
-            Toast.makeText(this,"Please Connect to a beacon first.", Toast.LENGTH_LONG).show();
-        }
+        //}
+//        else if(beacon_found)
+//        {
+//            Toast.makeText(this,"Place the order first then proceed.", Toast.LENGTH_LONG).show();
+//
+//        }
+//        else {
+//            Toast.makeText(this,"Please Connect to a beacon first.", Toast.LENGTH_LONG).show();
+//        }
     }
 
     public void giveOrderClicked(View view) {
@@ -76,9 +77,9 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
-
     public void viewOrderStatus(View view) {
-        //TODO : Add the view status activity here.
+        LoginDialogFragment dialog = new LoginDialogFragment();
+        dialog.show(getSupportFragmentManager(), "LoginDialogFragment");
     }
 
     @Override
@@ -173,7 +174,6 @@ public class OrderActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
 
                 Snackbar snackbar = Snackbar.make(OrderActivity.this.findViewById(android.R.id.content), "Vendor Available.", Snackbar.LENGTH_INDEFINITE);
                 snackbar.show();

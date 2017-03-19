@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Order Id"
+        android:textSize="22sp"
+        android:layout_marginTop="20dp"/>
+
+    <com.github.glomadrian.codeinputlib.CodeInput
+        android:id="@+id/order_id_input"
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        app:underline_color="#33ddff"
+        app:underline_selected_color="#000000"
+        app:text_color="#000000"
+        app:hint_color="#77ce9d"
+        app:hint_text="Order Id"
+        app:codes="4" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/get_token_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#33ddff"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginTop="30dp"
+            android:paddingRight="30dp"
+            android:onClick="viewStatusClicked"
+            app:fb_text="OK"
+            app:fb_radius="30dp"/>
+
+        <com.victor.loading.rotate.RotateLoading
+            android:id="@+id/rotate_loading"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="16dp"
+            app:loading_width="5dp"
+            app:loading_color="#00bfff"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/get_token_button"
+            android:layout_centerInParent="true"/>
+
+    </FrameLayout>
+
+
+</LinearLayout>

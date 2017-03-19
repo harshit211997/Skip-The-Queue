@@ -86,7 +86,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".movies.OrderActivity" />
+        <activity android:name=".movies.OrderActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <activity android:name=".movies.MovieGenTokenActivity" />
 

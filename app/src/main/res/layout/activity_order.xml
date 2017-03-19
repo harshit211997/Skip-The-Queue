@@ -73,7 +73,7 @@
         app:layout_marginLeftPercent="34%"
         app:layout_marginTopPercent="10%"
         android:layout_below="@id/give_order_textView"
-        android:onClick="giveOrderClicked"
+        android:onClick="viewOrderStatus"
         android:scaleType="fitCenter"
         android:src="@drawable/pizza"
         android:text="Start My Order" />

@@ -1,59 +1,61 @@
-package com.sdsmdg.skipthequeue.movies;
+package com.sdsmdg.skipthequeue.movies.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.github.glomadrian.codeinputlib.CodeInput;
-import com.kontakt.sdk.android.common.profile.IEddystoneDevice;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
-import com.sdsmdg.skipthequeue.BeaconFinder.BeaconFinderService;
-import com.sdsmdg.skipthequeue.BeaconScannerActivity;
-import com.sdsmdg.skipthequeue.MainActivity;
 import com.sdsmdg.skipthequeue.R;
-import com.sdsmdg.skipthequeue.StartingActivity;
 import com.sdsmdg.skipthequeue.models.User;
+import com.sdsmdg.skipthequeue.movies.ViewStatusActivity;
 import com.victor.loading.rotate.RotateLoading;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.List;
 
+import mehdi.sakout.fancybuttons.FancyButton;
+
+import static android.content.ContentValues.TAG;
 import static com.sdsmdg.skipthequeue.Helper.machine;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginDialogFragment extends DialogFragment {
 
-    private final static String TAG = MainActivity.class.getSimpleName();
-    BroadcastReceiver broadcastReceiver;
+    RotateLoading rotateLoading;
+    FancyButton signInButton;
     MobileServiceClient mClient;
     MobileServiceTable<User> table;
-    ArrayList<IEddystoneDevice> beaconsArray;
     CodeInput codeInput;
-    private IEddystoneDevice beacon;
-    RotateLoading rotateLoading;
 
     private String tableName = "User";
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.dialog_login, null);
+        signInButton = (FancyButton)view.findViewById(R.id.get_token_button);
+        rotateLoading = (RotateLoading)view.findViewById(R.id.rotate_loading);
+        codeInput = (CodeInput) view.findViewById(R.id.order_id_input);
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rotateLoading.start();
+                signInButton.setVisibility(View.INVISIBLE);
+                viewStatusClicked();
+            }
+        });
 
-        rotateLoading = (RotateLoading) findViewById(R.id.rotateloading);
-        codeInput = (CodeInput) findViewById(R.id.order_id_input);
-        beacon = (IEddystoneDevice) getIntent().getSerializableExtra(BeaconScannerActivity.BEACON);
         makeClient();
-        makeReceiver();
 
+        return view;
     }
 
     private void makeClient() {
@@ -61,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             mClient = new MobileServiceClient(
                     "https://skipthequeue.azurewebsites.net",
-                    this
+                    getActivity()
             );
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -69,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         table = mClient.getTable(tableName, User.class);
     }
 
-    public void viewStatusClicked(View view) {
+    public void viewStatusClicked() {
 
         //The following code converts Character array to String
         Character[] code = codeInput.getCode();
@@ -78,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         for (int i = 0; i < code.length; i++) {
 
             if (code[i] == null || Character.isLetter(code[i].charValue())) {
-                Toast.makeText(LoginActivity.this, "Please enter a valid token.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Please enter a valid token.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -88,13 +90,10 @@ public class LoginActivity extends AppCompatActivity {
             codeChar[i] = code[i].charValue();
         }
 
-
         String codeString = new String(codeChar);
 
         final String clientId = new String(codeString);
         //here we've obtained the client id entered by the user
-
-        rotateLoading.start();
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -107,10 +106,10 @@ public class LoginActivity extends AppCompatActivity {
                     if (user != null) {
                         final int queueNo = user.queueNo;
                         Log.i(TAG, "signin successful");
-                        runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Intent i = new Intent(LoginActivity.this, ViewStatusActivity.class);
+                                Intent i = new Intent(getActivity(), ViewStatusActivity.class);
                                 //If the user is found forward the data to showqueueno activity
                                 i.putExtra("machine", machine);
                                 i.putExtra("queue_no", queueNo);
@@ -119,17 +118,18 @@ public class LoginActivity extends AppCompatActivity {
                                 //This sends the detail of the next user
                                 i.putExtra("nextOTPuser", getnextuser(results, user));
                                 //sends the beacon to which the app is connected, so that it checks after connection lost in case of multiple beacons
-                                i.putExtra(BeaconScannerActivity.BEACON, beacon);
                                 startActivity(i);
                                 rotateLoading.stop();
+                                signInButton.setVisibility(View.VISIBLE);
                             }
                         });
                     } else {
-                        runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(LoginActivity.this, "Token does not Exist.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Token does not Exist.", Toast.LENGTH_SHORT).show();
                                 rotateLoading.stop();
+                                signInButton.setVisibility(View.VISIBLE);
                             }
                         });
 
@@ -180,40 +180,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return 0;
-    }
-
-    @Override
-    protected void onStart() {
-
-        //Register the receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
-                new IntentFilter(BeaconFinderService.intent_filter)
-        );
-
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-
-        //Unregister the receiver
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
-        super.onStop();
-
-    }
-
-    private void makeReceiver() {
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                beaconsArray = intent.getParcelableArrayListExtra(BeaconFinderService.beacons_array);
-                if (!beaconsArray.contains(beacon)) {
-                    Toast.makeText(LoginActivity.this, "Beacon Lost, please stay into proximity.", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(LoginActivity.this, StartingActivity.class);
-                    startActivity(i);
-                }
-            }
-        };
     }
 
 }
