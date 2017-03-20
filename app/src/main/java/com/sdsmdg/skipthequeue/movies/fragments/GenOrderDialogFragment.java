@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +31,7 @@ import com.victor.loading.rotate.RotateLoading;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import mehdi.sakout.fancybuttons.FancyButton;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,10 +48,10 @@ public class GenOrderDialogFragment extends DialogFragment {
     private MobileServiceTable<Order> table;
     EditText mobileEditText;
     private int maxqueueNo = 0;
-    private TextView time ;
+    private TextView time;
     private RotateLoading rotateLoading;
     private int activeOrders;
-    private Button getOrderIdButton;
+    private FancyButton getOrderIdButton;
 
     SharedPreferences prefs;
 
@@ -65,12 +65,12 @@ public class GenOrderDialogFragment extends DialogFragment {
         prefs = getDefaultSharedPreferences(getActivity());
 
         maxqueueNo = 0;
-        rotateLoading = (RotateLoading)view.findViewById(R.id.rotate_loading);
+        rotateLoading = (RotateLoading) view.findViewById(R.id.rotate_loading);
         mobileEditText = (EditText) view.findViewById(R.id.mobile_editText);
 
         makeClient();
         //makeReceiver(); // Receiver not required any more here once the URL is known.
-        getOrderIdButton = (Button)view.findViewById(R.id.get_order_button);
+        getOrderIdButton = (FancyButton) view.findViewById(R.id.get_order_button);
         getOrderIdButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,10 +151,10 @@ public class GenOrderDialogFragment extends DialogFragment {
 
     private String generateMessage(Order order) {
 
-        String str = "Your Order Id is "+ order.orderId + ".\n" +
-                "Your Order number is "+ order.queueNo +" in the queue. "+ "\n"+
+        String str = "Your Order Id is " + order.orderId + ".\n" +
+                "Your Order number is " + order.queueNo + " in the queue. " + "\n" +
                 "\n" +
-                "Please Monitor your order from the above Order Id mentioned. \n\n"+
+                "Please Monitor your order from the above Order Id mentioned. \n\n" +
                 "Thanks for using Skip the Queue service, have a nice day.";
         return str;
 
@@ -163,42 +163,37 @@ public class GenOrderDialogFragment extends DialogFragment {
     private String getApproxtime() {
 
         //Waiting time
-        int mins = activeOrders*20;
+        int mins = activeOrders * 20;
 
 
-        if(mins > 50 && mins < 70)
+        if (mins > 50 && mins < 70)
             return "one hour.";
 
-        else if(mins > 110 && mins < 130)
+        else if (mins > 110 && mins < 130)
             return "two hours.";
-        else if(mins > 170 && mins < 190)
+        else if (mins > 170 && mins < 190)
             return "two hours.";
-        else if(mins > 230 && mins < 250)
+        else if (mins > 230 && mins < 250)
             return "two hours.";
-        else if(mins > 290 && mins < 310)
+        else if (mins > 290 && mins < 310)
             return "two hours.";
 
 
-        else
-        {
-            int hours = mins/60;
-            mins = mins%60;
+        else {
+            int hours = mins / 60;
+            mins = mins % 60;
 
-            if (hours > 0)
-            {
+            if (hours > 0) {
                 return hours + " hours and " + mins + "minutes.";
-            }
-
-            else
-                return  mins + " minutes.";
+            } else
+                return mins + " minutes.";
         }
     }
 
     private void insertEntry(final Order order) {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
-            protected Void doInBackground(Void... params)
-            {
+            protected Void doInBackground(Void... params) {
 
                 table.insert(order, new TableOperationCallback<Order>() {
                     public void onCompleted(Order entity, Exception exception, ServiceFilterResponse response) {
@@ -240,8 +235,7 @@ public class GenOrderDialogFragment extends DialogFragment {
                     table.where().execute(new TableQueryCallback<Order>() {
                         @Override
                         public void onCompleted(List<Order> result, int count, Exception exception, ServiceFilterResponse response) {
-                            if(exception == null)
-                            {
+                            if (exception == null) {
                                 //This will give the approximate Time for preparing the order, by knowing presently active orders.
                                 activeOrders = result.size();
                                 for (Order order : result) {
@@ -252,8 +246,7 @@ public class GenOrderDialogFragment extends DialogFragment {
                                 }
                                 //This runs the supposed Post Execute method only when the call succeeds.
                                 onUIthread(orderId);
-                            }
-                            else {
+                            } else {
                                 generateOrder(orderId);
                             }
                         }
@@ -277,17 +270,15 @@ public class GenOrderDialogFragment extends DialogFragment {
             public void run() {
                 final Order order = new Order();
                 //91 added to user's mobile no.
-                order.mobile = "91"+ mobileEditText.getText().toString();
+                order.mobile = "91" + mobileEditText.getText().toString();
                 order.orderId = orderId;
                 order.queueNo = maxqueueNo + 1;
 
-                if(order.mobile.length() != 12 )
-                {
-                    Toast.makeText(getActivity(),"Please Enter a valid Mobile No.",Toast.LENGTH_SHORT).show();
+                if (order.mobile.length() != 12) {
+                    Toast.makeText(getActivity(), "Please Enter a valid Mobile No.", Toast.LENGTH_SHORT).show();
                     rotateLoading.stop();
                     getOrderIdButton.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     //TODO : Iterate through db and allow token generation only once for a particular mobile no.
                     sendOrderId(order);
                 }
@@ -303,7 +294,7 @@ public class GenOrderDialogFragment extends DialogFragment {
         i.putExtra("queue_no", order.queueNo);
         i.putExtra("queue_size", activeOrders);
         i.putExtra("showOrderCompleteDialog", true);
-        i.putExtra("order",order);
+        i.putExtra("order", order);
         //nextOrder is null
         startActivity(i);
 
