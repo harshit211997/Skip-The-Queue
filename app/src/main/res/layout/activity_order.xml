@@ -20,7 +20,7 @@
         app:layout_widthPercent="30%"
         app:layout_aspectRatio="100%"
         app:layout_marginLeftPercent="34%"
-        app:layout_marginTopPercent="10%"
+        app:layout_marginTopPercent="0%"
         android:layout_alignParentTop="true"
         android:onClick="getTokenClicked"
         android:scaleType="fitCenter"
