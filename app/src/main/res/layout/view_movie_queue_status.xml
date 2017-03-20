@@ -34,7 +34,7 @@
         app:layout_widthPercent="60%"
         app:layout_marginLeftPercent="20%"
         app:layout_marginTopPercent="45%"
-        android:text="Token No"
+        android:text="Order No"
         android:textSize="18sp"
         android:gravity="center_horizontal"/>
 

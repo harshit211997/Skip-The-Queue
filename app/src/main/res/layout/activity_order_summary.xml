@@ -18,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="Proceed to pay Rs.75"
+        android:text="Proceed to pay Rs.80"
+        android:textSize="16sp"
         android:background="@color/colorPrimaryDark"
         android:onClick="payClicked"
         android:textColor="#ffffff"/>
