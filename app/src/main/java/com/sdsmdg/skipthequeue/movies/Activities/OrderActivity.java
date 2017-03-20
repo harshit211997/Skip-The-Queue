@@ -34,7 +34,8 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         makeReceiver();
-        makeSnackbar();
+        //makeSnackbar();
+        replaceSnackBar();
         disableButtonsSetFlags();
     }
 
@@ -176,7 +177,7 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                Snackbar snackbar = Snackbar.make(OrderActivity.this.findViewById(android.R.id.content), "Vendor Available.", Snackbar.LENGTH_INDEFINITE);
+                Snackbar snackbar = Snackbar.make(OrderActivity.this.findViewById(android.R.id.content), "Physical Web Deactivated for Testing Purposes.", Snackbar.LENGTH_INDEFINITE);
                 snackbar.show();
 
             }

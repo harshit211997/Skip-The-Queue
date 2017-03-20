@@ -291,10 +291,10 @@ public class ViewStatusActivity extends AppCompatActivity {
 
     public void gotMyOrderClicked(View view) {
         if (queueSize == 0) {
-            Toast.makeText(this, "Token Utilized.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Order Completed.", Toast.LENGTH_SHORT).show();
             completeOrder();
         } else {
-            Toast.makeText(this, "Your chance has not arrived yet.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Your order has not been prepared yet.", Toast.LENGTH_SHORT).show();
         }
     }
 
