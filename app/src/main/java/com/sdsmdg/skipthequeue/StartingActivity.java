@@ -81,7 +81,7 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         makeRecyclerView();
         initalizeClient();
         getAtmList();
-        initializeManagerTable();
+//        initializeManagerTable();
     }
 
     private void initalizeClient() {
