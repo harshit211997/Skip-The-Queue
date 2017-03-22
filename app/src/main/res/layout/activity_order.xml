@@ -61,7 +61,7 @@
         android:layout_alignLeft="@id/give_order_button"
         android:layout_alignRight="@id/give_order_button"
         android:gravity="center_horizontal"
-        android:text="Get order id"
+        android:text="Proceed to Pay"
         android:textSize="18sp"/>
 
     <ImageView

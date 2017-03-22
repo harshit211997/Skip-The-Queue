@@ -15,6 +15,7 @@ import com.github.glomadrian.codeinputlib.CodeInput;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.sdsmdg.skipthequeue.R;
+import com.sdsmdg.skipthequeue.models.Order;
 import com.sdsmdg.skipthequeue.models.User;
 import com.sdsmdg.skipthequeue.movies.Activities.ViewStatusActivity;
 import com.victor.loading.rotate.RotateLoading;
@@ -32,10 +33,10 @@ public class EnterOrderIdDialogFragment extends DialogFragment {
     RotateLoading rotateLoading;
     FancyButton signInButton;
     MobileServiceClient mClient;
-    MobileServiceTable<User> table;
+    MobileServiceTable<Order> table;
     CodeInput codeInput;
 
-    private String tableName = "User";
+    private String tableName = "OrderTable";
 
     @Nullable
     @Override
@@ -68,7 +69,7 @@ public class EnterOrderIdDialogFragment extends DialogFragment {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        table = mClient.getTable(tableName, User.class);
+        table = mClient.getTable(tableName, Order.class);
     }
 
     public void viewStatusClicked() {
@@ -100,23 +101,22 @@ public class EnterOrderIdDialogFragment extends DialogFragment {
             protected Void doInBackground(Void... params) {
 
                 try {
-                    //user list from the backend
-                    final List<User> results = table.where().execute().get();
-                    final User user = getUser(results, clientId);
-                    if (user != null) {
-                        final int queueNo = user.queueNo;
-                        Log.i(TAG, "signin successful");
+                    //order list from the backend
+                    final List<Order> results = table.where().execute().get();
+                    final Order order = getOrder(results, clientId);
+                    if (order != null) {
+                        final int queueNo = order.queueNo;
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 Intent i = new Intent(getActivity(), ViewStatusActivity.class);
                                 //If the user is found forward the data to showqueueno activity
-                                i.putExtra("machine", machine);
+//                                i.putExtra("machine", machine);
                                 i.putExtra("queue_no", queueNo);
                                 i.putExtra("queue_size", getQueueAhead(results, queueNo));
-                                i.putExtra("user", user);
+                                i.putExtra("order", order);
                                 //This sends the detail of the next user
-                                i.putExtra("nextOTPuser", getnextuser(results, user));
+                                i.putExtra("nextOrder", getNextOrder(results, order));
                                 //sends the beacon to which the app is connected, so that it checks after connection lost in case of multiple beacons
                                 startActivity(i);
                                 rotateLoading.stop();
@@ -146,34 +146,34 @@ public class EnterOrderIdDialogFragment extends DialogFragment {
         task.execute();
     }
 
-    private User getnextuser(List<User> users, User user) {
+    private Order getNextOrder(List<Order> orders, Order order) {
 
         //get next user if available, else return null
-        if (users.indexOf(user) + 1 < users.size()) {
-            return users.get(users.indexOf(user) + 1);
+        if (orders.indexOf(order) + 1 < orders.size()) {
+            return orders.get(orders.indexOf(order) + 1);
         }
         return null;
 
     }
 
     //Returns the user if exists else null.
-    User getUser(List<User> users, String clientId) {
+    Order getOrder(List<Order> orders, String orderId) {
 
-        for (User user : users) {
-            if (user.clientId.equals(clientId)) {
-                return user;
+        for (Order order : orders) {
+            if (order.orderId.equals(orderId)) {
+                return order;
             }
         }
         return null;
     }
 
     //Returns the no. of people standing ahead in the queue
-    public int getQueueAhead(List<User> users, int queueNo) {
+    public int getQueueAhead(List<Order> orders, int queueNo) {
 
         int count = 0;
-        for (User user : users) {
-            if (user.queueNo == queueNo) {
-                Log.i(TAG, "getQueueAhead: " + user.queueNo + " " + queueNo);
+        for (Order order : orders) {
+            if (order.queueNo == queueNo) {
+                Log.i(TAG, "getQueueAhead: " + order.queueNo + " " + queueNo);
                 return count;
             }
             count++;

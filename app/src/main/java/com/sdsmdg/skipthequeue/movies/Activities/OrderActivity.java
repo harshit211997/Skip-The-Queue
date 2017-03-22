@@ -51,9 +51,9 @@ public class OrderActivity extends AppCompatActivity {
         //{
 
         Toast.makeText(this, "Generated dummy orders", Toast.LENGTH_SHORT).show();
+        order_placed = true;
+        Toast.makeText(this, "Order is Placed.", Toast.LENGTH_LONG).show();
 
-        Intent i = new Intent(this, OrderSummary.class);
-        startActivity(i);
 
         //}
 //        else if(beacon_found)
@@ -68,15 +68,23 @@ public class OrderActivity extends AppCompatActivity {
 
     public void giveOrderClicked(View view) {
 
-        if (beacon_found) {
-            //TODO: make a webview that renders the page provided by the food caterer
+//        if (beacon_found) {
+//               //TODO: make a webview that renders the page provided by the food caterer
+                if(order_placed)
+                {
+                    Intent i = new Intent(this, OrderSummary.class);
+                    startActivity(i);
+                }
+                else
+                {
+                    Toast.makeText(this, "Please make an order first.", Toast.LENGTH_LONG).show();
 
-            order_placed = true;
-            Toast.makeText(this, "Order is Placed.", Toast.LENGTH_LONG).show();
+                }
 
-        } else {
-            Toast.makeText(this, "Please Connect to a beacon first.", Toast.LENGTH_LONG).show();
-        }
+
+//        } else {
+//            Toast.makeText(this, "Please Connect to a beacon first.", Toast.LENGTH_LONG).show();
+//        }
     }
 
     public void viewOrderStatus(View view) {
