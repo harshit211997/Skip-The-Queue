@@ -28,6 +28,10 @@ import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
 import com.azoft.carousellayoutmanager.CenterScrollListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.MobileServiceException;
@@ -46,18 +50,19 @@ import java.util.List;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public class StartingActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class StartingActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private static final String TAG = StartingActivity.class.getSimpleName();
 
 
-
+    LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
-
+    private static final long INTERVAL = 1000 * 10;
+    private static final long FASTEST_INTERVAL = 1000 * 5;
     private List<Machine> mList = new ArrayList<>();
     private RecyclerView recyclerView;
     private adapter_class mAdapter;
-
+    Location mLastLocation;
     MobileServiceClient mClient;
     MobileServiceTable<Machine> table;
 
@@ -74,14 +79,22 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
         prefs = getDefaultSharedPreferences(this);
 
-        rotateLoading = (RotateLoading)findViewById(R.id.rotate_loading);
+        rotateLoading = (RotateLoading) findViewById(R.id.rotate_loading);
         rotateLoading.start();
 
         buildClient();
+        buildLocationRequest();
         makeRecyclerView();
         initalizeClient();
         getAtmList();
 //        initializeManagerTable();
+    }
+
+    private void buildLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     private void initalizeClient() {
@@ -104,8 +117,7 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
             public void onClick(int position) {
                 //Onclick is set on the adapter.
 
-                if(lat != null && lng != null)
-                {
+                if (lat != null && lng != null) {
                     //Making the static object of the machine being used for further transactions.
 
                     Helper.machine = mList.get(position);
@@ -113,9 +125,7 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
                             lat,//current latitude(if available)
                             lng//current longitude(if available)
                     );
-                }
-                else
-                {
+                } else {
                     //Open Maps before using.
                     Toast.makeText(StartingActivity.this, " Please make a Location Request by opening Google Maps and then proceed.", Toast.LENGTH_LONG).show();
                 }
@@ -141,7 +151,7 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
                 table.where().execute(new TableQueryCallback<Machine>() {
                     @Override
                     public void onCompleted(List<Machine> result, int count, Exception exception, ServiceFilterResponse response) {
-                        if(exception == null) {
+                        if (exception == null) {
                             mList.addAll(result);
                             mAdapter.notifyDataSetChanged();
                             Log.i(TAG, result.get(0).tableName);
@@ -161,8 +171,7 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
     private void buildClient() {
         //Working to retrive the location using google play services.
         // Create an instance of GoogleAPIClient.
-        if (mGoogleApiClient == null)
-        {
+        if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
@@ -176,7 +185,7 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
         Helper.machine = findRegisteredMachine();
 
         //If machine is null, that means we haven't received the machine, user wishes to view his status for
-        if(Helper.machine != null) {
+        if (Helper.machine != null) {
             Intent i = new Intent(this, MainActivity.class);
             i.putExtra("allowGenerate", false);
             i.putExtra("allowReport", false);
@@ -188,8 +197,8 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
     //Returns the machine where the user has registered previously
     private Machine findRegisteredMachine() {
-        for(Machine machine:mList) {
-            if(machine.tableName.equals(prefs.getString("table_name", null))) {
+        for (Machine machine : mList) {
+            if (machine.tableName.equals(prefs.getString("table_name", null))) {
                 return machine;
             }
         }
@@ -200,14 +209,25 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
     public void onConnected(@Nullable Bundle bundle) {
 
         try {
-            getLocation();
+            getLastLocation();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void getLocation() throws IOException {
+    private void getlocationUpdate() {
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this,"Please allow the permissions.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        //The results can be used through
+        PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest,this);
+    }
+
+    private void getLastLocation() throws IOException {
 
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -224,7 +244,8 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
         else
         {
-            Toast.makeText(this,"Location received as null.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Location received as null, calling location update now.",Toast.LENGTH_SHORT).show();
+            getlocationUpdate();
         }
 
     }
@@ -371,4 +392,14 @@ public class StartingActivity extends AppCompatActivity implements GoogleApiClie
 
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        if(location != null)
+        {
+            Toast.makeText(this,"Location updated and not null, please proceed.",Toast.LENGTH_SHORT).show();
+            mLastLocation = location;
+            lat = mLastLocation.getLatitude();
+            lng = mLastLocation.getLongitude();
+        }
+    }
 }
