@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     boolean allowReport;
     TextView generate;
 
-    private String tableName = "User";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             generate.setEnabled(false);
             generate.setTextColor(Color.argb(255, 214, 214, 214));
         }
+
     }
 
     private void makeClient() {
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        table = mClient.getTable(tableName, User.class);
+        table = mClient.getTable(Helper.machine.tableName, User.class);
     }
 
     private void checkPermits() {
