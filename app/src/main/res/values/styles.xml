@@ -27,6 +27,14 @@
         <item name="android:alertDialogTheme">@style/YourAlertDialogTheme</item>
     </style>
 
+    <style name="MovieTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkMovie</item>
+        <item name="android:actionBarStyle">@style/MyActionBarTheme</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryDarkMovie</item>
+        <item name="android:alertDialogTheme">@style/YourAlertDialogTheme</item>
+    </style>
+
     <style name="MyCustomTheme.NoActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>

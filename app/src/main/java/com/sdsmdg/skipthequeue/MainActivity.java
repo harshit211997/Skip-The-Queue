@@ -31,7 +31,6 @@ import static com.sdsmdg.skipthequeue.Helper.machine;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private final static String TAG = MainActivity.class.getSimpleName();
     BroadcastReceiver broadcastReceiver;
     MobileServiceClient mClient;
@@ -43,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     boolean allowGenerate;
     boolean allowReport;
     TextView generate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             generate.setEnabled(false);
             generate.setTextColor(Color.argb(255, 214, 214, 214));
         }
+
     }
 
     private void makeClient() {
@@ -73,8 +74,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        table = mClient.getTable(Helper.machine.tableName,User.class);
-        Log.i(TAG, "makeClient: " +Helper.machine.tableName );
+        table = mClient.getTable(Helper.machine.tableName, User.class);
     }
 
     private void checkPermits() {
@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         {
             //view gone means the view no longer needs UI space, whereas view invisible means it is just not visible
             generate.setVisibility(View.GONE);
-
         }
     }
 

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDarkMovie"
+    tools:context="com.sdsmdg.skipthequeue.movies.Activities.ViewStatusActivity">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_widthPercent="60%"
+        app:layout_aspectRatio="80%"
+        app:layout_marginLeftPercent="20%"
+        app:layout_marginTopPercent="15%"
+        android:src="@drawable/food_token"/>
+
+    <TextView
+        android:id="@+id/token_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="60%"
+        app:layout_marginLeftPercent="20%"
+        app:layout_marginTopPercent="48%"
+        android:textSize="40sp"
+        android:text="#45"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="60%"
+        app:layout_marginLeftPercent="20%"
+        app:layout_marginTopPercent="45%"
+        android:text="Order No"
+        android:textSize="18sp"
+        android:gravity="center_horizontal"/>
+
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/got_my_order_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#ffffff"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="30dp"
+        android:onClick="gotMyOrderClicked"
+        app:layout_marginTopPercent="76%"
+        app:fb_text="Got My Order"
+        app:fb_radius="30dp"
+        app:fb_textColor="@color/colorPrimaryDarkMovie"/>
+
+    <TextView
+        android:id="@id/delete_token_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_marginTopPercent="90%"
+        android:text="I won't go, cancel my Order"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:onClick="cancelOrderOnClick"
+        android:gravity="center_horizontal"/>
+
+    <com.victor.loading.rotate.RotateLoading
+        android:id="@+id/rotate_loading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_marginTopPercent="72%"
+        app:layout_marginLeftPercent="40%"/>
+
+</android.support.percent.PercentRelativeLayout>

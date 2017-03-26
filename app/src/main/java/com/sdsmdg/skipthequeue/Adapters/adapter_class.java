@@ -30,7 +30,6 @@ public class adapter_class extends RecyclerView.Adapter<adapter_class.MyViewHold
             queue = (TextView) view.findViewById(R.id.queue);
             time = (TextView) view.findViewById(R.id.time);
             status = (TextView) view.findViewById(R.id.status);
-
         }
     }
 

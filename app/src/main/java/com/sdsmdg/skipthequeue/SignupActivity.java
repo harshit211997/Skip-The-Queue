@@ -241,6 +241,7 @@ public class SignupActivity extends AppCompatActivity {
                             rotateLoading.stop();
                             infoTextView.setVisibility(View.VISIBLE);
                             changeQueueNoInManagerTable(1);
+                            openLoginActivity();
                         } else {
                             // Insert failed
                             exception.printStackTrace();
@@ -348,5 +349,11 @@ public class SignupActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         getToken.setEnabled(true);
+    }
+
+    //This function is called just after the signup is successful
+    private void openLoginActivity() {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
     }
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Enter Order Id"
+        android:textSize="22sp" />
+
+    <com.github.glomadrian.codeinputlib.CodeInput
+        android:id="@+id/order_id_input"
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        app:codes="4"
+        app:hint_color="#77ce9d"
+        app:hint_text="Order Id"
+        app:text_color="#000000"
+        app:underline_color="#33ddff"
+        app:underline_selected_color="#000000" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/get_token_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:backgroundTint="#33ddff"
+            android:onClick="viewStatusClicked"
+            android:paddingBottom="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            app:fb_radius="30dp"
+            app:fb_text="OK" />
+
+        <com.victor.loading.rotate.RotateLoading
+            android:id="@+id/rotate_loading"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_below="@id/get_token_button"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            app:loading_color="#00bfff"
+            app:loading_width="5dp" />
+
+    </FrameLayout>
+
+
+</LinearLayout>
