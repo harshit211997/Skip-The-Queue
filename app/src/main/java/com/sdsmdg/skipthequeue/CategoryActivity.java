@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -14,9 +16,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdsmdg.skipthequeue.movies.Activities.OrderActivity;
+
+import java.util.Locale;
 
 public class CategoryActivity extends AppCompatActivity {
 
@@ -25,12 +30,24 @@ public class CategoryActivity extends AppCompatActivity {
     private final static int REQUEST_ENABLE_FINE_LOCATION = 3;
     private BluetoothAdapter bluetoothAdapter;
 
+    TextView comingSoonTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
         checkPermissions();
+
+        comingSoonTextView = (TextView)findViewById(R.id.coming_soon_textView);
+
+        //Setting custom cursive font to the Coming Soon... textView
+        AssetManager am = getApplicationContext().getAssets();
+
+        Typeface typeface = Typeface.createFromAsset(am,
+                String.format(Locale.US, "fonts/%s", "mayqueen.ttf"));
+
+        comingSoonTextView.setTypeface(typeface);
 
     }
 

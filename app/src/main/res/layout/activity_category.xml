@@ -69,6 +69,19 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/coming_soon_textView"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp"
+            android:text="Coming Soon..."
+            android:textStyle="italic"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            app:layout_marginTopPercent="42%"/>
+
+
+        <TextView
             android:id="@+id/atm_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
